@@ -1,16 +1,18 @@
-# React + Vite
+#  TravelInn — ICT Project Management in Practice (CSI_6_ICT)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+###  Academic Year: 2025–2026
+###  London South Bank University
+###  Team Project | Client-Based Development
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+##  Project Overview
+**TravelInn** is a full-stack travel booking and management web application developed as part of the *ICT Project Management in Practice* module (CSI_6_ICT).  
+The platform will allow users to explore, book, and manage travel accommodations, integrating intelligent features such as AI-based chat support and secure data handling.
 
-## React Compiler
+The project follows **Agile SCRUM** methodology with clear division of roles and sprint-based progress tracking through **Jira** and **GitHub**.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+##  Folder Structure
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
