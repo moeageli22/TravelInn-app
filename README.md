@@ -10,7 +10,7 @@
 **TravelInn** is a full-stack travel booking and management web application developed as part of the *ICT Project Management in Practice* module (CSI_6_ICT).  
 The platform will allow users to explore, book, and manage travel accommodations, integrating intelligent features such as AI-based chat support and secure data handling.
 
-The project follows **Agile SCRUM** methodology with clear division of roles and sprint-based progress tracking through **Jira** and **GitHub**.
+
 
 ---
 
