@@ -1,0 +1,2 @@
+-- TravelInn Database Schema
+-- Add your CREATE TABLE statements here.
