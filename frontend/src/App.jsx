@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
-import HomePage from '../Pages/HomePage'
-import SignInPage from '../Pages/SignInPage'
-import ChatbotPage from '../Pages/ChatbotPage'
+import HomePage from './Pages/HomePage'
+import SignInPage from './Pages/SignInPage'
+import ChatbotPage from './Pages/Chatbotpage'  // lowercase 'p'np
 import './App.css'
 
 function App() {
