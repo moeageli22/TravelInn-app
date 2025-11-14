@@ -218,6 +218,252 @@
             height: 100%;
         }
 
+        /* Chat Window */
+        .chat-window {
+            position: fixed;
+            bottom: 11rem;
+            right: 3rem;
+            width: 400px;
+            height: 600px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            display: none;
+            flex-direction: column;
+            z-index: 998;
+            overflow: hidden;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .chat-window.active {
+            display: flex;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .chat-header p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin: 0.25rem 0 0 0;
+        }
+
+        .close-chat {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: background 0.3s ease;
+        }
+
+        .close-chat:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            background: #f9fafb;
+        }
+
+        .chat-message {
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 0.75rem;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .chat-message.user .message-avatar {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        }
+
+        .message-content {
+            background: white;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            max-width: 70%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-message.user .message-content {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-top: 0.25rem;
+        }
+
+        .chat-message.user .message-time {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0 1.5rem 1rem 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .quick-action-btn {
+            background: white;
+            border: 2px solid #e5e7eb;
+            color: #6b7280;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quick-action-btn:hover {
+            border-color: #8b5cf6;
+            color: #8b5cf6;
+            transform: translateY(-2px);
+        }
+
+        .chat-input-container {
+            padding: 1rem 1.5rem;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .chat-input:focus {
+            border-color: #8b5cf6;
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+        }
+
+        .typing-indicator {
+            display: none;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: white;
+            border-radius: 12px;
+            width: fit-content;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .typing-indicator.active {
+            display: flex;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #8b5cf6;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             nav {
@@ -241,6 +487,13 @@
                 right: 2rem;
                 width: 90px;
                 height: 90px;
+            }
+
+            .chat-window {
+                width: calc(100vw - 2rem);
+                height: calc(100vh - 12rem);
+                right: 1rem;
+                bottom: 9rem;
             }
         }
 
@@ -305,13 +558,63 @@
 </section>
 
 <!-- Chat Bot with Lottie Animation -->
-<div class="chat-bot" onclick="openChat()">
+<div class="chat-bot" onclick="toggleChat()">
     <dotlottie-wc
             src="https://lottie.host/b3e4cac4-349a-4761-b167-2bf30a257e55/Xas0LWY1sY.lottie"
             style="width: 100%; height: 100%;"
             autoplay
             loop>
     </dotlottie-wc>
+</div>
+
+<!-- Chat Window -->
+<div class="chat-window" id="chatWindow">
+    <div class="chat-header">
+        <div>
+            <h3>Travelinn AI Assistant</h3>
+            <p>Here to help plan your perfect trip</p>
+        </div>
+        <button class="close-chat" onclick="toggleChat()">×</button>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+        <div class="chat-message">
+            <div class="message-avatar">AI</div>
+            <div>
+                <div class="message-content">
+                    Hello! 👋 I'm your AI travel assistant. I can help you find perfect hotels, plan trips, and answer any travel questions. How can I assist you today?
+                </div>
+                <div class="message-time">Just now</div>
+            </div>
+        </div>
+
+        <div class="typing-indicator" id="typingIndicator">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+        </div>
+    </div>
+
+    <div class="quick-actions">
+        <button class="quick-action-btn" onclick="sendQuickMessage('Find hotels in Paris')">🏨 Find Hotels</button>
+        <button class="quick-action-btn" onclick="sendQuickMessage('Best travel destinations')">✈️ Destinations</button>
+        <button class="quick-action-btn" onclick="sendQuickMessage('Travel tips')">💡 Travel Tips</button>
+    </div>
+
+    <div class="chat-input-container">
+        <input
+                type="text"
+                class="chat-input"
+                id="chatInput"
+                placeholder="Ask me anything about travel..."
+                onkeypress="handleKeyPress(event)"
+        />
+        <button class="send-btn" onclick="sendMessage()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+            </svg>
+        </button>
+    </div>
 </div>
 
 <script>
@@ -333,6 +636,116 @@
 
     // Change background every 3 seconds
     setInterval(changeBackground, 3000);
+
+    // Chat functionality
+    let chatOpen = false;
+
+    function toggleChat() {
+        chatOpen = !chatOpen;
+        const chatWindow = document.getElementById('chatWindow');
+        if (chatOpen) {
+            chatWindow.classList.add('active');
+            document.getElementById('chatInput').focus();
+        } else {
+            chatWindow.classList.remove('active');
+        }
+    }
+
+    function handleKeyPress(event) {
+        if (event.key === 'Enter') {
+            sendMessage();
+        }
+    }
+
+    function sendMessage() {
+        const input = document.getElementById('chatInput');
+        const message = input.value.trim();
+
+        if (message === '') return;
+
+        // Add user message
+        addMessage(message, 'user');
+        input.value = '';
+
+        // Show typing indicator
+        showTypingIndicator();
+
+        // Simulate AI response
+        setTimeout(() => {
+            hideTypingIndicator();
+            const response = getAIResponse(message);
+            addMessage(response, 'ai');
+        }, 1500);
+    }
+
+    function sendQuickMessage(message) {
+        addMessage(message, 'user');
+
+        showTypingIndicator();
+
+        setTimeout(() => {
+            hideTypingIndicator();
+            const response = getAIResponse(message);
+            addMessage(response, 'ai');
+        }, 1500);
+    }
+
+    function addMessage(text, sender) {
+        const messagesContainer = document.getElementById('chatMessages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `chat-message ${sender}`;
+
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        messageDiv.innerHTML = `
+                <div class="message-avatar">${sender === 'user' ? 'You' : 'AI'}</div>
+                <div>
+                    <div class="message-content">${text}</div>
+                    <div class="message-time">${time}</div>
+                </div>
+            `;
+
+        // Insert before typing indicator
+        const typingIndicator = document.getElementById('typingIndicator');
+        messagesContainer.insertBefore(messageDiv, typingIndicator);
+
+        // Scroll to bottom
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function showTypingIndicator() {
+        const typingIndicator = document.getElementById('typingIndicator');
+        typingIndicator.classList.add('active');
+        const messagesContainer = document.getElementById('chatMessages');
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function hideTypingIndicator() {
+        const typingIndicator = document.getElementById('typingIndicator');
+        typingIndicator.classList.remove('active');
+    }
+
+    function getAIResponse(message) {
+        const lowerMessage = message.toLowerCase();
+
+        if (lowerMessage.includes('hotel') || lowerMessage.includes('accommodation')) {
+            return "I'd be happy to help you find hotels! 🏨 We have amazing accommodations worldwide. Which destination are you interested in? I can show you options with great amenities, reviews, and competitive prices.";
+        } else if (lowerMessage.includes('paris')) {
+            return "Paris is magnificent! 🗼 We have wonderful hotels near the Eiffel Tower, Louvre, and Champs-Élysées. Would you like to see luxury options or budget-friendly stays? I can also recommend the best neighborhoods for your trip!";
+        } else if (lowerMessage.includes('destination') || lowerMessage.includes('where')) {
+            return "Great question! ✈️ Popular destinations right now include Paris, Tokyo, Dubai, London, and Bali. Each offers unique experiences - from cultural landmarks to tropical beaches. What type of experience are you looking for?";
+        } else if (lowerMessage.includes('tip') || lowerMessage.includes('advice')) {
+            return "Here are my top travel tips: 💡<br/>1. Book accommodations in advance for better rates<br/>2. Join our travel groups to connect with fellow travelers<br/>3. Use our concierge service for personalized recommendations<br/>4. Check visa requirements early<br/>5. Pack light and smart!";
+        } else if (lowerMessage.includes('group') || lowerMessage.includes('community')) {
+            return "Our travel groups are amazing! 👥 Connect with like-minded travelers, share experiences, and even plan group trips. We have communities for solo travelers, families, adventure seekers, and more. Want me to show you our active groups?";
+        } else if (lowerMessage.includes('price') || lowerMessage.includes('cost') || lowerMessage.includes('budget')) {
+            return "We offer options for every budget! 💰 From luxury 5-star hotels to cozy budget stays. Our prices are competitive and transparent - no hidden fees. Would you like to set a budget range, and I can show you the best options?";
+        } else if (lowerMessage.includes('thank')) {
+            return "You're very welcome! 😊 I'm here anytime you need help planning your perfect trip. Feel free to ask me anything about hotels, destinations, or travel tips!";
+        } else {
+            return "I'm here to help with all your travel needs! 🌍 I can assist you with finding hotels, suggesting destinations, providing travel tips, connecting you with our community, and more. What would you like to know?";
+        }
+    }
 
     // Smooth scrolling for navigation links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
