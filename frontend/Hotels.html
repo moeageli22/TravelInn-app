@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Travelinn - Premium Hotels Booking</title>
+    <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js" type="module"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -476,51 +477,95 @@
         .payment-option {
             background: rgba(255, 255, 255, 0.05);
             border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 1.2rem;
+            border-radius: 16px;
+            padding: 1.5rem;
             cursor: pointer;
             transition: all 0.3s;
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 1.25rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .payment-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            opacity: 0;
+            transition: opacity 0.3s;
         }
         .payment-option:hover {
             border-color: #60a5fa;
             background: rgba(59, 130, 246, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.2);
         }
         .payment-option.selected {
             border-color: #60a5fa;
             background: rgba(59, 130, 246, 0.15);
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+        }
+        .payment-option.selected::before {
+            opacity: 1;
         }
         .payment-option input[type="radio"] {
             accent-color: #60a5fa;
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
         }
         .payment-logo-container {
             background: white;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            height: 50px;
+            padding: 0.75rem 1.25rem;
+            border-radius: 10px;
+            min-height: 60px;
+            min-width: 100px;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .payment-logo-container.card-logos {
+            min-width: 120px;
         }
         .payment-logo {
-            max-width: 80px;
-            max-height: 40px;
+            max-width: 90px;
+            max-height: 45px;
             object-fit: contain;
         }
-        .payment-info { flex: 1; }
+        .payment-logo-multi {
+            max-width: 110px;
+            max-height: 50px;
+            object-fit: contain;
+        }
+        .payment-info {
+            flex: 1;
+            padding-left: 0.5rem;
+        }
         .payment-title {
-            font-weight: 600;
-            font-size: 1.1rem;
-            margin-bottom: 0.25rem;
+            font-weight: 700;
+            font-size: 1.15rem;
+            margin-bottom: 0.3rem;
+            color: white;
         }
         .payment-desc {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        /* Accepted Cards Display */
+        .accepted-cards {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         /* Credit Card Form */
@@ -887,6 +932,340 @@
             .rooms-showcase { grid-template-columns: 1fr; }
             .amenities-grid { grid-template-columns: 1fr; }
             .details-title { font-size: 1.8rem; }
+            .chat-window {
+                width: calc(100% - 2rem);
+                right: 1rem;
+                height: 550px;
+            }
+            .chat-bot {
+                right: 1.5rem;
+                bottom: 1.5rem;
+                width: 80px;
+                height: 80px;
+            }
+        }
+
+        /* Chat Bot Styles */
+        .chat-bot {
+            position: fixed;
+            bottom: 3rem;
+            right: 3rem;
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 999;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.4);
+            border: 3px solid rgba(168, 85, 247, 0.6);
+        }
+
+        .chat-bot:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.6);
+        }
+
+        .chat-bot dotlottie-wc {
+            pointer-events: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Chat Window */
+        .chat-window {
+            position: fixed;
+            bottom: 11rem;
+            right: 3rem;
+            width: 450px;
+            height: 650px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            display: none;
+            flex-direction: column;
+            z-index: 998;
+            overflow: hidden;
+            border: 1px solid rgba(96, 165, 250, 0.3);
+        }
+
+        .chat-window.active {
+            display: flex;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-header h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .chat-header p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .close-chat {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .close-chat:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(96, 165, 250, 0.5);
+            border-radius: 10px;
+        }
+
+        .chat-message {
+            display: flex;
+            gap: 0.75rem;
+            animation: messageSlide 0.3s ease-out;
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+        }
+
+        .chat-message.user .message-avatar {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .message-content {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            max-width: 280px;
+            word-wrap: break-word;
+            line-height: 1.5;
+        }
+
+        .chat-message.user .message-content {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 0.3rem;
+        }
+
+        .hotel-suggestion {
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .hotel-suggestion:hover {
+            background: rgba(59, 130, 246, 0.3);
+            border-color: rgba(59, 130, 246, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .hotel-suggestion-name {
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            color: #60a5fa;
+        }
+
+        .hotel-suggestion-location {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 0.3rem;
+        }
+
+        .hotel-suggestion-price {
+            font-weight: 600;
+            color: #10b981;
+        }
+
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+        }
+
+        .typing-indicator.active {
+            display: flex;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(96, 165, 250, 0.8);
+            animation: typingBounce 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingBounce {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .quick-actions {
+            padding: 1rem 1.5rem;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .quick-action-btn {
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quick-action-btn:hover {
+            background: rgba(59, 130, 246, 0.3);
+            border-color: rgba(59, 130, 246, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .chat-input-container {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            gap: 0.75rem;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            color: white;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .chat-input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(96, 165, 250, 0.5);
+        }
+
+        .chat-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
         }
     </style>
 </head>
@@ -943,7 +1322,7 @@
         <!-- Dubai Luxe Tower -->
         <div class="hotel-card" data-location="dubai" data-price="680" data-hotel-id="dubai-luxe">
             <div class="hotel-image-container">
-                <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800" class="hotel-image" alt="Dubai Luxe Tower">
+                <img src="https://ralphdeal.s3.amazonaws.com/wp-content/uploads/2024/05/UAE_Blog-321.jpg" class="hotel-image" alt="Dubai Luxe Tower">
                 <div class="hotel-type-badge">5-Star Resort</div>
             </div>
             <div class="hotel-content">
@@ -977,7 +1356,7 @@
         <!-- Burj Al Arab -->
         <div class="hotel-card" data-location="dubai" data-price="1200" data-hotel-id="burj-arab">
             <div class="hotel-image-container">
-                <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800" class="hotel-image" alt="Burj Al Arab">
+                <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2c/18/e7/95/aerial-shot.jpg?w=900&h=-1&s=1" class="hotel-image" alt="Burj Al Arab">
                 <div class="hotel-type-badge">7-Star Luxury</div>
             </div>
             <div class="hotel-content">
@@ -1011,7 +1390,7 @@
         <!-- Atlantis The Palm -->
         <div class="hotel-card" data-location="dubai" data-price="520" data-hotel-id="atlantis-palm">
             <div class="hotel-image-container">
-                <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800" class="hotel-image" alt="Atlantis The Palm">
+                <img src="https://media.istockphoto.com/id/1097789900/photo/aerial-view-of-dubai-palm-jumeirah-island-united-arab-emirates.jpg?s=612x612&w=0&k=20&c=a54NL3aG_WcbHLSyw6UvSyRDzZC3s-mT6slVN-ONJ0I=" class="hotel-image" alt="Atlantis The Palm">
                 <div class="hotel-type-badge">Family Resort</div>
             </div>
             <div class="hotel-content">
@@ -1045,7 +1424,7 @@
         <!-- Armani Hotel -->
         <div class="hotel-card" data-location="dubai" data-price="750" data-hotel-id="armani-hotel">
             <div class="hotel-image-container">
-                <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800" class="hotel-image" alt="Armani Hotel">
+                <img src="https://media.istockphoto.com/id/183371461/photo/city-lights-in-dubai-at-sunset.jpg?s=612x612&w=0&k=20&c=zAkTw5NIWr3y2EhmIZwB-HW-pVMZqu3JXX21gQuHnB4=" class="hotel-image" alt="Armani Hotel">
                 <div class="hotel-type-badge">Designer Hotel</div>
             </div>
             <div class="hotel-content">
@@ -1079,7 +1458,7 @@
         <!-- Azure Paradise Resort -->
         <div class="hotel-card" data-location="maldives" data-price="450" data-hotel-id="azure-paradise">
             <div class="hotel-image-container">
-                <img src="https://images.unsplash.com/photo-1540541338287-41700207dee6?w=800" class="hotel-image" alt="Azure Paradise Resort">
+                <img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800&q=80" class="hotel-image" alt="Azure Paradise Resort">
                 <div class="hotel-type-badge">Beach Resort</div>
             </div>
             <div class="hotel-content">
@@ -1113,7 +1492,7 @@
         <!-- Paris Grand Palace -->
         <div class="hotel-card" data-location="paris" data-price="550" data-hotel-id="paris-palace">
             <div class="hotel-image-container">
-                <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800" class="hotel-image" alt="Paris Grand Palace">
+                <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80" class="hotel-image" alt="Paris Grand Palace">
                 <div class="hotel-type-badge">Luxury Hotel</div>
             </div>
             <div class="hotel-content">
@@ -1147,7 +1526,7 @@
         <!-- Tokyo Sky Suites -->
         <div class="hotel-card" data-location="tokyo" data-price="380" data-hotel-id="tokyo-sky">
             <div class="hotel-image-container">
-                <img src="https://images.unsplash.com/photo-1560184897-ae75f418493e?w=800" class="hotel-image" alt="Tokyo Sky Suites">
+                <img src="https://t4.ftcdn.net/jpg/02/51/12/11/360_F_251121174_5xQyUCqSrkswyLHbM9Ne8DQ8Qb0o1HGw.jpg" class="hotel-image" alt="Tokyo Sky Suites">
                 <div class="hotel-type-badge">Business Hotel</div>
             </div>
             <div class="hotel-content">
@@ -1181,7 +1560,7 @@
         <!-- Santorini Dream Villa -->
         <div class="hotel-card" data-location="santorini" data-price="620" data-hotel-id="santorini-dream">
             <div class="hotel-image-container">
-                <img src="https://images.unsplash.com/photo-1570213489059-0aac6626cade?w=800" class="hotel-image" alt="Santorini Dream Villa">
+                <img src="https://plus.unsplash.com/premium_photo-1661964149725-fbf14eabd38c?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8c2FudG9yaW5pfGVufDB8fDB8fHww" class="hotel-image" alt="Santorini Dream Villa">
                 <div class="hotel-type-badge">Boutique Hotel</div>
             </div>
             <div class="hotel-content">
@@ -1215,7 +1594,7 @@
         <!-- Swiss Alpine Lodge -->
         <div class="hotel-card" data-location="switzerland" data-price="490" data-hotel-id="swiss-alpine">
             <div class="hotel-image-container">
-                <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800" class="hotel-image" alt="Swiss Alpine Lodge">
+                <img src="https://t4.ftcdn.net/jpg/02/81/14/83/360_F_281148366_Uw03PoKAGUZIAWecL5Op35YPMa7os2uC.jpg" class="hotel-image" alt="Swiss Alpine Lodge">
                 <div class="hotel-type-badge">Mountain Resort</div>
             </div>
             <div class="hotel-content">
@@ -1241,6 +1620,346 @@
                     <div>
                         <button class="view-details-btn" onclick="showHotelDetails('swiss-alpine')">VIEW DETAILS</button>
                         <button class="book-btn" onclick="startBooking('Swiss Alpine Lodge', 490, 'Switzerland', 'Mountain Resort')">BOOK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Le Meurice Paris -->
+        <div class="hotel-card" data-location="paris" data-price="720" data-hotel-id="le-meurice">
+            <div class="hotel-image-container">
+                <img src="https://wallpapers.com/images/featured/paris-zy4x2ow5p7j5qi4a.jpg" class="hotel-image" alt="Le Meurice Paris">
+                <div class="hotel-type-badge">Palace Hotel</div>
+            </div>
+            <div class="hotel-content">
+                <h3 class="hotel-name">Le Meurice Paris</h3>
+                <div class="hotel-rating">⭐⭐⭐⭐⭐ 5.0</div>
+                <div class="hotel-location">📍 Tuileries, Paris</div>
+                <div class="hotel-amenities">
+                    <span class="amenity-tag">👑 Palace</span>
+                    <span class="amenity-tag">🍽️ Michelin Star</span>
+                    <span class="amenity-tag">🎨 Art Deco</span>
+                    <span class="amenity-tag">💆 Valmont Spa</span>
+                </div>
+                <div class="room-preview">
+                    <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=200" class="room-thumb" alt="Suite 1">
+                    <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=200" class="room-thumb" alt="Suite 2">
+                    <img src="https://images.unsplash.com/photo-1566195992011-5f6b21e539ce?w=200" class="room-thumb" alt="Suite 3">
+                </div>
+                <div class="hotel-footer">
+                    <div class="price-section">
+                        <span class="price-label">From</span>
+                        <span class="price-amount">$720</span>
+                    </div>
+                    <div>
+                        <button class="view-details-btn" onclick="showHotelDetails('le-meurice')">VIEW DETAILS</button>
+                        <button class="book-btn" onclick="startBooking('Le Meurice Paris', 720, 'Paris', 'Palace Hotel')">BOOK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shangri-La Paris -->
+        <div class="hotel-card" data-location="paris" data-price="650" data-hotel-id="shangri-la-paris">
+            <div class="hotel-image-container">
+                <img src="https://www.kayak.co.uk/rimg/himg/5b/cc/8b/ice-100053252-0746998_3XL-452362.jpg?width=836&height=607&crop=true" class="hotel-image" alt="Shangri-La Paris">
+                <div class="hotel-type-badge">Historic Palace</div>
+            </div>
+            <div class="hotel-content">
+                <h3 class="hotel-name">Shangri-La Paris</h3>
+                <div class="hotel-rating">⭐⭐⭐⭐⭐ 4.9</div>
+                <div class="hotel-location">📍 Trocadéro, Paris</div>
+                <div class="hotel-amenities">
+                    <span class="amenity-tag">🗼 Eiffel Tower</span>
+                    <span class="amenity-tag">🏛️ Palace</span>
+                    <span class="amenity-tag">🍾 Champagne</span>
+                    <span class="amenity-tag">🌺 Garden</span>
+                </div>
+                <div class="room-preview">
+                    <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?w=200" class="room-thumb" alt="Room 1">
+                    <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=200" class="room-thumb" alt="Room 2">
+                    <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=200" class="room-thumb" alt="Room 3">
+                </div>
+                <div class="hotel-footer">
+                    <div class="price-section">
+                        <span class="price-label">From</span>
+                        <span class="price-amount">$650</span>
+                    </div>
+                    <div>
+                        <button class="view-details-btn" onclick="showHotelDetails('shangri-la-paris')">VIEW DETAILS</button>
+                        <button class="book-btn" onclick="startBooking('Shangri-La Paris', 650, 'Paris', 'Historic Palace')">BOOK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- The Savoy London -->
+        <div class="hotel-card" data-location="london" data-price="580" data-hotel-id="savoy-london">
+            <div class="hotel-image-container">
+                <img src="https://images.pexels.com/photos/460672/pexels-photo-460672.jpeg?cs=srgb&dl=pexels-pixabay-460672.jpg&fm=jpg" class="hotel-image" alt="The Savoy London">
+                <div class="hotel-type-badge">Iconic Luxury</div>
+            </div>
+            <div class="hotel-content">
+                <h3 class="hotel-name">The Savoy London</h3>
+                <div class="hotel-rating">⭐⭐⭐⭐⭐ 4.9</div>
+                <div class="hotel-location">📍 Covent Garden, London</div>
+                <div class="hotel-amenities">
+                    <span class="amenity-tag">🎭 Theatre District</span>
+                    <span class="amenity-tag">🍸 American Bar</span>
+                    <span class="amenity-tag">🏛️ Historic</span>
+                    <span class="amenity-tag">🎩 Butler</span>
+                </div>
+                <div class="room-preview">
+                    <img src="https://images.unsplash.com/photo-1566195992011-5f6b21e539ce?w=200" class="room-thumb" alt="Room 1">
+                    <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=200" class="room-thumb" alt="Room 2">
+                    <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=200" class="room-thumb" alt="Room 3">
+                </div>
+                <div class="hotel-footer">
+                    <div class="price-section">
+                        <span class="price-label">From</span>
+                        <span class="price-amount">$580</span>
+                    </div>
+                    <div>
+                        <button class="view-details-btn" onclick="showHotelDetails('savoy-london')">VIEW DETAILS</button>
+                        <button class="book-btn" onclick="startBooking('The Savoy London', 580, 'London', 'Iconic Luxury')">BOOK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Claridge's London -->
+        <div class="hotel-card" data-location="london" data-price="620" data-hotel-id="claridges-london">
+            <div class="hotel-image-container">
+                <img src="https://c0.wallpaperflare.com/preview/320/877/213/london-united-kingdom-mayfair-britain.jpg" class="hotel-image" alt="Claridge's London">
+                <div class="hotel-type-badge">Art Deco Luxury</div>
+            </div>
+            <div class="hotel-content">
+                <h3 class="hotel-name">Claridge's London</h3>
+                <div class="hotel-rating">⭐⭐⭐⭐⭐ 5.0</div>
+                <div class="hotel-location">📍 Mayfair, London</div>
+                <div class="hotel-amenities">
+                    <span class="amenity-tag">👑 Royal</span>
+                    <span class="amenity-tag">🎨 Art Deco</span>
+                    <span class="amenity-tag">🍰 Afternoon Tea</span>
+                    <span class="amenity-tag">💎 Luxury</span>
+                </div>
+                <div class="room-preview">
+                    <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?w=200" class="room-thumb" alt="Suite 1">
+                    <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=200" class="room-thumb" alt="Suite 2">
+                    <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=200" class="room-thumb" alt="Suite 3">
+                </div>
+                <div class="hotel-footer">
+                    <div class="price-section">
+                        <span class="price-label">From</span>
+                        <span class="price-amount">$620</span>
+                    </div>
+                    <div>
+                        <button class="view-details-btn" onclick="showHotelDetails('claridges-london')">VIEW DETAILS</button>
+                        <button class="book-btn" onclick="startBooking('Claridge\'s London', 620, 'London', 'Art Deco Luxury')">BOOK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- The Ritz London -->
+        <div class="hotel-card" data-location="london" data-price="750" data-hotel-id="ritz-london">
+            <div class="hotel-image-container">
+                <img src="https://img.goodfon.com/original/2048x1365/1/21/london-angliia-ploshchad-pikadilli-sokho-fontan-shaftesbari.jpg" class="hotel-image" alt="The Ritz London">
+                <div class="hotel-type-badge">Legendary Hotel</div>
+            </div>
+            <div class="hotel-content">
+                <h3 class="hotel-name">The Ritz London</h3>
+                <div class="hotel-rating">⭐⭐⭐⭐⭐ 5.0</div>
+                <div class="hotel-location">📍 Piccadilly, London</div>
+                <div class="hotel-amenities">
+                    <span class="amenity-tag">👑 Royal Warrant</span>
+                    <span class="amenity-tag">🎩 Traditional</span>
+                    <span class="amenity-tag">🍽️ Michelin Star</span>
+                    <span class="amenity-tag">🌺 Garden</span>
+                </div>
+                <div class="room-preview">
+                    <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=200" class="room-thumb" alt="Room 1">
+                    <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=200" class="room-thumb" alt="Room 2">
+                    <img src="https://images.unsplash.com/photo-1566195992011-5f6b21e539ce?w=200" class="room-thumb" alt="Room 3">
+                </div>
+                <div class="hotel-footer">
+                    <div class="price-section">
+                        <span class="price-label">From</span>
+                        <span class="price-amount">$750</span>
+                    </div>
+                    <div>
+                        <button class="view-details-btn" onclick="showHotelDetails('ritz-london')">VIEW DETAILS</button>
+                        <button class="book-btn" onclick="startBooking('The Ritz London', 750, 'London', 'Legendary Hotel')">BOOK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Al Faisaliah Hotel Riyadh -->
+        <div class="hotel-card" data-location="riyadh" data-price="450" data-hotel-id="al-faisaliah">
+            <div class="hotel-image-container">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/2/20/Riyadh_Skyline.jpg" class="hotel-image" alt="Al Faisaliah Hotel">
+                <div class="hotel-type-badge">Luxury Tower</div>
+            </div>
+            <div class="hotel-content">
+                <h3 class="hotel-name">Al Faisaliah Hotel</h3>
+                <div class="hotel-rating">⭐⭐⭐⭐⭐ 4.8</div>
+                <div class="hotel-location">📍 Riyadh, Saudi Arabia</div>
+                <div class="hotel-amenities">
+                    <span class="amenity-tag">🏢 Iconic Tower</span>
+                    <span class="amenity-tag">💎 Luxury</span>
+                    <span class="amenity-tag">🍽️ Fine Dining</span>
+                    <span class="amenity-tag">🏊 Pool</span>
+                </div>
+                <div class="room-preview">
+                    <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=200" class="room-thumb" alt="Room 1">
+                    <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=200" class="room-thumb" alt="Room 2">
+                    <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=200" class="room-thumb" alt="Room 3">
+                </div>
+                <div class="hotel-footer">
+                    <div class="price-section">
+                        <span class="price-label">From</span>
+                        <span class="price-amount">$450</span>
+                    </div>
+                    <div>
+                        <button class="view-details-btn" onclick="showHotelDetails('al-faisaliah')">VIEW DETAILS</button>
+                        <button class="book-btn" onclick="startBooking('Al Faisaliah Hotel', 450, 'Riyadh', 'Luxury Tower')">BOOK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Makkah Clock Royal Tower -->
+        <div class="hotel-card" data-location="makkah" data-price="380" data-hotel-id="makkah-clock">
+            <div class="hotel-image-container">
+                <img src="https://www.shutterstock.com/image-photo/skyline-mecca-saudi-arabiaapril2018-royal-600nw-1605876778.jpg" class="hotel-image" alt="Makkah Clock Royal Tower">
+                <div class="hotel-type-badge">Religious Site</div>
+            </div>
+            <div class="hotel-content">
+                <h3 class="hotel-name">Makkah Clock Royal Tower</h3>
+                <div class="hotel-rating">⭐⭐⭐⭐⭐ 4.9</div>
+                <div class="hotel-location">📍 Makkah, Saudi Arabia</div>
+                <div class="hotel-amenities">
+                    <span class="amenity-tag">🕌 Haram View</span>
+                    <span class="amenity-tag">🏢 Tallest Hotel</span>
+                    <span class="amenity-tag">🍽️ Restaurants</span>
+                    <span class="amenity-tag">🛍️ Shopping</span>
+                </div>
+                <div class="room-preview">
+                    <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?w=200" class="room-thumb" alt="Room 1">
+                    <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=200" class="room-thumb" alt="Room 2">
+                    <img src="https://images.unsplash.com/photo-1566195992011-5f6b21e539ce?w=200" class="room-thumb" alt="Room 3">
+                </div>
+                <div class="hotel-footer">
+                    <div class="price-section">
+                        <span class="price-label">From</span>
+                        <span class="price-amount">$380</span>
+                    </div>
+                    <div>
+                        <button class="view-details-btn" onclick="showHotelDetails('makkah-clock')">VIEW DETAILS</button>
+                        <button class="book-btn" onclick="startBooking('Makkah Clock Royal Tower', 380, 'Makkah', 'Religious Site')">BOOK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- The St. Regis New York -->
+        <div class="hotel-card" data-location="new york" data-price="890" data-hotel-id="st-regis-ny">
+            <div class="hotel-image-container">
+                <img src="https://files.ekmcdn.com/allwallpapers/images/new-york-city-skyline-paper-wallpaper-28703-1-p.jpg" class="hotel-image" alt="The St. Regis New York">
+                <div class="hotel-type-badge">Luxury Icon</div>
+            </div>
+            <div class="hotel-content">
+                <h3 class="hotel-name">The St. Regis New York</h3>
+                <div class="hotel-rating">⭐⭐⭐⭐⭐ 5.0</div>
+                <div class="hotel-location">📍 Fifth Avenue, New York</div>
+                <div class="hotel-amenities">
+                    <span class="amenity-tag">🗽 Fifth Avenue</span>
+                    <span class="amenity-tag">🥂 Champagne</span>
+                    <span class="amenity-tag">🎨 Art Collection</span>
+                    <span class="amenity-tag">🛎️ Butler</span>
+                </div>
+                <div class="room-preview">
+                    <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=200" class="room-thumb" alt="Suite 1">
+                    <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=200" class="room-thumb" alt="Suite 2">
+                    <img src="https://images.unsplash.com/photo-1566195992011-5f6b21e539ce?w=200" class="room-thumb" alt="Suite 3">
+                </div>
+                <div class="hotel-footer">
+                    <div class="price-section">
+                        <span class="price-label">From</span>
+                        <span class="price-amount">$890</span>
+                    </div>
+                    <div>
+                        <button class="view-details-btn" onclick="showHotelDetails('st-regis-ny')">VIEW DETAILS</button>
+                        <button class="book-btn" onclick="startBooking('The St. Regis New York', 890, 'New York', 'Luxury Icon')">BOOK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- The Plaza New York -->
+        <div class="hotel-card" data-location="new york" data-price="950" data-hotel-id="plaza-ny">
+            <div class="hotel-image-container">
+                <img src="https://live.staticflickr.com/126/387606063_be63334fd8_h.jpg" class="hotel-image" alt="The Plaza New York">
+                <div class="hotel-type-badge">Historic Landmark</div>
+            </div>
+            <div class="hotel-content">
+                <h3 class="hotel-name">The Plaza New York</h3>
+                <div class="hotel-rating">⭐⭐⭐⭐⭐ 5.0</div>
+                <div class="hotel-location">📍 Central Park, New York</div>
+                <div class="hotel-amenities">
+                    <span class="amenity-tag">🌳 Park View</span>
+                    <span class="amenity-tag">🏛️ Landmark</span>
+                    <span class="amenity-tag">💎 Luxury</span>
+                    <span class="amenity-tag">🍰 Palm Court</span>
+                </div>
+                <div class="room-preview">
+                    <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?w=200" class="room-thumb" alt="Room 1">
+                    <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=200" class="room-thumb" alt="Room 2">
+                    <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=200" class="room-thumb" alt="Room 3">
+                </div>
+                <div class="hotel-footer">
+                    <div class="price-section">
+                        <span class="price-label">From</span>
+                        <span class="price-amount">$950</span>
+                    </div>
+                    <div>
+                        <button class="view-details-btn" onclick="showHotelDetails('plaza-ny')">VIEW DETAILS</button>
+                        <button class="book-btn" onclick="startBooking('The Plaza New York', 950, 'New York', 'Historic Landmark')">BOOK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- The Peninsula New York -->
+        <div class="hotel-card" data-location="new york" data-price="820" data-hotel-id="peninsula-ny">
+            <div class="hotel-image-container">
+                <img src="https://www.wallart.com/media/catalog/product/cache/5b18b93ddbe5d6592c6b175f41d24454/a/d/adobestock_277637491-small.jpg" class="hotel-image" alt="The Peninsula New York">
+                <div class="hotel-type-badge">Modern Luxury</div>
+            </div>
+            <div class="hotel-content">
+                <h3 class="hotel-name">The Peninsula New York</h3>
+                <div class="hotel-rating">⭐⭐⭐⭐⭐ 4.9</div>
+                <div class="hotel-location">📍 Midtown, New York</div>
+                <div class="hotel-amenities">
+                    <span class="amenity-tag">🏙️ City Views</span>
+                    <span class="amenity-tag">🍽️ Rooftop</span>
+                    <span class="amenity-tag">🚗 Rolls-Royce</span>
+                    <span class="amenity-tag">💆 ESPA Spa</span>
+                </div>
+                <div class="room-preview">
+                    <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=200" class="room-thumb" alt="Room 1">
+                    <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=200" class="room-thumb" alt="Room 2">
+                    <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=200" class="room-thumb" alt="Room 3">
+                </div>
+                <div class="hotel-footer">
+                    <div class="price-section">
+                        <span class="price-label">From</span>
+                        <span class="price-amount">$820</span>
+                    </div>
+                    <div>
+                        <button class="view-details-btn" onclick="showHotelDetails('peninsula-ny')">VIEW DETAILS</button>
+                        <button class="book-btn" onclick="startBooking('The Peninsula New York', 820, 'New York', 'Modern Luxury')">BOOK</button>
                     </div>
                 </div>
             </div>
@@ -1419,49 +2138,64 @@
                     <div class="payment-option" onclick="selectPayment('applepay')">
                         <input type="radio" name="payment" id="payApple" value="applepay">
                         <div class="payment-logo-container">
-                            <img src="/mnt/user-data/uploads/1763140256942_image.png" class="payment-logo">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWxYUQvdwKXZ9meVu4Jx6fr7nNNo99TLl-bA&s" class="payment-logo" alt="Apple Pay">
                         </div>
                         <div class="payment-info">
                             <div class="payment-title">Apple Pay</div>
-                            <div class="payment-desc">Pay securely with Apple Pay</div>
+                            <div class="payment-desc">Fast and secure checkout</div>
+                        </div>
+                    </div>
+
+                    <div class="payment-option" onclick="selectPayment('paze')">
+                        <input type="radio" name="payment" id="payPaze" value="paze">
+                        <div class="payment-logo-container">
+                            <img src="https://www.paze.com/sites/default/files/2023-06/Paze_Button_60x200px%402x.png" class="payment-logo" alt="Paze">
+                        </div>
+                        <div class="payment-info">
+                            <div class="payment-title">Paze</div>
+                            <div class="payment-desc">Simple & secure online checkout</div>
                         </div>
                     </div>
 
                     <div class="payment-option" onclick="selectPayment('googlepay')">
                         <input type="radio" name="payment" id="payGoogle" value="googlepay">
                         <div class="payment-logo-container">
-                            <img src="/mnt/user-data/uploads/1763140424246_image.png" class="payment-logo">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQq_S1I-kRo8EmqBe0MSfTSRdtAflozeeDoBQ&s" class="payment-logo" alt="Google Pay">
                         </div>
                         <div class="payment-info">
                             <div class="payment-title">Google Pay</div>
-                            <div class="payment-desc">Pay securely with Google Pay</div>
+                            <div class="payment-desc">Quick & easy payment</div>
                         </div>
                     </div>
 
                     <div class="payment-option selected" onclick="selectPayment('card')">
                         <input type="radio" name="payment" id="payCard" value="card" checked>
-                        <div class="payment-logo-container">
-                            <span style="font-size: 2rem;">💳</span>
+                        <div class="payment-logo-container card-logos">
+                            <img src="https://t4.ftcdn.net/jpg/04/06/75/39/360_F_406753914_SFSBhjhp6kbHblNiUFZ1MXHcuEKe7e7P.jpg" class="payment-logo-multi" alt="Credit Cards">
                         </div>
                         <div class="payment-info">
                             <div class="payment-title">Credit / Debit Card</div>
-                            <div class="payment-desc">Pay with Visa, MasterCard or AmEx</div>
+                            <div class="payment-desc">Visa, Mastercard, Amex & more</div>
                         </div>
                     </div>
 
-                    <div class="payment-option" onclick="selectPayment('paypal')">
-                        <input type="radio" name="payment" id="payPaypal" value="paypal">
+                    <div class="payment-option" onclick="selectPayment('bank')">
+                        <input type="radio" name="payment" id="payBank" value="bank">
                         <div class="payment-logo-container">
-                            <img src="/mnt/user-data/uploads/1763140436984_image.png" class="payment-logo">
+                            <span style="font-size: 2rem;">🏦</span>
                         </div>
                         <div class="payment-info">
-                            <div class="payment-title">PayPal</div>
-                            <div class="payment-desc">Pay securely with PayPal</div>
+                            <div class="payment-title">Bank Account</div>
+                            <div class="payment-desc">Direct bank transfer</div>
                         </div>
                     </div>
                 </div>
 
                 <div class="card-form active" id="cardForm">
+                    <div class="accepted-cards">
+                        <span style="opacity: 0.7; font-size: 0.9rem; margin-right: 1rem;">We accept:</span>
+                        <img src="https://t4.ftcdn.net/jpg/04/16/93/07/360_F_416930739_UeumuMO5QhZOXIAc09s7gz6JSPT97duS.jpg" alt="Payment methods" style="height: 30px; border-radius: 4px;">
+                    </div>
                     <div class="form-group">
                         <label>Cardholder Name</label>
                         <input type="text" id="cardName" placeholder="John Doe">
@@ -1522,6 +2256,68 @@
     </div>
 </div>
 
+<!-- Chat Bot with Lottie Animation -->
+<div class="chat-bot" onclick="toggleChat()">
+    <dotlottie-wc
+            src="https://lottie.host/b3e4cac4-349a-4761-b167-2bf30a257e55/Xas0LWY1sY.lottie"
+            style="width: 100%; height: 100%;"
+            autoplay
+            loop>
+    </dotlottie-wc>
+</div>
+
+<!-- Chat Window -->
+<div class="chat-window" id="chatWindow">
+    <div class="chat-header">
+        <div>
+            <h3>🏨 Hotel Finder AI</h3>
+            <p>Find your perfect stay</p>
+        </div>
+        <button class="close-chat" onclick="toggleChat()">×</button>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+        <div class="chat-message">
+            <div class="message-avatar">AI</div>
+            <div>
+                <div class="message-content">
+                    Hello! 👋 I see you're looking for hotels. I can help you find the perfect accommodation! Where would you like to stay?
+                </div>
+                <div class="message-time">Just now</div>
+            </div>
+        </div>
+
+        <div class="typing-indicator" id="typingIndicator">
+            <div class="message-avatar">AI</div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+        </div>
+    </div>
+
+    <div class="quick-actions">
+        <button class="quick-action-btn" onclick="sendQuickMessage('Show me hotels in Dubai')">🏨 Dubai</button>
+        <button class="quick-action-btn" onclick="sendQuickMessage('Hotels in Paris')">🗼 Paris</button>
+        <button class="quick-action-btn" onclick="sendQuickMessage('Best hotels in Tokyo')">🗾 Tokyo</button>
+        <button class="quick-action-btn" onclick="sendQuickMessage('Help me choose')">💡 Help</button>
+    </div>
+
+    <div class="chat-input-container">
+        <input
+                type="text"
+                class="chat-input"
+                id="chatInput"
+                placeholder="Where do you want to go?"
+                onkeypress="handleChatKeyPress(event)"
+        />
+        <button class="send-btn" onclick="sendChatMessage()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+            </svg>
+        </button>
+    </div>
+</div>
+
 <script>
     let currentStep = 1;
     let selectedHotel = {};
@@ -1535,7 +2331,7 @@
             type: '5-Star Resort',
             price: 680,
             rating: '⭐⭐⭐⭐⭐ 4.9',
-            heroImage: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200',
+            heroImage: 'https://ralphdeal.s3.amazonaws.com/wp-content/uploads/2024/05/UAE_Blog-321.jpg',
             description: 'Experience unparalleled luxury in the heart of Dubai. Dubai Luxe Tower offers breathtaking views of the Burj Khalifa and combines modern elegance with traditional Arabian hospitality. Our world-class facilities include a rooftop infinity pool, Michelin-starred dining, and personalized concierge services to make your stay unforgettable.',
             amenities: [
                 { icon: '🏊', name: 'Infinity Pool', desc: 'Rooftop pool with city views' },
@@ -1557,7 +2353,7 @@
             type: '7-Star Luxury',
             price: 1200,
             rating: '⭐⭐⭐⭐⭐ 5.0',
-            heroImage: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1200',
+            heroImage: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2c/18/e7/95/aerial-shot.jpg?w=900&h=-1&s=1',
             description: 'The epitome of luxury, Burj Al Arab stands as an architectural masterpiece on a private island. Every suite offers stunning Arabian Gulf views, personalized butler service, and access to our fleet of Rolls-Royce cars. Experience hospitality beyond compare in the world\'s most luxurious hotel.',
             amenities: [
                 { icon: '🏖️', name: 'Private Beach', desc: 'Exclusive beach access' },
@@ -1579,7 +2375,7 @@
             type: 'Family Resort',
             price: 520,
             rating: '⭐⭐⭐⭐⭐ 4.8',
-            heroImage: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=1200',
+            heroImage: 'https://media.istockphoto.com/id/1097789900/photo/aerial-view-of-dubai-palm-jumeirah-island-united-arab-emirates.jpg?s=612x612&w=0&k=20&c=a54NL3aG_WcbHLSyw6UvSyRDzZC3s-mT6slVN-ONJ0I=',
             description: 'A world of wonder awaits at Atlantis The Palm. This iconic resort features Aquaventure Waterpark, The Lost Chambers Aquarium, and pristine beaches. Perfect for families, couples, and adventure seekers, with endless dining options and marine experiences that will create memories for a lifetime.',
             amenities: [
                 { icon: '🎢', name: 'Water Park', desc: 'Aquaventure access' },
@@ -1601,7 +2397,7 @@
             type: 'Designer Hotel',
             price: 750,
             rating: '⭐⭐⭐⭐⭐ 4.9',
-            heroImage: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=1200',
+            heroImage: 'https://media.istockphoto.com/id/183371461/photo/city-lights-in-dubai-at-sunset.jpg?s=612x612&w=0&k=20&c=zAkTw5NIWr3y2EhmIZwB-HW-pVMZqu3JXX21gQuHnB4=',
             description: 'Conceived by Giorgio Armani himself, this hotel embodies the designer\'s signature elegance and sophistication. Located within the iconic Burj Khalifa, every detail reflects Armani\'s aesthetic vision. Experience fashion-forward luxury with personalized service in the world\'s tallest building.',
             amenities: [
                 { icon: '🏢', name: 'Burj Khalifa', desc: 'Inside world\'s tallest' },
@@ -1667,7 +2463,7 @@
             type: 'Business Hotel',
             price: 380,
             rating: '⭐⭐⭐⭐⭐ 4.7',
-            heroImage: 'https://images.unsplash.com/photo-1560184897-ae75f418493e?w=1200',
+            heroImage: 'https://t4.ftcdn.net/jpg/02/51/12/11/360_F_251121174_5xQyUCqSrkswyLHbM9Ne8DQ8Qb0o1HGw.jpg',
             description: 'Modern sophistication meets Japanese tradition in the heart of Shibuya. Tokyo Sky Suites offers stunning skyline views, authentic Japanese dining, and state-of-the-art business facilities. Perfect for business travelers and tourists seeking contemporary comfort in Tokyo\'s vibrant center.',
             amenities: [
                 { icon: '🏙️', name: 'Skyline Views', desc: '360° city panorama' },
@@ -1689,7 +2485,7 @@
             type: 'Boutique Hotel',
             price: 620,
             rating: '⭐⭐⭐⭐⭐ 5.0',
-            heroImage: 'https://images.unsplash.com/photo-1570213489059-0aac6626cade?w=1200',
+            heroImage: 'https://plus.unsplash.com/premium_photo-1661964149725-fbf14eabd38c?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8c2FudG9yaW5pfGVufDB8fDB8fHww',
             description: 'Perched on the cliffs of Oia, experience the most spectacular sunsets in the world. Each whitewashed cave suite features infinity pools, Aegean Sea views, and authentic Cycladic design. Indulge in Greek cuisine, wine tasting, and the romance of this iconic island paradise.',
             amenities: [
                 { icon: '🌅', name: 'Sunset Views', desc: 'World-famous sunsets' },
@@ -1711,7 +2507,7 @@
             type: 'Mountain Resort',
             price: 490,
             rating: '⭐⭐⭐⭐⭐ 4.8',
-            heroImage: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=1200',
+            heroImage: 'https://t4.ftcdn.net/jpg/02/81/14/83/360_F_281148366_Uw03PoKAGUZIAWecL5Op35YPMa7os2uC.jpg',
             description: 'Nestled at the foot of the iconic Matterhorn, Swiss Alpine Lodge offers the ultimate mountain retreat. Enjoy ski-in/ski-out access, cozy chalets with fireplaces, and authentic Swiss cuisine. After a day on the slopes, unwind in our alpine spa with Matterhorn views.',
             amenities: [
                 { icon: '⛷️', name: 'Ski-in/Ski-out', desc: 'Direct slope access' },
@@ -1725,6 +2521,226 @@
                 { name: 'Mountain Room', price: 490, image: 'https://images.unsplash.com/photo-1566195992011-5f6b21e539ce?w=400', desc: 'Comfortable room with Alpine charm', features: ['Queen Bed', 'Mountain View', '30m²', 'Balcony'] },
                 { name: 'Family Chalet', price: 780, image: 'https://images.unsplash.com/photo-1521783988139-89397d761dce?w=400', desc: 'Spacious chalet for families', features: ['2 Bedrooms', 'Living Room', '65m²', 'Fireplace'] },
                 { name: 'Matterhorn Suite', price: 1100, image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=400', desc: 'Luxury suite with Matterhorn views', features: ['Panoramic View', 'Private Sauna', '90m²', 'Terrace'] }
+            ]
+        },
+        'le-meurice': {
+            name: 'Le Meurice Paris',
+            location: 'Tuileries, Paris',
+            type: 'Palace Hotel',
+            price: 720,
+            rating: '⭐⭐⭐⭐⭐ 5.0',
+            heroImage: 'https://wallpapers.com/images/featured/paris-zy4x2ow5p7j5qi4a.jpg',
+            description: 'A palatial masterpiece facing the Tuileries Garden, Le Meurice embodies French elegance since 1835. With interiors inspired by Versailles, a two-Michelin-starred restaurant by Alain Ducasse, and the exclusive Valmont Spa, experience Parisian luxury at its most refined.',
+            amenities: [
+                { icon: '👑', name: 'Palace Status', desc: 'Official Palace distinction' },
+                { icon: '🍽️', name: 'Michelin Dining', desc: 'Alain Ducasse restaurant' },
+                { icon: '🎨', name: 'Art Deco', desc: 'Philippe Starck design' },
+                { icon: '💆', name: 'Valmont Spa', desc: 'Exclusive treatments' },
+                { icon: '🌺', name: 'Garden View', desc: 'Tuileries overlook' },
+                { icon: '🎭', name: 'Cultural Hub', desc: 'Near Louvre & Opera' }
+            ],
+            rooms: [
+                { name: 'Deluxe Room', price: 720, image: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=400', desc: 'Elegant room with period furnishings', features: ['King Bed', 'Garden View', '35m²', 'Marble Bath'] },
+                { name: 'Junior Suite', price: 1150, image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400', desc: 'Spacious suite with sitting area', features: ['Living Space', 'Tuileries View', '55m²', 'French Balcony'] },
+                { name: 'Belle Etoile Suite', price: 2200, image: 'https://images.unsplash.com/photo-1566195992011-5f6b21e539ce?w=400', desc: 'Rooftop suite with 360° Paris views', features: ['Rooftop Terrace', 'Panoramic View', '200m²', 'Private Bar'] }
+            ]
+        },
+        'shangri-la-paris': {
+            name: 'Shangri-La Paris',
+            location: 'Trocadéro, Paris',
+            type: 'Historic Palace',
+            price: 650,
+            rating: '⭐⭐⭐⭐⭐ 4.9',
+            heroImage: 'https://www.kayak.co.uk/rimg/himg/5b/cc/8b/ice-100053252-0746998_3XL-452362.jpg?width=836&height=607&crop=true',
+            description: 'Once the residence of Prince Roland Bonaparte, this majestic palace offers unparalleled views of the Eiffel Tower. Combining Asian hospitality with French grandeur, enjoy Michelin-starred dining, a serene spa, and exquisitely appointed rooms in this historic monument.',
+            amenities: [
+                { icon: '🗼', name: 'Eiffel Tower Views', desc: 'Direct tower views' },
+                { icon: '🏛️', name: 'Historic Palace', desc: 'Former royal residence' },
+                { icon: '🍾', name: 'Champagne Bar', desc: 'La Bauhinia lounge' },
+                { icon: '🌺', name: 'Asian Spa', desc: 'CHI wellness sanctuary' },
+                { icon: '⭐', name: 'Michelin Star', desc: 'L\'Abeille restaurant' },
+                { icon: '🎨', name: 'Art Collection', desc: 'Historic artifacts' }
+            ],
+            rooms: [
+                { name: 'Deluxe Room', price: 650, image: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=400', desc: 'Luxurious room with elegant décor', features: ['King Bed', 'City View', '40m²', 'Empire Style'] },
+                { name: 'Eiffel Tower Suite', price: 1300, image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400', desc: 'Suite with iconic tower views', features: ['Tower View', 'Living Room', '70m²', 'French Balcony'] },
+                { name: 'Bonaparte Suite', price: 2500, image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=400', desc: 'Presidential suite with terrace', features: ['Private Terrace', '360° Views', '150m²', 'Dining Room'] }
+            ]
+        },
+        'savoy-london': {
+            name: 'The Savoy London',
+            location: 'Covent Garden, London',
+            type: 'Iconic Luxury',
+            price: 580,
+            rating: '⭐⭐⭐⭐⭐ 4.9',
+            heroImage: 'https://images.pexels.com/photos/460672/pexels-photo-460672.jpeg?cs=srgb&dl=pexels-pixabay-460672.jpg&fm=jpg',
+            description: 'A beacon of British hospitality since 1889, The Savoy perfectly balances Edwardian grandeur with contemporary sophistication. Home to the legendary American Bar, stunning Thames views, and impeccable service, The Savoy remains London\'s most celebrated hotel.',
+            amenities: [
+                { icon: '🎭', name: 'Theatre District', desc: 'Steps from West End' },
+                { icon: '🍸', name: 'American Bar', desc: 'World\'s best cocktails' },
+                { icon: '🏛️', name: 'Historic Icon', desc: 'Since 1889' },
+                { icon: '🎩', name: 'Butler Service', desc: 'Personal assistance' },
+                { icon: '🌊', name: 'Thames Views', desc: 'River panoramas' },
+                { icon: '⭐', name: 'Gordon Ramsay', desc: 'Celebrity chef dining' }
+            ],
+            rooms: [
+                { name: 'Deluxe King', price: 580, image: 'https://images.unsplash.com/photo-1566195992011-5f6b21e539ce?w=400', desc: 'Elegant room with Art Deco style', features: ['King Bed', 'City View', '30m²', 'Marble Bath'] },
+                { name: 'River View Suite', price: 950, image: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=400', desc: 'Suite overlooking the Thames', features: ['Thames View', 'Living Area', '60m²', 'Butler Service'] },
+                { name: 'Royal Suite', price: 1800, image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400', desc: 'The ultimate in British luxury', features: ['Panoramic Views', '2 Bedrooms', '180m²', 'Grand Piano'] }
+            ]
+        },
+        'claridges-london': {
+            name: 'Claridge\'s London',
+            location: 'Mayfair, London',
+            type: 'Art Deco Luxury',
+            price: 620,
+            rating: '⭐⭐⭐⭐⭐ 5.0',
+            heroImage: 'https://c0.wallpaperflare.com/preview/320/877/213/london-united-kingdom-mayfair-britain.jpg',
+            description: 'The epitome of Art Deco elegance in Mayfair, Claridge\'s has been the London residence of royalty and celebrities for decades. Experience legendary afternoon tea, Michelin-starred dining, and service that defines British hospitality excellence.',
+            amenities: [
+                { icon: '👑', name: 'Royal Heritage', desc: 'Favorite of royalty' },
+                { icon: '🎨', name: 'Art Deco Design', desc: 'Iconic interiors' },
+                { icon: '🍰', name: 'Afternoon Tea', desc: 'Traditional service' },
+                { icon: '💎', name: 'Mayfair Location', desc: 'Prime address' },
+                { icon: '⭐', name: 'Michelin Dining', desc: 'Davies and Brook' },
+                { icon: '💆', name: 'Luxury Spa', desc: 'Bamford treatments' }
+            ],
+            rooms: [
+                { name: 'Deluxe Room', price: 620, image: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=400', desc: 'Classic Art Deco elegance', features: ['King Bed', 'Mayfair View', '28m²', 'Period Features'] },
+                { name: 'Luxury Suite', price: 1200, image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400', desc: 'Spacious suite with sitting room', features: ['Living Room', 'Study', '70m²', 'Butler Service'] },
+                { name: 'Grand Piano Suite', price: 2000, image: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=400', desc: 'Suite with full-size grand piano', features: ['Grand Piano', 'Dining Room', '130m²', 'Private Bar'] }
+            ]
+        },
+        'ritz-london': {
+            name: 'The Ritz London',
+            location: 'Piccadilly, London',
+            type: 'Legendary Hotel',
+            price: 750,
+            rating: '⭐⭐⭐⭐⭐ 5.0',
+            heroImage: 'https://img.goodfon.com/original/2048x1365/1/21/london-angliia-ploshchad-pikadilli-sokho-fontan-shaftesbari.jpg',
+            description: 'An icon of elegance since 1906, The Ritz London epitomizes timeless luxury. With its Louis XVI décor, legendary afternoon tea, and Michelin-starred cuisine, The Ritz offers an unforgettable experience of old-world glamour and impeccable British service.',
+            amenities: [
+                { icon: '👑', name: 'Royal Warrant', desc: 'By appointment to HM' },
+                { icon: '🎩', name: 'Traditional Service', desc: 'White glove standards' },
+                { icon: '🍽️', name: 'Michelin Star', desc: 'The Ritz Restaurant' },
+                { icon: '🌺', name: 'Palm Court', desc: 'Famous afternoon tea' },
+                { icon: '🎨', name: 'Louis XVI Style', desc: 'Opulent décor' },
+                { icon: '🥂', name: 'Rivoli Bar', desc: 'Champagne & cocktails' }
+            ],
+            rooms: [
+                { name: 'Deluxe Room', price: 750, image: 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=400', desc: 'Luxuriously appointed room', features: ['King Bed', 'Park View', '32m²', 'Period Décor'] },
+                { name: 'Executive Suite', price: 1400, image: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=400', desc: 'Suite with separate sitting room', features: ['Living Area', 'Green Park View', '65m²', 'Butler Service'] },
+                { name: 'Royal Suite', price: 3000, image: 'https://images.unsplash.com/photo-1566195992011-5f6b21e539ce?w=400', desc: 'The pinnacle of Ritz luxury', features: ['2 Bedrooms', 'Private Butler', '200m²', 'Dining Room'] }
+            ]
+        },
+        'al-faisaliah': {
+            name: 'Al Faisaliah Hotel',
+            location: 'Riyadh, Saudi Arabia',
+            type: 'Luxury Tower',
+            price: 450,
+            rating: '⭐⭐⭐⭐⭐ 4.8',
+            heroImage: 'https://upload.wikimedia.org/wikipedia/commons/2/20/Riyadh_Skyline.jpg',
+            description: 'Rising above Riyadh\'s skyline, Al Faisaliah Hotel offers unmatched luxury in Saudi Arabia\'s capital. This iconic tower features world-class dining, a luxurious spa, and panoramic city views. Experience Arabian hospitality at its finest in this architectural landmark.',
+            amenities: [
+                { icon: '🏢', name: 'Iconic Tower', desc: 'Riyadh landmark' },
+                { icon: '💎', name: 'Luxury Service', desc: 'Five-star excellence' },
+                { icon: '🍽️', name: 'Fine Dining', desc: 'International cuisine' },
+                { icon: '🏊', name: 'Infinity Pool', desc: 'Skyline views' },
+                { icon: '💆', name: 'Al Faisaliah Spa', desc: 'Wellness sanctuary' },
+                { icon: '🛍️', name: 'Shopping Mall', desc: 'Luxury boutiques' }
+            ],
+            rooms: [
+                { name: 'Deluxe Room', price: 450, image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400', desc: 'Modern luxury with city views', features: ['King Bed', 'City View', '45m²', 'Marble Bath'] },
+                { name: 'Executive Suite', price: 720, image: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=400', desc: 'Spacious suite with work area', features: ['Living Space', 'Skyline View', '80m²', 'Meeting Area'] },
+                { name: 'Royal Suite', price: 1300, image: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=400', desc: 'Ultimate luxury accommodation', features: ['2 Bedrooms', 'Panoramic View', '180m²', 'Private Elevator'] }
+            ]
+        },
+        'makkah-clock': {
+            name: 'Makkah Clock Royal Tower',
+            location: 'Makkah, Saudi Arabia',
+            type: 'Religious Site',
+            price: 380,
+            rating: '⭐⭐⭐⭐⭐ 4.9',
+            heroImage: 'https://www.shutterstock.com/image-photo/skyline-mecca-saudi-arabiaapril2018-royal-600nw-1605876778.jpg',
+            description: 'Part of the Abraj Al Bait complex, this iconic tower offers unparalleled access to the Holy Mosque. As one of the world\'s tallest hotels, it provides pilgrims with luxurious accommodations, exceptional dining, and spiritual tranquility in the heart of Makkah.',
+            amenities: [
+                { icon: '🕌', name: 'Haram View', desc: 'Holy Mosque access' },
+                { icon: '🏢', name: 'Tallest Hotel', desc: 'Iconic clock tower' },
+                { icon: '🍽️', name: 'Multiple Restaurants', desc: 'Global cuisine' },
+                { icon: '🛍️', name: 'Shopping Mall', desc: '5-story complex' },
+                { icon: '🙏', name: 'Prayer Rooms', desc: 'In every room' },
+                { icon: '📚', name: 'Islamic Museum', desc: 'Cultural exhibits' }
+            ],
+            rooms: [
+                { name: 'Standard Room', price: 380, image: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=400', desc: 'Comfortable room near Haram', features: ['Twin/King', 'City View', '35m²', 'Prayer Mat'] },
+                { name: 'Haram View Room', price: 580, image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400', desc: 'Room with Holy Mosque view', features: ['King Bed', 'Haram View', '45m²', 'Premium Location'] },
+                { name: 'Royal Suite', price: 950, image: 'https://images.unsplash.com/photo-1566195992011-5f6b21e539ce?w=400', desc: 'Luxury suite with Kaaba view', features: ['Direct Kaaba View', 'Living Room', '120m²', 'VIP Service'] }
+            ]
+        },
+        'st-regis-ny': {
+            name: 'The St. Regis New York',
+            location: 'Fifth Avenue, New York',
+            type: 'Luxury Icon',
+            price: 890,
+            rating: '⭐⭐⭐⭐⭐ 5.0',
+            heroImage: 'https://files.ekmcdn.com/allwallpapers/images/new-york-city-skyline-paper-wallpaper-28703-1-p.jpg',
+            description: 'A New York landmark since 1904, The St. Regis exemplifies timeless elegance on Fifth Avenue. With Beaux-Arts architecture, legendary butler service, and the iconic King Cole Bar, experience the sophistication that has made The St. Regis synonymous with luxury.',
+            amenities: [
+                { icon: '🗽', name: 'Fifth Avenue', desc: 'Prime location' },
+                { icon: '🥂', name: 'Champagne Ritual', desc: 'Signature service' },
+                { icon: '🎨', name: 'Art Collection', desc: 'Museum-quality pieces' },
+                { icon: '🛎️', name: 'Butler Service', desc: '24/7 personal butler' },
+                { icon: '🍸', name: 'King Cole Bar', desc: 'Birthplace of Bloody Mary' },
+                { icon: '⭐', name: 'Michelin Dining', desc: 'Astor Court' }
+            ],
+            rooms: [
+                { name: 'Deluxe Room', price: 890, image: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=400', desc: 'Elegant room with classic décor', features: ['King Bed', 'City View', '35m²', 'Butler Service'] },
+                { name: 'Grand Suite', price: 1600, image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400', desc: 'Spacious suite with sitting area', features: ['Living Room', 'Fifth Avenue', '75m²', 'Dining Space'] },
+                { name: 'Presidential Suite', price: 3500, image: 'https://images.unsplash.com/photo-1566195992011-5f6b21e539ce?w=400', desc: 'The ultimate NYC experience', features: ['3 Bedrooms', 'Private Kitchen', '280m²', 'Terrace'] }
+            ]
+        },
+        'plaza-ny': {
+            name: 'The Plaza New York',
+            location: 'Central Park, New York',
+            type: 'Historic Landmark',
+            price: 950,
+            rating: '⭐⭐⭐⭐⭐ 5.0',
+            heroImage: 'https://live.staticflickr.com/126/387606063_be63334fd8_h.jpg',
+            description: 'An American icon since 1907, The Plaza defines New York luxury. Overlooking Central Park, this legendary hotel combines historic grandeur with modern amenities. From the famous Palm Court to the luxurious suites, The Plaza continues to captivate guests from around the world.',
+            amenities: [
+                { icon: '🌳', name: 'Central Park', desc: 'Park-facing rooms' },
+                { icon: '🏛️', name: 'National Landmark', desc: 'Historic building' },
+                { icon: '💎', name: 'Luxury Shopping', desc: 'Fifth Avenue steps away' },
+                { icon: '🍰', name: 'Palm Court', desc: 'Legendary afternoon tea' },
+                { icon: '🎭', name: 'Cultural Hub', desc: 'Near theatres & museums' },
+                { icon: '💆', name: 'Guerlain Spa', desc: 'French luxury spa' }
+            ],
+            rooms: [
+                { name: 'Deluxe Room', price: 950, image: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=400', desc: 'Elegant room with classic style', features: ['King Bed', 'Park/City View', '40m²', 'Marble Bath'] },
+                { name: 'Park View Suite', price: 1800, image: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=400', desc: 'Suite overlooking Central Park', features: ['Park View', 'Living Room', '85m²', 'French Doors'] },
+                { name: 'Royal Plaza Suite', price: 4000, image: 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=400', desc: 'Three-bedroom luxury residence', features: ['3 Bedrooms', 'Park Terrace', '450m²', 'Private Library'] }
+            ]
+        },
+        'peninsula-ny': {
+            name: 'The Peninsula New York',
+            location: 'Midtown, New York',
+            type: 'Modern Luxury',
+            price: 820,
+            rating: '⭐⭐⭐⭐⭐ 4.9',
+            heroImage: 'https://www.wallart.com/media/catalog/product/cache/5b18b93ddbe5d6592c6b175f41d24454/a/d/adobestock_277637491-small.jpg',
+            description: 'Combining modern luxury with timeless elegance, The Peninsula New York offers sophisticated accommodations in the heart of Midtown. Enjoy rooftop dining with skyline views, ESPA spa treatments, and the famous Peninsula Rolls-Royce fleet for exploring the city.',
+            amenities: [
+                { icon: '🏙️', name: 'Skyline Views', desc: 'NYC panoramas' },
+                { icon: '🍽️', name: 'Rooftop Dining', desc: 'Salon de Ning' },
+                { icon: '🚗', name: 'Rolls-Royce Fleet', desc: 'Complimentary service' },
+                { icon: '💆', name: 'ESPA Spa', desc: 'World-class treatments' },
+                { icon: '🏊', name: 'Pool & Sun Deck', desc: 'Rooftop relaxation' },
+                { icon: '🎯', name: 'Tech-Enabled', desc: 'Tablet-controlled rooms' }
+            ],
+            rooms: [
+                { name: 'Superior Room', price: 820, image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400', desc: 'Modern room with smart features', features: ['King Bed', 'City View', '42m²', 'Tech Controls'] },
+                { name: 'Grand Deluxe Suite', price: 1500, image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400', desc: 'Suite with separate living area', features: ['Living Space', 'Skyline View', '80m²', 'Walk-in Closet'] },
+                { name: 'Peninsula Suite', price: 3200, image: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=400', desc: 'Ultimate luxury in Manhattan', features: ['2 Bedrooms', 'Terrace', '220m²', 'Private Bar'] }
             ]
         }
     };
@@ -1860,7 +2876,7 @@
             noResults.innerHTML = `
                 <div class="no-results-icon">🔍</div>
                 <div class="no-results-title">No hotels found</div>
-                <div class="no-results-subtitle">Try searching for Dubai, Paris, Maldives, Tokyo, Santorini, or Switzerland</div>
+                <div class="no-results-subtitle">Try searching for Dubai, Paris, London, New York, Maldives, Tokyo, Santorini, Riyadh, Makkah, or Switzerland</div>
             `;
             hotelsGrid.appendChild(noResults);
         }
@@ -2019,6 +3035,241 @@
 
         createParticles();
     });
+
+    // ============= CHATBOT FUNCTIONALITY =============
+
+    // Hotel database for chatbot
+    const chatHotelDatabase = {
+        'dubai': [
+            { name: 'Dubai Luxe Tower', location: 'Dubai, UAE', price: 680, amenities: 'Pool, Restaurant, Spa, Parking' },
+            { name: 'Burj Al Arab Jumeirah', location: 'Dubai, UAE', price: 1200, amenities: 'Private Beach, Helipad, Butler Service' },
+            { name: 'Atlantis The Palm', location: 'Dubai, UAE', price: 520, amenities: 'Water Park, Aquarium, Kids Club' }
+        ],
+        'paris': [
+            { name: 'Le Bristol Paris', location: 'Paris, France', price: 920, amenities: 'Eiffel View, Michelin Star, Butler Service' },
+            { name: 'Hôtel Plaza Athénée', location: 'Paris, France', price: 850, amenities: 'Luxury Spa, Fine Dining' },
+            { name: 'Four Seasons George V', location: 'Paris, France', price: 980, amenities: 'Art Collection, 3 Michelin Stars' }
+        ],
+        'london': [
+            { name: 'The Savoy', location: 'London, UK', price: 780, amenities: 'Thames View, American Bar, Concierge' },
+            { name: 'Claridge\'s', location: 'London, UK', price: 820, amenities: 'Art Deco, Afternoon Tea' },
+            { name: 'The Ritz London', location: 'London, UK', price: 890, amenities: 'Royal Suite, Palm Court' }
+        ],
+        'tokyo': [
+            { name: 'Aman Tokyo', location: 'Tokyo, Japan', price: 890, amenities: 'Skyline View, Onsen, Japanese Cuisine' },
+            { name: 'The Peninsula Tokyo', location: 'Tokyo, Japan', price: 720, amenities: 'Imperial Palace View, Spa' },
+            { name: 'Mandarin Oriental Tokyo', location: 'Tokyo, Japan', price: 680, amenities: 'City View, Michelin Dining' }
+        ],
+        'maldives': [
+            { name: 'Azure Paradise Resort', location: 'Maldives', price: 450, amenities: 'Beach, Diving, Bar, Seaplane' },
+            { name: 'Soneva Jani', location: 'Maldives', price: 1450, amenities: 'Private Island, Water Slide, Snorkeling' },
+            { name: 'Conrad Maldives', location: 'Maldives', price: 950, amenities: 'Underwater Restaurant, Spa' }
+        ],
+        'new york': [
+            { name: 'The St. Regis New York', location: 'New York, USA', price: 890, amenities: 'Fifth Avenue, Butler Service' },
+            { name: 'The Plaza New York', location: 'New York, USA', price: 950, amenities: 'Central Park, Palm Court' },
+            { name: 'The Peninsula New York', location: 'New York, USA', price: 820, amenities: 'Rooftop Dining, Rolls-Royce Fleet' }
+        ],
+        'santorini': [
+            { name: 'Katikies Santorini', location: 'Santorini, Greece', price: 680, amenities: 'Caldera View, Infinity Pool, Wine Tasting' },
+            { name: 'Canaves Oia Suites', location: 'Santorini, Greece', price: 620, amenities: 'Sunset View, Cave Suites' },
+            { name: 'Grace Hotel Santorini', location: 'Santorini, Greece', price: 590, amenities: 'Cliffside, Champagne Lounge' }
+        ],
+        'riyadh': [
+            { name: 'Four Seasons Riyadh', location: 'Riyadh, Saudi Arabia', price: 420, amenities: 'Kingdom Tower View, Spa' },
+            { name: 'The Ritz-Carlton Riyadh', location: 'Riyadh, Saudi Arabia', price: 480, amenities: 'Palace Design, Fine Dining' },
+            { name: 'Narcissus Hotel', location: 'Riyadh, Saudi Arabia', price: 350, amenities: 'City Center, Modern Luxury' }
+        ],
+        'makkah': [
+            { name: 'Makkah Clock Royal Tower', location: 'Makkah, Saudi Arabia', price: 380, amenities: 'Haram View, Prayer Rooms' },
+            { name: 'Fairmont Makkah', location: 'Makkah, Saudi Arabia', price: 420, amenities: 'Holy Mosque Access, Dining' },
+            { name: 'Swissôtel Makkah', location: 'Makkah, Saudi Arabia', price: 350, amenities: 'Kaaba View, Spa' }
+        ],
+        'switzerland': [
+            { name: 'The Chedi Andermatt', location: 'Andermatt, Switzerland', price: 780, amenities: 'Alpine Spa, Ski Access' },
+            { name: 'Badrutt\'s Palace', location: 'St. Moritz, Switzerland', price: 950, amenities: 'Mountain View, Ice Rink' },
+            { name: 'Dolder Grand', location: 'Zurich, Switzerland', price: 680, amenities: 'City & Lake View, Art Collection' }
+        ]
+    };
+
+    // Chat functionality
+    let chatOpen = false;
+    let conversationState = 'greeting';
+
+    function toggleChat() {
+        chatOpen = !chatOpen;
+        const chatWindow = document.getElementById('chatWindow');
+        if (chatOpen) {
+            chatWindow.classList.add('active');
+            document.getElementById('chatInput').focus();
+        } else {
+            chatWindow.classList.remove('active');
+        }
+    }
+
+    function handleChatKeyPress(event) {
+        if (event.key === 'Enter') {
+            sendChatMessage();
+        }
+    }
+
+    function sendChatMessage() {
+        const input = document.getElementById('chatInput');
+        const message = input.value.trim();
+
+        if (message === '') return;
+
+        addChatMessage(message, 'user');
+        input.value = '';
+
+        showTypingIndicator();
+
+        setTimeout(() => {
+            hideTypingIndicator();
+            const response = getAIResponse(message);
+            addChatMessage(response, 'ai');
+        }, 1500);
+    }
+
+    function sendQuickMessage(message) {
+        addChatMessage(message, 'user');
+        showTypingIndicator();
+
+        setTimeout(() => {
+            hideTypingIndicator();
+            const response = getAIResponse(message);
+            addChatMessage(response, 'ai');
+        }, 1500);
+    }
+
+    function addChatMessage(text, sender) {
+        const messagesContainer = document.getElementById('chatMessages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `chat-message ${sender}`;
+
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        messageDiv.innerHTML = `
+            <div class="message-avatar">${sender === 'user' ? 'You' : 'AI'}</div>
+            <div>
+                <div class="message-content">${text}</div>
+                <div class="message-time">${time}</div>
+            </div>
+        `;
+
+        const typingIndicator = document.getElementById('typingIndicator');
+        messagesContainer.insertBefore(messageDiv, typingIndicator);
+
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function showTypingIndicator() {
+        const typingIndicator = document.getElementById('typingIndicator');
+        typingIndicator.classList.add('active');
+        const messagesContainer = document.getElementById('chatMessages');
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function hideTypingIndicator() {
+        const typingIndicator = document.getElementById('typingIndicator');
+        typingIndicator.classList.remove('active');
+    }
+
+    function getAIResponse(message) {
+        const lowerMessage = message.toLowerCase();
+
+        // Extract destination from message
+        const destinations = Object.keys(chatHotelDatabase);
+        let foundDestination = null;
+
+        for (const dest of destinations) {
+            if (lowerMessage.includes(dest)) {
+                foundDestination = dest;
+                break;
+            }
+        }
+
+        if (foundDestination) {
+            conversationState = 'showing_hotels';
+            return generateHotelResponse(foundDestination);
+        }
+
+        // Handle greetings and help
+        if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+            conversationState = 'waiting_destination';
+            return "Hello! 👋 I'm your hotel finder assistant. I can help you discover amazing hotels in cities like Dubai, Paris, London, Tokyo, Maldives, New York, Santorini, Riyadh, Makkah, and Switzerland. Where would you like to stay?";
+        }
+
+        if (lowerMessage.includes('help') || lowerMessage.includes('choose')) {
+            return "I can help you find the perfect hotel! 🏨 Just tell me which city you're interested in:<br/><br/>🏙️ Dubai - Luxury resorts & iconic hotels<br/>🗼 Paris - Elegant & historic properties<br/>🗾 Tokyo - Modern luxury with Japanese hospitality<br/>🏝️ Maldives - Overwater villas & beach resorts<br/>🗽 New York - Iconic city hotels<br/>🌅 Santorini - Cliffside boutique hotels<br/>🕌 Riyadh & Makkah - Premium Islamic hospitality<br/>🏔️ Switzerland - Alpine luxury & mountain retreats<br/><br/>Which destination interests you?";
+        }
+
+        if (lowerMessage.includes('price') || lowerMessage.includes('cost') || lowerMessage.includes('budget')) {
+            return "Great question about pricing! 💰 Our hotels range from $350/night to $1,450/night depending on the destination and luxury level. Tell me where you'd like to go, and I'll show you options within your budget!";
+        }
+
+        if (lowerMessage.includes('thank')) {
+            return "You're very welcome! 😊 Feel free to ask if you need help finding the perfect hotel. Happy to assist you anytime!";
+        }
+
+        // Default response - ask for destination
+        conversationState = 'waiting_destination';
+        return "I'd love to help you find hotels! 🏨 Which city are you planning to visit? We have amazing options in Dubai, Paris, London, Tokyo, Maldives, New York, Santorini, Riyadh, Makkah, and Switzerland.";
+    }
+
+    function generateHotelResponse(destination) {
+        const hotels = chatHotelDatabase[destination];
+
+        if (!hotels) {
+            return `I don't have hotels for ${destination} right now, but we have amazing options in Dubai, Paris, London, Tokyo, Maldives, New York, Santorini, Riyadh, Makkah, and Switzerland. Which of these interests you?`;
+        }
+
+        const cityName = destination.charAt(0).toUpperCase() + destination.slice(1);
+        let response = `Excellent choice! 🌟 I found ${hotels.length} amazing hotels in ${cityName}:<br/><br/>`;
+
+        hotels.forEach((hotel, index) => {
+            response += `<div class="hotel-suggestion" onclick="searchAndScrollToHotel('${hotel.name}')">
+                <div class="hotel-suggestion-name">${index + 1}. ${hotel.name}</div>
+                <div class="hotel-suggestion-location">📍 ${hotel.location}</div>
+                <div class="hotel-suggestion-price">💰 From $${hotel.price}/night</div>
+                <div style="font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-top: 0.3rem;">${hotel.amenities}</div>
+            </div>`;
+        });
+
+        response += `<br/>Click on any hotel to view it on the page! 👆`;
+
+        return response;
+    }
+
+    function searchAndScrollToHotel(hotelName) {
+        // Close chat
+        toggleChat();
+
+        // Find and highlight the hotel
+        const hotelCards = document.querySelectorAll('.hotel-card');
+        hotelCards.forEach(card => {
+            const cardName = card.querySelector('.hotel-name').textContent;
+            if (cardName === hotelName) {
+                // Show all hotels first
+                document.querySelectorAll('.hotel-card').forEach(c => c.style.display = 'block');
+
+                // Remove any existing no-results message
+                const existingNoResults = document.querySelector('.no-results');
+                if (existingNoResults) existingNoResults.remove();
+
+                // Scroll to the hotel
+                setTimeout(() => {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    card.classList.add('search-highlight');
+
+                    // Remove highlight after animation
+                    setTimeout(() => {
+                        card.classList.remove('search-highlight');
+                    }, 6000);
+                }, 300);
+            }
+        });
+    }
 </script>
 </body>
 </html>
