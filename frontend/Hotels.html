@@ -3,153 +3,410 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travelinn - Professional Hotels Booking</title>
+    <title>Travelinn - Premium Hotels Booking</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            background: linear-gradient(-45deg, #0f172a, #1e3a8a, #1e293b, #0c4a6e);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
             color: white;
             min-height: 100vh;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Animated background overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                    radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
         }
 
         /* Navigation */
         nav {
             position: fixed; top: 0; left: 0; right: 0;
             display: flex; justify-content: space-between; align-items: center;
-            padding: 1.5rem 4rem; background: rgba(30, 41, 59, 0.95);
-            backdrop-filter: blur(10px); z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            padding: 1.5rem 4rem;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .logo { font-size: 1.5rem; font-weight: 600; cursor: pointer; }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            cursor: pointer;
+            background: linear-gradient(135deg, #60a5fa 0%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
         .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-        .nav-links a { color: white; text-decoration: none; transition: opacity 0.3s; }
-        .nav-links a:hover { opacity: 0.7; }
-        .nav-links a.active { color: #a855f7; font-weight: 600; }
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        .nav-links a:hover { color: #60a5fa; }
+        .nav-links a.active {
+            color: #60a5fa;
+            font-weight: 600;
+        }
         .sign-in-btn {
-            background: linear-gradient(135deg, #a855f7 0%, #8b5cf6 100%);
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
             color: white; border: none; padding: 0.7rem 2rem;
             border-radius: 50px; cursor: pointer;
-            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .sign-in-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
         }
 
         /* Main Content */
-        .container { max-width: 1400px; margin: 0 auto; padding: 120px 2rem 4rem; }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 120px 2rem 4rem;
+            position: relative;
+            z-index: 1;
+        }
         .page-header { text-align: center; margin-bottom: 3rem; }
         .page-header h1 {
-            font-size: 3rem; font-weight: 700; margin-bottom: 1rem;
-            background: linear-gradient(135deg, #a855f7 0%, #8b5cf6 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #60a5fa 0%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(96, 165, 250, 0.3);
+        }
+        .page-header p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
         }
 
         /* Search Section */
         .search-section {
-            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px);
-            border-radius: 20px; padding: 2rem; margin-bottom: 3rem;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         }
         .search-bar { display: flex; gap: 1rem; flex-wrap: wrap; align-items: end; }
         .search-field { flex: 1; min-width: 200px; }
-        .search-field label { display: block; margin-bottom: 0.5rem; }
+        .search-field label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+        }
         .search-field input, .search-field select {
             width: 100%; padding: 0.75rem 1rem;
-            border: 2px solid rgba(255, 255, 255, 0.2); border-radius: 12px;
-            background: rgba(255, 255, 255, 0.1); color: white; outline: none;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            outline: none;
+            transition: all 0.3s;
+        }
+        .search-field input:focus, .search-field select:focus {
+            border-color: #60a5fa;
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
         }
         .search-btn {
-            background: linear-gradient(135deg, #a855f7 0%, #8b5cf6 100%);
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
             color: white; border: none; padding: 0.75rem 2.5rem;
             border-radius: 12px; font-weight: 600; cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
         }
 
         /* Hotels Grid */
         .hotels-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-            gap: 2rem; margin-bottom: 4rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
         }
         .hotel-card {
-            background: rgba(30, 41, 59, 0.8); border-radius: 20px;
-            overflow: hidden; transition: all 0.3s; cursor: pointer;
-            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+        .hotel-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(168, 85, 247, 0.1));
+            opacity: 0;
+            transition: opacity 0.4s;
+            pointer-events: none;
+        }
+        .hotel-card:hover::before {
+            opacity: 1;
         }
         .hotel-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(168, 85, 247, 0.3);
-            border-color: rgba(168, 85, 247, 0.5);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
+            border-color: rgba(96, 165, 250, 0.5);
         }
-        .hotel-image { width: 100%; height: 250px; object-fit: cover; }
-        .hotel-content { padding: 1.5rem; }
-        .hotel-name { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem; }
-        .hotel-rating { color: #fbbf24; margin-bottom: 0.5rem; }
-        .hotel-location { color: rgba(255, 255, 255, 0.6); margin-bottom: 1rem; }
+        .hotel-image-container {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+        }
+        .hotel-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s;
+        }
+        .hotel-card:hover .hotel-image {
+            transform: scale(1.1);
+        }
+        .hotel-type-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(59, 130, 246, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .hotel-content { padding: 1.5rem; position: relative; }
+        .hotel-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+        .hotel-rating {
+            color: #fbbf24;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        .hotel-location {
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .hotel-amenities {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        .amenity-tag {
+            background: rgba(59, 130, 246, 0.2);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .room-preview {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        .room-thumb {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+        }
+        .room-thumb:hover {
+            border-color: #60a5fa;
+            transform: scale(1.05);
+        }
         .hotel-footer {
-            display: flex; justify-content: space-between; align-items: center;
-            padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .price-amount { font-size: 1.8rem; font-weight: 700; color: #a855f7; }
+        .price-section {
+            display: flex;
+            flex-direction: column;
+        }
+        .price-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .price-amount {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60a5fa 0%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
         .book-btn {
-            background: linear-gradient(135deg, #a855f7 0%, #8b5cf6 100%);
-            color: white; border: none; padding: 0.75rem 2rem;
-            border-radius: 50px; font-weight: 600; cursor: pointer;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+        .book-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
         }
 
         /* Professional Booking Modal */
         .booking-modal {
-            display: none; position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85);
-            z-index: 2000; justify-content: center; align-items: center;
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
             overflow-y: auto;
+            backdrop-filter: blur(10px);
         }
         .booking-modal.active { display: flex; }
         .booking-container {
-            background: #2d3748; border-radius: 16px;
-            max-width: 900px; width: 95%; margin: 2rem auto;
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            border-radius: 20px;
+            max-width: 900px;
+            width: 95%;
+            margin: 2rem auto;
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         /* Progress Steps */
         .progress-header {
-            background: #1a202c; padding: 2rem;
-            border-radius: 16px 16px 0 0; display: flex;
-            justify-content: space-between; align-items: flex-start;
+            background: rgba(15, 23, 42, 0.8);
+            padding: 2rem;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         .close-booking {
-            background: transparent; border: none; color: white;
-            font-size: 1.5rem; cursor: pointer; padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        .close-booking:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
         .progress-steps {
-            display: flex; align-items: center; gap: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
             margin: 2rem 0 0 0;
         }
         .step {
-            display: flex; flex-direction: column; align-items: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             position: relative;
         }
         .step-circle {
-            width: 50px; height: 50px; border-radius: 50%;
-            background: #4a5568; color: white;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 700; font-size: 1.2rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
             transition: all 0.3s;
+            border: 2px solid rgba(255, 255, 255, 0.2);
         }
         .step.active .step-circle {
-            background: linear-gradient(135deg, #a855f7, #8b5cf6);
-            box-shadow: 0 0 20px rgba(168, 85, 247, 0.6);
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
+            border-color: transparent;
         }
         .step.completed .step-circle {
-            background: linear-gradient(135deg, #a855f7, #8b5cf6);
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-color: transparent;
         }
         .step-label {
-            margin-top: 0.5rem; font-size: 0.9rem;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
             color: rgba(255, 255, 255, 0.6);
         }
-        .step.active .step-label { color: #a855f7; font-weight: 600; }
+        .step.active .step-label {
+            color: #60a5fa;
+            font-weight: 600;
+        }
         .step-connector {
-            width: 100px; height: 3px; background: #4a5568;
+            width: 100px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.1);
             margin: 0 -1rem;
         }
         .step.completed + .step .step-connector {
-            background: linear-gradient(90deg, #a855f7, #8b5cf6);
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
         }
 
         /* Booking Content */
@@ -163,82 +420,102 @@
         }
 
         .step-title {
-            font-size: 1.8rem; font-weight: 700;
-            margin-bottom: 0.5rem; color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: white;
         }
         .step-subtitle {
             color: rgba(255, 255, 255, 0.6);
-            margin-bottom: 2rem; font-size: 0.95rem;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
         }
 
         /* Form Groups */
-        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
         .form-group { margin-bottom: 1.5rem; }
         .form-group label {
-            display: block; margin-bottom: 0.5rem;
-            color: rgba(255, 255, 255, 0.8); font-weight: 500;
+            display: block;
+            margin-bottom: 0.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
         }
         .form-group input, .form-group select, .form-group textarea {
-            width: 100%; padding: 0.9rem 1rem;
-            background: #1a202c; border: 2px solid #4a5568;
-            border-radius: 8px; color: white; font-size: 1rem;
-            outline: none; transition: all 0.3s;
+            width: 100%;
+            padding: 0.9rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
         }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            border-color: #a855f7;
-            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1);
+            border-color: #60a5fa;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
         }
         .form-group input::placeholder { color: rgba(255, 255, 255, 0.4); }
         .form-group textarea {
-            resize: vertical; min-height: 100px;
+            resize: vertical;
+            min-height: 100px;
             font-family: inherit;
-        }
-        .input-icon {
-            position: relative;
-        }
-        .input-icon input {
-            padding-left: 3rem;
-        }
-        .input-icon::before {
-            content: attr(data-icon);
-            position: absolute; left: 1rem; top: 50%;
-            transform: translateY(-50%); font-size: 1.2rem;
         }
 
         /* Payment Methods */
         .payment-options {
-            display: grid; gap: 1rem; margin-bottom: 2rem;
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 2rem;
         }
         .payment-option {
-            background: #1a202c; border: 2px solid #4a5568;
-            border-radius: 12px; padding: 1.2rem;
-            cursor: pointer; transition: all 0.3s;
-            display: flex; align-items: center; gap: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
         .payment-option:hover {
-            border-color: #a855f7;
-            background: rgba(168, 85, 247, 0.05);
+            border-color: #60a5fa;
+            background: rgba(59, 130, 246, 0.1);
         }
         .payment-option.selected {
-            border-color: #a855f7;
-            background: rgba(168, 85, 247, 0.1);
-            box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);
+            border-color: #60a5fa;
+            background: rgba(59, 130, 246, 0.15);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
         }
         .payment-option input[type="radio"] {
-            accent-color: #a855f7;
-            width: 20px; height: 20px;
+            accent-color: #60a5fa;
+            width: 20px;
+            height: 20px;
         }
         .payment-logo-container {
-            background: white; padding: 0.5rem 1rem;
-            border-radius: 8px; height: 50px;
-            display: flex; align-items: center; justify-content: center;
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .payment-logo { max-width: 80px; max-height: 40px; object-fit: contain; }
-        .payment-info {
-            flex: 1;
+        .payment-logo {
+            max-width: 80px;
+            max-height: 40px;
+            object-fit: contain;
         }
+        .payment-info { flex: 1; }
         .payment-title {
-            font-weight: 600; font-size: 1.1rem;
+            font-weight: 600;
+            font-size: 1.1rem;
             margin-bottom: 0.25rem;
         }
         .payment-desc {
@@ -248,41 +525,61 @@
 
         /* Credit Card Form */
         .card-form {
-            background: #1a202c; border: 2px solid #4a5568;
-            border-radius: 12px; padding: 2rem;
-            margin-top: 1rem; display: none;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 1rem;
+            display: none;
         }
         .card-form.active { display: block; }
 
         /* Booking Summary */
         .booking-summary {
-            background: #1a202c; border-radius: 12px;
-            padding: 2rem; margin-top: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         .summary-title {
-            font-size: 1.3rem; font-weight: 700;
-            margin-bottom: 1.5rem; padding-bottom: 1rem;
-            border-bottom: 2px solid #4a5568;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
         }
         .summary-row {
-            display: flex; justify-content: space-between;
-            padding: 0.75rem 0; color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            color: rgba(255, 255, 255, 0.8);
         }
         .summary-row.total {
-            border-top: 2px solid #4a5568;
-            padding-top: 1.5rem; margin-top: 1rem;
-            font-size: 1.3rem; font-weight: 700;
-            color: #a855f7;
+            border-top: 2px solid rgba(255, 255, 255, 0.1);
+            padding-top: 1.5rem;
+            margin-top: 1rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60a5fa 0%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         /* Navigation Buttons */
         .button-group {
-            display: flex; gap: 1rem; margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
         }
         .btn {
-            flex: 1; padding: 1rem 2rem; border-radius: 8px;
-            font-weight: 600; font-size: 1rem;
-            cursor: pointer; transition: all 0.3s;
+            flex: 1;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
             border: none;
         }
         .btn-back {
@@ -295,30 +592,301 @@
             border-color: rgba(255, 255, 255, 0.4);
         }
         .btn-next {
-            background: linear-gradient(135deg, #a855f7, #8b5cf6);
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
             color: white;
-            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
         }
         .btn-next:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(168, 85, 247, 0.6);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
         }
 
         /* Security Notice */
         .security-notice {
-            text-align: center; padding: 1rem;
+            text-align: center;
+            padding: 1rem;
             color: rgba(255, 255, 255, 0.5);
-            font-size: 0.85rem; margin-top: 1rem;
-            display: flex; align-items: center;
-            justify-content: center; gap: 0.5rem;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        /* Hotel Details Modal */
+        .details-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2500;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+        }
+        .details-modal.active { display: flex; }
+        .details-container {
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            border-radius: 20px;
+            max-width: 1200px;
+            width: 95%;
+            margin: 2rem auto;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+        .details-header {
+            position: relative;
+            height: 400px;
+            overflow: hidden;
+        }
+        .details-hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .details-header-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(15, 23, 42, 1), transparent);
+            padding: 2rem;
+        }
+        .details-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.75rem;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+        .details-close:hover {
+            background: rgba(59, 130, 246, 0.8);
+            transform: rotate(90deg);
+        }
+        .details-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+        .details-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .details-content {
+            padding: 2.5rem;
+        }
+        .details-section {
+            margin-bottom: 3rem;
+        }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #60a5fa;
+        }
+        .amenities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        .amenity-item {
+            background: rgba(59, 130, 246, 0.1);
+            padding: 1rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            transition: all 0.3s;
+        }
+        .amenity-item:hover {
+            background: rgba(59, 130, 246, 0.2);
+            transform: translateY(-2px);
+        }
+        .amenity-icon {
+            font-size: 1.5rem;
+        }
+        .rooms-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .room-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+        .room-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+            border-color: rgba(96, 165, 250, 0.5);
+        }
+        .room-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .room-info {
+            padding: 1.5rem;
+        }
+        .room-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .room-description {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        .room-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .room-feature {
+            background: rgba(59, 130, 246, 0.2);
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        .room-price-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .room-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60a5fa 0%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .book-room-btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        .book-room-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.5);
+        }
+        .view-details-btn {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+            border: 2px solid #60a5fa;
+            padding: 0.6rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            margin-left: 0.5rem;
+        }
+        .view-details-btn:hover {
+            background: rgba(59, 130, 246, 0.3);
+            transform: translateY(-2px);
+        }
+        .hotel-description {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        /* Floating particles effect */
+        .particle {
+            position: fixed;
+            width: 3px;
+            height: 3px;
+            background: rgba(96, 165, 250, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 20s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+        }
+
+        /* Search highlight animation */
+        @keyframes searchPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+            50% { box-shadow: 0 0 20px 10px rgba(59, 130, 246, 0); }
+        }
+
+        .hotel-card.search-highlight {
+            animation: searchPulse 2s ease-in-out 3;
+        }
+
+        /* No results message */
+        .no-results {
+            text-align: center;
+            padding: 4rem 2rem;
+            grid-column: 1 / -1;
+        }
+        .no-results-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        .no-results-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .no-results-subtitle {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.1rem;
         }
 
         @media (max-width: 768px) {
+            nav { padding: 1rem 2rem; }
             .nav-links { display: none; }
             .form-grid { grid-template-columns: 1fr; }
             .progress-steps { flex-wrap: wrap; }
             .step-connector { display: none; }
             .hotels-grid { grid-template-columns: 1fr; }
+            .page-header h1 { font-size: 2rem; }
+            .rooms-showcase { grid-template-columns: 1fr; }
+            .amenities-grid { grid-template-columns: 1fr; }
+            .details-title { font-size: 1.8rem; }
         }
     </style>
 </head>
@@ -340,8 +908,8 @@
 
 <div class="container">
     <div class="page-header">
-        <h1>Featured Hotels</h1>
-        <p>Discover luxurious stays handpicked by our AI</p>
+        <h1>Premium Hotels</h1>
+        <p>Discover luxurious stays handpicked by our AI concierge</p>
     </div>
 
     <div class="search-section">
@@ -372,30 +940,349 @@
     </div>
 
     <div class="hotels-grid" id="hotelsGrid">
-        <!-- Hotels will be added here - showing first 2 as examples -->
-        <div class="hotel-card" data-location="dubai" data-price="680">
-            <img src="/mnt/user-data/uploads/360_F_321262583_yrjvmflBlyQLqLIkpHEUogdmbQFwoYJd.jpg" class="hotel-image">
+        <!-- Dubai Luxe Tower -->
+        <div class="hotel-card" data-location="dubai" data-price="680" data-hotel-id="dubai-luxe">
+            <div class="hotel-image-container">
+                <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800" class="hotel-image" alt="Dubai Luxe Tower">
+                <div class="hotel-type-badge">5-Star Resort</div>
+            </div>
             <div class="hotel-content">
                 <h3 class="hotel-name">Dubai Luxe Tower</h3>
-                <div class="hotel-rating">⭐⭐⭐⭐⭐</div>
-                <div class="hotel-location">📍 Dubai</div>
+                <div class="hotel-rating">⭐⭐⭐⭐⭐ 4.9</div>
+                <div class="hotel-location">📍 Downtown Dubai, UAE</div>
+                <div class="hotel-amenities">
+                    <span class="amenity-tag">🏊 Pool</span>
+                    <span class="amenity-tag">🍽️ Restaurant</span>
+                    <span class="amenity-tag">💆 Spa</span>
+                    <span class="amenity-tag">🅿️ Parking</span>
+                </div>
+                <div class="room-preview">
+                    <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=200" class="room-thumb" alt="Room 1">
+                    <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=200" class="room-thumb" alt="Room 2">
+                    <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=200" class="room-thumb" alt="Room 3">
+                </div>
                 <div class="hotel-footer">
-                    <div><span class="price-amount">$680</span> /night</div>
-                    <button class="book-btn" onclick="startBooking('Dubai Luxe Tower', 680, 'dubai')">BOOK</button>
+                    <div class="price-section">
+                        <span class="price-label">From</span>
+                        <span class="price-amount">$680</span>
+                    </div>
+                    <div>
+                        <button class="view-details-btn" onclick="showHotelDetails('dubai-luxe')">VIEW DETAILS</button>
+                        <button class="book-btn" onclick="startBooking('Dubai Luxe Tower', 680, 'Dubai', '5-Star Resort')">BOOK</button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="hotel-card" data-location="maldives" data-price="450">
-            <img src="/mnt/user-data/uploads/tropical-beach-paradise-with-palm-trees-turquoise-water_23-2151975534.avif" class="hotel-image">
+        <!-- Burj Al Arab -->
+        <div class="hotel-card" data-location="dubai" data-price="1200" data-hotel-id="burj-arab">
+            <div class="hotel-image-container">
+                <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800" class="hotel-image" alt="Burj Al Arab">
+                <div class="hotel-type-badge">7-Star Luxury</div>
+            </div>
+            <div class="hotel-content">
+                <h3 class="hotel-name">Burj Al Arab Jumeirah</h3>
+                <div class="hotel-rating">⭐⭐⭐⭐⭐ 5.0</div>
+                <div class="hotel-location">📍 Jumeirah, Dubai</div>
+                <div class="hotel-amenities">
+                    <span class="amenity-tag">🏖️ Private Beach</span>
+                    <span class="amenity-tag">🚁 Helipad</span>
+                    <span class="amenity-tag">💎 Butler Service</span>
+                    <span class="amenity-tag">🍾 Michelin Star</span>
+                </div>
+                <div class="room-preview">
+                    <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=200" class="room-thumb" alt="Suite 1">
+                    <img src="https://images.unsplash.com/photo-1566195992011-5f6b21e539ce?w=200" class="room-thumb" alt="Suite 2">
+                    <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=200" class="room-thumb" alt="Suite 3">
+                </div>
+                <div class="hotel-footer">
+                    <div class="price-section">
+                        <span class="price-label">From</span>
+                        <span class="price-amount">$1200</span>
+                    </div>
+                    <div>
+                        <button class="view-details-btn" onclick="showHotelDetails('burj-arab')">VIEW DETAILS</button>
+                        <button class="book-btn" onclick="startBooking('Burj Al Arab Jumeirah', 1200, 'Dubai', '7-Star Luxury')">BOOK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Atlantis The Palm -->
+        <div class="hotel-card" data-location="dubai" data-price="520" data-hotel-id="atlantis-palm">
+            <div class="hotel-image-container">
+                <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800" class="hotel-image" alt="Atlantis The Palm">
+                <div class="hotel-type-badge">Family Resort</div>
+            </div>
+            <div class="hotel-content">
+                <h3 class="hotel-name">Atlantis The Palm</h3>
+                <div class="hotel-rating">⭐⭐⭐⭐⭐ 4.8</div>
+                <div class="hotel-location">📍 Palm Jumeirah, Dubai</div>
+                <div class="hotel-amenities">
+                    <span class="amenity-tag">🎢 Water Park</span>
+                    <span class="amenity-tag">🐠 Aquarium</span>
+                    <span class="amenity-tag">👨‍👩‍👧 Kids Club</span>
+                    <span class="amenity-tag">🏊 Pools</span>
+                </div>
+                <div class="room-preview">
+                    <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=200" class="room-thumb" alt="Room 1">
+                    <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=200" class="room-thumb" alt="Room 2">
+                    <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=200" class="room-thumb" alt="Room 3">
+                </div>
+                <div class="hotel-footer">
+                    <div class="price-section">
+                        <span class="price-label">From</span>
+                        <span class="price-amount">$520</span>
+                    </div>
+                    <div>
+                        <button class="view-details-btn" onclick="showHotelDetails('atlantis-palm')">VIEW DETAILS</button>
+                        <button class="book-btn" onclick="startBooking('Atlantis The Palm', 520, 'Dubai', 'Family Resort')">BOOK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Armani Hotel -->
+        <div class="hotel-card" data-location="dubai" data-price="750" data-hotel-id="armani-hotel">
+            <div class="hotel-image-container">
+                <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800" class="hotel-image" alt="Armani Hotel">
+                <div class="hotel-type-badge">Designer Hotel</div>
+            </div>
+            <div class="hotel-content">
+                <h3 class="hotel-name">Armani Hotel Dubai</h3>
+                <div class="hotel-rating">⭐⭐⭐⭐⭐ 4.9</div>
+                <div class="hotel-location">📍 Burj Khalifa, Dubai</div>
+                <div class="hotel-amenities">
+                    <span class="amenity-tag">🏢 Burj Khalifa</span>
+                    <span class="amenity-tag">👔 Fashion</span>
+                    <span class="amenity-tag">🍸 Lounge</span>
+                    <span class="amenity-tag">💆 Armani Spa</span>
+                </div>
+                <div class="room-preview">
+                    <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?w=200" class="room-thumb" alt="Room 1">
+                    <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=200" class="room-thumb" alt="Room 2">
+                    <img src="https://images.unsplash.com/photo-1566195992011-5f6b21e539ce?w=200" class="room-thumb" alt="Room 3">
+                </div>
+                <div class="hotel-footer">
+                    <div class="price-section">
+                        <span class="price-label">From</span>
+                        <span class="price-amount">$750</span>
+                    </div>
+                    <div>
+                        <button class="view-details-btn" onclick="showHotelDetails('armani-hotel')">VIEW DETAILS</button>
+                        <button class="book-btn" onclick="startBooking('Armani Hotel Dubai', 750, 'Dubai', 'Designer Hotel')">BOOK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Azure Paradise Resort -->
+        <div class="hotel-card" data-location="maldives" data-price="450" data-hotel-id="azure-paradise">
+            <div class="hotel-image-container">
+                <img src="https://images.unsplash.com/photo-1540541338287-41700207dee6?w=800" class="hotel-image" alt="Azure Paradise Resort">
+                <div class="hotel-type-badge">Beach Resort</div>
+            </div>
             <div class="hotel-content">
                 <h3 class="hotel-name">Azure Paradise Resort</h3>
-                <div class="hotel-rating">⭐⭐⭐⭐⭐</div>
+                <div class="hotel-rating">⭐⭐⭐⭐⭐ 4.8</div>
                 <div class="hotel-location">📍 Maldives</div>
-                <div class="hotel-footer">
-                    <div><span class="price-amount">$450</span> /night</div>
-                    <button class="book-btn" onclick="startBooking('Azure Paradise Resort', 450, 'maldives')">BOOK</button>
+                <div class="hotel-amenities">
+                    <span class="amenity-tag">🏖️ Beach</span>
+                    <span class="amenity-tag">🤿 Diving</span>
+                    <span class="amenity-tag">🍹 Bar</span>
+                    <span class="amenity-tag">✈️ Seaplane</span>
                 </div>
+                <div class="room-preview">
+                    <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=200" class="room-thumb" alt="Villa 1">
+                    <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=200" class="room-thumb" alt="Villa 2">
+                    <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=200" class="room-thumb" alt="Villa 3">
+                </div>
+                <div class="hotel-footer">
+                    <div class="price-section">
+                        <span class="price-label">From</span>
+                        <span class="price-amount">$450</span>
+                    </div>
+                    <div>
+                        <button class="view-details-btn" onclick="showHotelDetails('azure-paradise')">VIEW DETAILS</button>
+                        <button class="book-btn" onclick="startBooking('Azure Paradise Resort', 450, 'Maldives', 'Beach Resort')">BOOK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paris Grand Palace -->
+        <div class="hotel-card" data-location="paris" data-price="550" data-hotel-id="paris-palace">
+            <div class="hotel-image-container">
+                <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800" class="hotel-image" alt="Paris Grand Palace">
+                <div class="hotel-type-badge">Luxury Hotel</div>
+            </div>
+            <div class="hotel-content">
+                <h3 class="hotel-name">Paris Grand Palace</h3>
+                <div class="hotel-rating">⭐⭐⭐⭐⭐ 4.9</div>
+                <div class="hotel-location">📍 Champs-Élysées, Paris</div>
+                <div class="hotel-amenities">
+                    <span class="amenity-tag">🗼 City View</span>
+                    <span class="amenity-tag">🍾 Champagne Bar</span>
+                    <span class="amenity-tag">🎨 Art Gallery</span>
+                    <span class="amenity-tag">🚕 Concierge</span>
+                </div>
+                <div class="room-preview">
+                    <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=200" class="room-thumb" alt="Suite 1">
+                    <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?w=200" class="room-thumb" alt="Suite 2">
+                    <img src="https://images.unsplash.com/photo-1566195992011-5f6b21e539ce?w=200" class="room-thumb" alt="Suite 3">
+                </div>
+                <div class="hotel-footer">
+                    <div class="price-section">
+                        <span class="price-label">From</span>
+                        <span class="price-amount">$550</span>
+                    </div>
+                    <div>
+                        <button class="view-details-btn" onclick="showHotelDetails('paris-palace')">VIEW DETAILS</button>
+                        <button class="book-btn" onclick="startBooking('Paris Grand Palace', 550, 'Paris', 'Luxury Hotel')">BOOK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tokyo Sky Suites -->
+        <div class="hotel-card" data-location="tokyo" data-price="380" data-hotel-id="tokyo-sky">
+            <div class="hotel-image-container">
+                <img src="https://images.unsplash.com/photo-1560184897-ae75f418493e?w=800" class="hotel-image" alt="Tokyo Sky Suites">
+                <div class="hotel-type-badge">Business Hotel</div>
+            </div>
+            <div class="hotel-content">
+                <h3 class="hotel-name">Tokyo Sky Suites</h3>
+                <div class="hotel-rating">⭐⭐⭐⭐⭐ 4.7</div>
+                <div class="hotel-location">📍 Shibuya, Tokyo</div>
+                <div class="hotel-amenities">
+                    <span class="amenity-tag">🏙️ Skyline</span>
+                    <span class="amenity-tag">🍣 Sushi Bar</span>
+                    <span class="amenity-tag">💼 Business</span>
+                    <span class="amenity-tag">🚇 Metro</span>
+                </div>
+                <div class="room-preview">
+                    <img src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=200" class="room-thumb" alt="Room 1">
+                    <img src="https://images.unsplash.com/photo-1540518614846-7eded433c457?w=200" class="room-thumb" alt="Room 2">
+                    <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=200" class="room-thumb" alt="Room 3">
+                </div>
+                <div class="hotel-footer">
+                    <div class="price-section">
+                        <span class="price-label">From</span>
+                        <span class="price-amount">$380</span>
+                    </div>
+                    <div>
+                        <button class="view-details-btn" onclick="showHotelDetails('tokyo-sky')">VIEW DETAILS</button>
+                        <button class="book-btn" onclick="startBooking('Tokyo Sky Suites', 380, 'Tokyo', 'Business Hotel')">BOOK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Santorini Dream Villa -->
+        <div class="hotel-card" data-location="santorini" data-price="620" data-hotel-id="santorini-dream">
+            <div class="hotel-image-container">
+                <img src="https://images.unsplash.com/photo-1570213489059-0aac6626cade?w=800" class="hotel-image" alt="Santorini Dream Villa">
+                <div class="hotel-type-badge">Boutique Hotel</div>
+            </div>
+            <div class="hotel-content">
+                <h3 class="hotel-name">Santorini Dream Villa</h3>
+                <div class="hotel-rating">⭐⭐⭐⭐⭐ 5.0</div>
+                <div class="hotel-location">📍 Oia, Santorini</div>
+                <div class="hotel-amenities">
+                    <span class="amenity-tag">🌅 Sunset View</span>
+                    <span class="amenity-tag">🏊 Infinity Pool</span>
+                    <span class="amenity-tag">🍷 Wine Cellar</span>
+                    <span class="amenity-tag">📸 Photo Tour</span>
+                </div>
+                <div class="room-preview">
+                    <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=200" class="room-thumb" alt="Villa 1">
+                    <img src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=200" class="room-thumb" alt="Villa 2">
+                    <img src="https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=200" class="room-thumb" alt="Villa 3">
+                </div>
+                <div class="hotel-footer">
+                    <div class="price-section">
+                        <span class="price-label">From</span>
+                        <span class="price-amount">$620</span>
+                    </div>
+                    <div>
+                        <button class="view-details-btn" onclick="showHotelDetails('santorini-dream')">VIEW DETAILS</button>
+                        <button class="book-btn" onclick="startBooking('Santorini Dream Villa', 620, 'Santorini', 'Boutique Hotel')">BOOK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Swiss Alpine Lodge -->
+        <div class="hotel-card" data-location="switzerland" data-price="490" data-hotel-id="swiss-alpine">
+            <div class="hotel-image-container">
+                <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800" class="hotel-image" alt="Swiss Alpine Lodge">
+                <div class="hotel-type-badge">Mountain Resort</div>
+            </div>
+            <div class="hotel-content">
+                <h3 class="hotel-name">Swiss Alpine Lodge</h3>
+                <div class="hotel-rating">⭐⭐⭐⭐⭐ 4.8</div>
+                <div class="hotel-location">📍 Zermatt, Switzerland</div>
+                <div class="hotel-amenities">
+                    <span class="amenity-tag">⛷️ Ski-in/out</span>
+                    <span class="amenity-tag">🔥 Fireplace</span>
+                    <span class="amenity-tag">🧖 Sauna</span>
+                    <span class="amenity-tag">🏔️ Mountain View</span>
+                </div>
+                <div class="room-preview">
+                    <img src="https://images.unsplash.com/photo-1566195992011-5f6b21e539ce?w=200" class="room-thumb" alt="Chalet 1">
+                    <img src="https://images.unsplash.com/photo-1521783988139-89397d761dce?w=200" class="room-thumb" alt="Chalet 2">
+                    <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=200" class="room-thumb" alt="Chalet 3">
+                </div>
+                <div class="hotel-footer">
+                    <div class="price-section">
+                        <span class="price-label">From</span>
+                        <span class="price-amount">$490</span>
+                    </div>
+                    <div>
+                        <button class="view-details-btn" onclick="showHotelDetails('swiss-alpine')">VIEW DETAILS</button>
+                        <button class="book-btn" onclick="startBooking('Swiss Alpine Lodge', 490, 'Switzerland', 'Mountain Resort')">BOOK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hotel Details Modal -->
+<div class="details-modal" id="detailsModal">
+    <div class="details-container">
+        <div class="details-header">
+            <img id="detailsHeroImage" src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200" class="details-hero-image" alt="Hotel">
+            <button class="details-close" onclick="closeDetailsModal()">×</button>
+            <div class="details-header-overlay">
+                <h1 class="details-title" id="detailsTitle">Hotel Name</h1>
+                <div class="details-subtitle">
+                    <span id="detailsRating">⭐⭐⭐⭐⭐ 4.9</span>
+                    <span>•</span>
+                    <span id="detailsLocation">📍 Location</span>
+                    <span>•</span>
+                    <span id="detailsType">Hotel Type</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="details-content">
+            <!-- Description Section -->
+            <div class="details-section">
+                <h2 class="section-title">About This Hotel</h2>
+                <p class="hotel-description" id="detailsDescription"></p>
+            </div>
+
+            <!-- Amenities Section -->
+            <div class="details-section">
+                <h2 class="section-title">Amenities & Services</h2>
+                <div class="amenities-grid" id="detailsAmenities"></div>
+            </div>
+
+            <!-- Rooms Section -->
+            <div class="details-section">
+                <h2 class="section-title">Available Rooms</h2>
+                <div class="rooms-showcase" id="detailsRooms"></div>
             </div>
         </div>
     </div>
@@ -428,12 +1315,12 @@
         </div>
 
         <div class="booking-content">
-            <!-- Step 1: Room Selection (Auto-filled) -->
+            <!-- Step 1: Room Selection -->
             <div class="booking-step active" id="stepContent1">
                 <h2 class="step-title">Select Your Room</h2>
                 <p class="step-subtitle">Your selected hotel and room details</p>
 
-                <div style="background: #1a202c; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+                <div style="background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid rgba(255, 255, 255, 0.1);">
                     <h3 id="selectedHotelName" style="font-size: 1.5rem; margin-bottom: 1rem;">Hotel Name</h3>
                     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
                         <div>
@@ -441,12 +1328,16 @@
                             <p id="selectedLocation">-</p>
                         </div>
                         <div>
+                            <p style="color: rgba(255, 255, 255, 0.6); margin-bottom: 0.5rem;">Hotel Type</p>
+                            <p id="selectedType">-</p>
+                        </div>
+                        <div>
                             <p style="color: rgba(255, 255, 255, 0.6); margin-bottom: 0.5rem;">Room Type</p>
                             <p>Deluxe Suite</p>
                         </div>
                         <div>
                             <p style="color: rgba(255, 255, 255, 0.6); margin-bottom: 0.5rem;">Price per night</p>
-                            <p style="color: #a855f7; font-size: 1.3rem; font-weight: 700;" id="selectedPrice">$0</p>
+                            <p style="color: #60a5fa; font-size: 1.3rem; font-weight: 700;" id="selectedPrice">$0</p>
                         </div>
                     </div>
                 </div>
@@ -597,34 +1488,34 @@
                 <div class="booking-summary">
                     <h3 class="summary-title">Final Summary</h3>
                     <div class="summary-row">
-                        <span id="finalHotelName">Azure Paradise Resort</span>
-                        <span id="finalLocation">Maldives</span>
+                        <span id="finalHotelName">Hotel</span>
+                        <span id="finalLocation">Location</span>
                     </div>
                     <div class="summary-row">
-                        <span id="finalRoomType">Overwater Deluxe Villa</span>
-                        <span id="finalPricePerNight">$450/night</span>
+                        <span id="finalRoomType">Deluxe Suite</span>
+                        <span id="finalPricePerNight">$0/night</span>
                     </div>
                     <div class="summary-row">
                         <span>Check-in</span>
-                        <span id="finalCheckin">November 21st, 2025</span>
+                        <span id="finalCheckin">-</span>
                     </div>
                     <div class="summary-row">
                         <span>Check-out</span>
-                        <span id="finalCheckout">November 25th, 2025</span>
+                        <span id="finalCheckout">-</span>
                     </div>
                     <div class="summary-row">
-                        <span id="finalNights">4 nights × $450</span>
-                        <span id="finalSubtotal">$1800</span>
+                        <span id="finalNights">0 nights × $0</span>
+                        <span id="finalSubtotal">$0</span>
                     </div>
                     <div class="summary-row total">
                         <span>Total Amount</span>
-                        <span id="finalTotal">$1800</span>
+                        <span id="finalTotal">$0</span>
                     </div>
                 </div>
 
                 <div class="button-group">
                     <button class="btn btn-back" onclick="prevStep(2)">← Back</button>
-                    <button class="btn btn-next" onclick="confirmBooking()">Confirm & Pay <span id="payAmount">$1800</span></button>
+                    <button class="btn btn-next" onclick="confirmBooking()">Confirm & Pay <span id="payAmount">$0</span></button>
                 </div>
             </div>
         </div>
@@ -636,10 +1527,362 @@
     let selectedHotel = {};
     let bookingData = {};
 
-    function startBooking(name, price, location) {
-        selectedHotel = { name, price, location };
+    // Hotel database with detailed information
+    const hotelsDatabase = {
+        'dubai-luxe': {
+            name: 'Dubai Luxe Tower',
+            location: 'Downtown Dubai, UAE',
+            type: '5-Star Resort',
+            price: 680,
+            rating: '⭐⭐⭐⭐⭐ 4.9',
+            heroImage: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200',
+            description: 'Experience unparalleled luxury in the heart of Dubai. Dubai Luxe Tower offers breathtaking views of the Burj Khalifa and combines modern elegance with traditional Arabian hospitality. Our world-class facilities include a rooftop infinity pool, Michelin-starred dining, and personalized concierge services to make your stay unforgettable.',
+            amenities: [
+                { icon: '🏊', name: 'Infinity Pool', desc: 'Rooftop pool with city views' },
+                { icon: '🍽️', name: 'Fine Dining', desc: '5 restaurants & bars' },
+                { icon: '💆', name: 'Luxury Spa', desc: 'Full-service wellness center' },
+                { icon: '🅿️', name: 'Valet Parking', desc: 'Complimentary valet service' },
+                { icon: '💪', name: 'Fitness Center', desc: '24/7 state-of-the-art gym' },
+                { icon: '🛎️', name: 'Concierge', desc: 'Personal assistance 24/7' }
+            ],
+            rooms: [
+                { name: 'Deluxe Suite', price: 680, image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400', desc: 'Spacious suite with king bed and city view', features: ['King Bed', 'City View', '50m²', 'Balcony'] },
+                { name: 'Executive Suite', price: 950, image: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=400', desc: 'Premium suite with separate living area', features: ['Living Area', 'Panoramic View', '75m²', 'Butler Service'] },
+                { name: 'Presidential Suite', price: 1500, image: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=400', desc: 'Ultimate luxury with private terrace', features: ['2 Bedrooms', 'Private Terrace', '120m²', 'Dining Room'] }
+            ]
+        },
+        'burj-arab': {
+            name: 'Burj Al Arab Jumeirah',
+            location: 'Jumeirah, Dubai',
+            type: '7-Star Luxury',
+            price: 1200,
+            rating: '⭐⭐⭐⭐⭐ 5.0',
+            heroImage: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1200',
+            description: 'The epitome of luxury, Burj Al Arab stands as an architectural masterpiece on a private island. Every suite offers stunning Arabian Gulf views, personalized butler service, and access to our fleet of Rolls-Royce cars. Experience hospitality beyond compare in the world\'s most luxurious hotel.',
+            amenities: [
+                { icon: '🏖️', name: 'Private Beach', desc: 'Exclusive beach access' },
+                { icon: '🚁', name: 'Helipad Transfer', desc: 'Helicopter landing pad' },
+                { icon: '💎', name: 'Butler Service', desc: 'Personal 24/7 butler' },
+                { icon: '🍾', name: 'Michelin Dining', desc: 'World-class restaurants' },
+                { icon: '🚗', name: 'Rolls-Royce', desc: 'Chauffeur service' },
+                { icon: '🎭', name: 'Theater', desc: 'Private cinema' }
+            ],
+            rooms: [
+                { name: 'Panoramic Suite', price: 1200, image: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=400', desc: 'Floor-to-ceiling windows with Gulf views', features: ['King Bed', 'Gulf View', '170m²', 'Butler'] },
+                { name: 'Club Suite', price: 1800, image: 'https://images.unsplash.com/photo-1566195992011-5f6b21e539ce?w=400', desc: 'Two-floor suite with library', features: ['2 Floors', 'Library', '230m²', 'Dining Room'] },
+                { name: 'Royal Suite', price: 3500, image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400', desc: 'The pinnacle of luxury accommodation', features: ['3 Bedrooms', 'Private Elevator', '780m²', 'Cinema'] }
+            ]
+        },
+        'atlantis-palm': {
+            name: 'Atlantis The Palm',
+            location: 'Palm Jumeirah, Dubai',
+            type: 'Family Resort',
+            price: 520,
+            rating: '⭐⭐⭐⭐⭐ 4.8',
+            heroImage: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=1200',
+            description: 'A world of wonder awaits at Atlantis The Palm. This iconic resort features Aquaventure Waterpark, The Lost Chambers Aquarium, and pristine beaches. Perfect for families, couples, and adventure seekers, with endless dining options and marine experiences that will create memories for a lifetime.',
+            amenities: [
+                { icon: '🎢', name: 'Water Park', desc: 'Aquaventure access' },
+                { icon: '🐠', name: 'Aquarium', desc: 'Lost Chambers tours' },
+                { icon: '👨‍👩‍👧', name: 'Kids Club', desc: 'Supervised activities' },
+                { icon: '🏊', name: 'Multiple Pools', desc: '20+ swimming pools' },
+                { icon: '🤿', name: 'Dive Center', desc: 'Scuba & snorkeling' },
+                { icon: '🍴', name: '23 Restaurants', desc: 'Global cuisines' }
+            ],
+            rooms: [
+                { name: 'Deluxe Room', price: 520, image: 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=400', desc: 'Modern room with resort views', features: ['King/Twin', 'Resort View', '45m²', 'Balcony'] },
+                { name: 'Ocean Suite', price: 850, image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=400', desc: 'Suite with Arabian Gulf views', features: ['Living Area', 'Ocean View', '85m²', 'Terrace'] },
+                { name: 'Underwater Suite', price: 1200, image: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=400', desc: 'Sleep surrounded by marine life', features: ['Aquarium View', 'Unique Experience', '165m²', 'Butler'] }
+            ]
+        },
+        'armani-hotel': {
+            name: 'Armani Hotel Dubai',
+            location: 'Burj Khalifa, Dubai',
+            type: 'Designer Hotel',
+            price: 750,
+            rating: '⭐⭐⭐⭐⭐ 4.9',
+            heroImage: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=1200',
+            description: 'Conceived by Giorgio Armani himself, this hotel embodies the designer\'s signature elegance and sophistication. Located within the iconic Burj Khalifa, every detail reflects Armani\'s aesthetic vision. Experience fashion-forward luxury with personalized service in the world\'s tallest building.',
+            amenities: [
+                { icon: '🏢', name: 'Burj Khalifa', desc: 'Inside world\'s tallest' },
+                { icon: '👔', name: 'Fashion Boutique', desc: 'Armani store access' },
+                { icon: '🍸', name: 'Armani Lounge', desc: 'Exclusive bar' },
+                { icon: '💆', name: 'Armani/SPA', desc: 'Signature treatments' },
+                { icon: '🍽️', name: 'Fine Dining', desc: 'Mediterranean cuisine' },
+                { icon: '🎨', name: 'Design Gallery', desc: 'Fashion exhibitions' }
+            ],
+            rooms: [
+                { name: 'Armani Deluxe', price: 750, image: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=400', desc: 'Elegantly designed with Armani furnishings', features: ['King Bed', 'City View', '55m²', 'Designer Decor'] },
+                { name: 'Armani Signature', price: 1100, image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400', desc: 'Exclusive suite with living space', features: ['Living Room', 'Fountain View', '90m²', 'Custom Amenities'] },
+                { name: 'Armani Fountain Suite', price: 1600, image: 'https://images.unsplash.com/photo-1566195992011-5f6b21e539ce?w=400', desc: 'Premium suite overlooking Dubai Fountain', features: ['2 Bedrooms', 'Fountain Show', '145m²', 'Private Bar'] }
+            ]
+        },
+        'azure-paradise': {
+            name: 'Azure Paradise Resort',
+            location: 'Maldives',
+            type: 'Beach Resort',
+            price: 450,
+            rating: '⭐⭐⭐⭐⭐ 4.8',
+            heroImage: 'https://images.unsplash.com/photo-1540541338287-41700207dee6?w=1200',
+            description: 'Your tropical paradise awaits in the crystal-clear waters of the Maldives. Azure Paradise offers overwater villas, pristine beaches, and world-class diving. Indulge in spa treatments, romantic dinners on the beach, and unforgettable sunset cruises in this idyllic island escape.',
+            amenities: [
+                { icon: '🏖️', name: 'Private Beach', desc: 'White sand paradise' },
+                { icon: '🤿', name: 'Dive Center', desc: 'PADI certified courses' },
+                { icon: '🍹', name: 'Beach Bar', desc: 'Cocktails & snacks' },
+                { icon: '✈️', name: 'Seaplane Transfer', desc: 'Scenic arrival' },
+                { icon: '💆', name: 'Overwater Spa', desc: 'Ocean treatments' },
+                { icon: '🎣', name: 'Water Sports', desc: 'Kayaking & more' }
+            ],
+            rooms: [
+                { name: 'Beach Villa', price: 450, image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=400', desc: 'Direct beach access with ocean views', features: ['King Bed', 'Beach Access', '65m²', 'Outdoor Shower'] },
+                { name: 'Overwater Villa', price: 680, image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400', desc: 'Villa suspended over turquoise lagoon', features: ['Glass Floor', 'Ocean Access', '85m²', 'Sun Deck'] },
+                { name: 'Sunset Pool Villa', price: 920, image: 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=400', desc: 'Private pool with sunset views', features: ['Private Pool', 'Butler Service', '120m²', 'Outdoor Dining'] }
+            ]
+        },
+        'paris-palace': {
+            name: 'Paris Grand Palace',
+            location: 'Champs-Élysées, Paris',
+            type: 'Luxury Hotel',
+            price: 550,
+            rating: '⭐⭐⭐⭐⭐ 4.9',
+            heroImage: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=1200',
+            description: 'Experience Parisian elegance at its finest on the prestigious Champs-Élysées. This Belle Époque palace combines historic grandeur with modern luxury, offering Eiffel Tower views, a Michelin-starred restaurant, and art collections worthy of a museum. Your dream Parisian escape begins here.',
+            amenities: [
+                { icon: '🗼', name: 'Eiffel Views', desc: 'Tower view rooms' },
+                { icon: '🍾', name: 'Champagne Bar', desc: 'Premium selections' },
+                { icon: '🎨', name: 'Art Gallery', desc: 'Curated exhibitions' },
+                { icon: '🚕', name: 'Concierge', desc: 'City tour planning' },
+                { icon: '🏛️', name: 'Historic Building', desc: '19th century palace' },
+                { icon: '☕', name: 'Parisian Café', desc: 'Traditional bistro' }
+            ],
+            rooms: [
+                { name: 'Classic Room', price: 550, image: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=400', desc: 'Elegant room with Parisian charm', features: ['Queen Bed', 'City View', '30m²', 'French Decor'] },
+                { name: 'Deluxe Suite', price: 850, image: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=400', desc: 'Suite with separate living area', features: ['Living Space', 'Boulevard View', '60m²', 'Marble Bath'] },
+                { name: 'Eiffel Suite', price: 1400, image: 'https://images.unsplash.com/photo-1566195992011-5f6b21e539ce?w=400', desc: 'Panoramic Eiffel Tower views', features: ['Tower View', 'Terrace', '95m²', 'Champagne Welcome'] }
+            ]
+        },
+        'tokyo-sky': {
+            name: 'Tokyo Sky Suites',
+            location: 'Shibuya, Tokyo',
+            type: 'Business Hotel',
+            price: 380,
+            rating: '⭐⭐⭐⭐⭐ 4.7',
+            heroImage: 'https://images.unsplash.com/photo-1560184897-ae75f418493e?w=1200',
+            description: 'Modern sophistication meets Japanese tradition in the heart of Shibuya. Tokyo Sky Suites offers stunning skyline views, authentic Japanese dining, and state-of-the-art business facilities. Perfect for business travelers and tourists seeking contemporary comfort in Tokyo\'s vibrant center.',
+            amenities: [
+                { icon: '🏙️', name: 'Skyline Views', desc: '360° city panorama' },
+                { icon: '🍣', name: 'Sushi Bar', desc: 'Master chef cuisine' },
+                { icon: '💼', name: 'Business Center', desc: 'Meeting rooms' },
+                { icon: '🚇', name: 'Metro Access', desc: 'Station connected' },
+                { icon: '🎌', name: 'Japanese Bath', desc: 'Traditional onsen' },
+                { icon: '📱', name: 'High-Tech', desc: 'Smart room controls' }
+            ],
+            rooms: [
+                { name: 'Modern Room', price: 380, image: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=400', desc: 'Sleek design with city views', features: ['Queen Bed', 'City View', '28m²', 'Tech Features'] },
+                { name: 'Executive Suite', price: 550, image: 'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=400', desc: 'Business suite with workspace', features: ['Work Desk', 'Skyline View', '45m²', 'Meeting Space'] },
+                { name: 'Sky Suite', price: 780, image: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=400', desc: 'Top floor suite with panoramic views', features: ['Panoramic View', 'Living Room', '70m²', 'Japanese Bath'] }
+            ]
+        },
+        'santorini-dream': {
+            name: 'Santorini Dream Villa',
+            location: 'Oia, Santorini',
+            type: 'Boutique Hotel',
+            price: 620,
+            rating: '⭐⭐⭐⭐⭐ 5.0',
+            heroImage: 'https://images.unsplash.com/photo-1570213489059-0aac6626cade?w=1200',
+            description: 'Perched on the cliffs of Oia, experience the most spectacular sunsets in the world. Each whitewashed cave suite features infinity pools, Aegean Sea views, and authentic Cycladic design. Indulge in Greek cuisine, wine tasting, and the romance of this iconic island paradise.',
+            amenities: [
+                { icon: '🌅', name: 'Sunset Views', desc: 'World-famous sunsets' },
+                { icon: '🏊', name: 'Infinity Pool', desc: 'Caldera view pool' },
+                { icon: '🍷', name: 'Wine Cellar', desc: 'Local wine tours' },
+                { icon: '📸', name: 'Photo Tours', desc: 'Guided sessions' },
+                { icon: '🛶', name: 'Boat Tours', desc: 'Island excursions' },
+                { icon: '🏛️', name: 'Cave Suites', desc: 'Traditional design' }
+            ],
+            rooms: [
+                { name: 'Cave Suite', price: 620, image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400', desc: 'Traditional cave suite with sea view', features: ['Cave Design', 'Sea View', '35m²', 'Private Terrace'] },
+                { name: 'Honeymoon Villa', price: 890, image: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=400', desc: 'Romantic villa with plunge pool', features: ['Plunge Pool', 'Caldera View', '50m²', 'Outdoor Jacuzzi'] },
+                { name: 'Infinity Villa', price: 1250, image: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=400', desc: 'Ultimate luxury with infinity pool', features: ['Infinity Pool', 'Sunset View', '85m²', 'Butler Service'] }
+            ]
+        },
+        'swiss-alpine': {
+            name: 'Swiss Alpine Lodge',
+            location: 'Zermatt, Switzerland',
+            type: 'Mountain Resort',
+            price: 490,
+            rating: '⭐⭐⭐⭐⭐ 4.8',
+            heroImage: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=1200',
+            description: 'Nestled at the foot of the iconic Matterhorn, Swiss Alpine Lodge offers the ultimate mountain retreat. Enjoy ski-in/ski-out access, cozy chalets with fireplaces, and authentic Swiss cuisine. After a day on the slopes, unwind in our alpine spa with Matterhorn views.',
+            amenities: [
+                { icon: '⛷️', name: 'Ski-in/Ski-out', desc: 'Direct slope access' },
+                { icon: '🔥', name: 'Fireplaces', desc: 'Cozy ambiance' },
+                { icon: '🧖', name: 'Alpine Spa', desc: 'Mountain view sauna' },
+                { icon: '🏔️', name: 'Matterhorn View', desc: 'Iconic mountain' },
+                { icon: '🧀', name: 'Swiss Fondue', desc: 'Traditional cuisine' },
+                { icon: '🎿', name: 'Ski Storage', desc: 'Heated lockers' }
+            ],
+            rooms: [
+                { name: 'Mountain Room', price: 490, image: 'https://images.unsplash.com/photo-1566195992011-5f6b21e539ce?w=400', desc: 'Comfortable room with Alpine charm', features: ['Queen Bed', 'Mountain View', '30m²', 'Balcony'] },
+                { name: 'Family Chalet', price: 780, image: 'https://images.unsplash.com/photo-1521783988139-89397d761dce?w=400', desc: 'Spacious chalet for families', features: ['2 Bedrooms', 'Living Room', '65m²', 'Fireplace'] },
+                { name: 'Matterhorn Suite', price: 1100, image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=400', desc: 'Luxury suite with Matterhorn views', features: ['Panoramic View', 'Private Sauna', '90m²', 'Terrace'] }
+            ]
+        }
+    };
+
+    // Create floating particles
+    function createParticles() {
+        const particleCount = 30;
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+            document.body.appendChild(particle);
+        }
+    }
+
+    // Show hotel details modal
+    function showHotelDetails(hotelId) {
+        const hotel = hotelsDatabase[hotelId];
+        if (!hotel) return;
+
+        document.getElementById('detailsTitle').textContent = hotel.name;
+        document.getElementById('detailsRating').textContent = hotel.rating;
+        document.getElementById('detailsLocation').textContent = '📍 ' + hotel.location;
+        document.getElementById('detailsType').textContent = hotel.type;
+        document.getElementById('detailsHeroImage').src = hotel.heroImage;
+        document.getElementById('detailsDescription').textContent = hotel.description;
+
+        // Populate amenities
+        const amenitiesContainer = document.getElementById('detailsAmenities');
+        amenitiesContainer.innerHTML = hotel.amenities.map(amenity => `
+            <div class="amenity-item">
+                <span class="amenity-icon">${amenity.icon}</span>
+                <div>
+                    <div style="font-weight: 600;">${amenity.name}</div>
+                    <div style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.6);">${amenity.desc}</div>
+                </div>
+            </div>
+        `).join('');
+
+        // Populate rooms
+        const roomsContainer = document.getElementById('detailsRooms');
+        roomsContainer.innerHTML = hotel.rooms.map(room => `
+            <div class="room-card">
+                <img src="${room.image}" class="room-image" alt="${room.name}">
+                <div class="room-info">
+                    <h3 class="room-name">${room.name}</h3>
+                    <p class="room-description">${room.desc}</p>
+                    <div class="room-features">
+                        ${room.features.map(f => `<span class="room-feature">${f}</span>`).join('')}
+                    </div>
+                    <div class="room-price-section">
+                        <div>
+                            <div style="font-size: 0.8rem; color: rgba(255, 255, 255, 0.6);">From</div>
+                            <div class="room-price">$${room.price}</div>
+                        </div>
+                        <button class="book-room-btn" onclick="bookRoom('${hotel.name}', ${room.price}, '${hotel.location}', '${hotel.type}', '${room.name}')">Book Now</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+        document.getElementById('detailsModal').classList.add('active');
+    }
+
+    function closeDetailsModal() {
+        document.getElementById('detailsModal').classList.remove('active');
+    }
+
+    function bookRoom(hotelName, price, location, type, roomType) {
+        closeDetailsModal();
+        setTimeout(() => {
+            selectedHotel = { name: hotelName, price, location, type };
+            document.getElementById('selectedHotelName').textContent = hotelName;
+            document.getElementById('selectedLocation').textContent = location;
+            document.getElementById('selectedType').textContent = type;
+            document.getElementById('selectedPrice').textContent = '$' + price;
+            document.getElementById('summaryRoomType').textContent = roomType;
+
+            document.getElementById('bookingModal').classList.add('active');
+            currentStep = 1;
+            updateStepUI();
+        }, 300);
+    }
+
+    // Search functionality
+    function searchHotels() {
+        const searchTerm = document.getElementById('destinationInput').value.toLowerCase().trim();
+        const hotelCards = document.querySelectorAll('.hotel-card');
+        let foundCount = 0;
+
+        // Remove any existing no-results message
+        const existingNoResults = document.querySelector('.no-results');
+        if (existingNoResults) existingNoResults.remove();
+
+        if (!searchTerm) {
+            // Show all hotels if search is empty
+            hotelCards.forEach(card => {
+                card.style.display = 'block';
+                card.classList.remove('search-highlight');
+            });
+            return;
+        }
+
+        hotelCards.forEach(card => {
+            const location = card.getAttribute('data-location').toLowerCase();
+            const hotelName = card.querySelector('.hotel-name').textContent.toLowerCase();
+            const hotelLocation = card.querySelector('.hotel-location').textContent.toLowerCase();
+
+            if (location.includes(searchTerm) || hotelName.includes(searchTerm) || hotelLocation.includes(searchTerm)) {
+                card.style.display = 'block';
+                card.classList.add('search-highlight');
+                foundCount++;
+
+                // Scroll to first result
+                if (foundCount === 1) {
+                    setTimeout(() => {
+                        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 100);
+                }
+            } else {
+                card.style.display = 'none';
+                card.classList.remove('search-highlight');
+            }
+        });
+
+        // Show no results message if nothing found
+        if (foundCount === 0) {
+            const hotelsGrid = document.getElementById('hotelsGrid');
+            const noResults = document.createElement('div');
+            noResults.className = 'no-results';
+            noResults.innerHTML = `
+                <div class="no-results-icon">🔍</div>
+                <div class="no-results-title">No hotels found</div>
+                <div class="no-results-subtitle">Try searching for Dubai, Paris, Maldives, Tokyo, Santorini, or Switzerland</div>
+            `;
+            hotelsGrid.appendChild(noResults);
+        }
+
+        // Remove highlight after animation
+        setTimeout(() => {
+            hotelCards.forEach(card => card.classList.remove('search-highlight'));
+        }, 6000);
+    }
+
+    // Allow Enter key to trigger search
+    document.getElementById('destinationInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            searchHotels();
+        }
+    });
+
+    function startBooking(name, price, location, type) {
+        selectedHotel = { name, price, location, type };
         document.getElementById('selectedHotelName').textContent = name;
-        document.getElementById('selectedLocation').textContent = location.charAt(0).toUpperCase() + location.slice(1);
+        document.getElementById('selectedLocation').textContent = location;
+        document.getElementById('selectedType').textContent = type;
         document.getElementById('selectedPrice').textContent = '$' + price;
 
         document.getElementById('bookingModal').classList.add('active');
@@ -653,10 +1896,8 @@
 
     function nextStep(step) {
         if (step === 2) {
-            // Moving to details
             updateSummary();
         } else if (step === 3) {
-            // Moving to payment
             if (!validateDates()) return;
             updateFinalSummary();
         }
@@ -670,7 +1911,6 @@
     }
 
     function updateStepUI() {
-        // Update progress circles
         for (let i = 1; i <= 3; i++) {
             const stepEl = document.getElementById('step' + i);
             const contentEl = document.getElementById('stepContent' + i);
@@ -735,17 +1975,14 @@
         }
     }
 
-    // Payment selection
     function selectPayment(type) {
         document.querySelectorAll('.payment-option').forEach(el => el.classList.remove('selected'));
         event.currentTarget.classList.add('selected');
         document.querySelector(`input[value="${type}"]`).checked = true;
 
-        // Show/hide card form
         document.getElementById('cardForm').classList.toggle('active', type === 'card');
     }
 
-    // Date change listeners
     ['bookingCheckin', 'bookingCheckout'].forEach(id => {
         const el = document.getElementById(id);
         if (el) {
@@ -753,7 +1990,6 @@
         }
     });
 
-    // Confirm booking
     function confirmBooking() {
         const payment = document.querySelector('input[name="payment"]:checked').value;
 
@@ -769,14 +2005,8 @@
             }
         }
 
-        alert('🎉 Booking Confirmed!\n\nThank you for booking with Travelinn!\nA confirmation email has been sent.');
+        alert('🎉 Booking Confirmed!\n\nThank you for booking with Travelinn!\nA confirmation email has been sent to your inbox.');
         closeBookingModal();
-    }
-
-    // Search function
-    function searchHotels() {
-        const dest = document.getElementById('destinationInput').value;
-        alert('Searching for hotels in: ' + dest);
     }
 
     // Initialize
@@ -786,6 +2016,8 @@
             const el = document.getElementById(id);
             if (el) el.setAttribute('min', today);
         });
+
+        createParticles();
     });
 </script>
 </body>
