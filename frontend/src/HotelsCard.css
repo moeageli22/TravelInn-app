@@ -1,0 +1,72 @@
+.hotel-card {
+    background: rgba(30, 41, 59, 0.8);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s;
+    cursor: pointer;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.hotel-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(168, 85, 247, 0.3);
+    border-color: rgba(168, 85, 247, 0.5);
+}
+
+.hotel-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.hotel-content {
+    padding: 1.5rem;
+}
+
+.hotel-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: white;
+}
+
+.hotel-rating {
+    color: #fbbf24;
+    margin-bottom: 0.5rem;
+}
+
+.hotel-location {
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 1rem;
+}
+
+.hotel-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.price-amount {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #a855f7;
+}
+
+.book-btn {
+    background: linear-gradient(135deg, #a855f7 0%, #8b5cf6 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+}
+
+.book-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(168, 85, 247, 0.6);
+}

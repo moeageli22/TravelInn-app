@@ -520,7 +520,7 @@
     <div class="logo">Travelinn</div>
     <ul class="nav-links">
         <li><a href="#home">Home</a></li>
-        <li><a href="#hotels">Hotels</a></li>
+        <li><a href="Hotels.html">Hotels</a></li>
         <li><a href="#groups">Groups</a></li>
         <li><a href="#wellbeing">Wellbeing</a></li>
         <li><a href="#concierge">Concierge</a></li>
@@ -553,7 +553,7 @@
             Connect with fellow travelers, find perfect accommodations, and create<br>
             unforgettable experiences around the world.
         </p>
-        <button class="explore-btn">EXPLORE HOTELS</button>
+        <button class="explore-btn" onclick="window.location.href='Hotels.html'">EXPLORE HOTELS</button>
     </div>
 </section>
 
@@ -774,11 +774,6 @@
     // Settings icon rotation on click
     document.querySelector('.settings-icon').addEventListener('click', function() {
         this.style.transform = this.style.transform === 'rotate(180deg)' ? 'rotate(0deg)' : 'rotate(180deg)';
-    });
-
-    // Explore hotels button
-    document.querySelector('.explore-btn').addEventListener('click', function() {
-        alert('Exploring hotels... Feature coming soon!');
     });
 
     // Initialize
