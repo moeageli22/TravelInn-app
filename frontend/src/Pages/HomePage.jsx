@@ -100,7 +100,7 @@ export default function HomePage() {
                         <circle cx="12" cy="12" r="3"/>
                         <path d="M12 1v6m0 6v6m10-7h-6m-6 0H4m15.364 6.364l-4.243-4.243m-6.364 0l-4.243 4.243m16.485-12.728l-4.243 4.243m-6.364 0L4.222 4.222"/>
                     </svg>
-                    <button className="sign-in-btn">Sign In</button>
+                    <button className="sign-in-btn" onClick={() => navigate('/signin')}>Sign In</button>
                 </div>
             </nav>
 
