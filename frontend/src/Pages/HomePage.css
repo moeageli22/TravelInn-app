@@ -78,7 +78,7 @@ nav {
     text-decoration: none;
     font-size: 0.95rem;
     font-weight: 400;
-    transition: opacity 0.3s ease;
+    transition: opacity var(--transition-normal);
 }
 
 .nav-links a:hover {
@@ -91,33 +91,40 @@ nav {
     align-items: center;
 }
 
+.settings-icon-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: transform var(--transition-normal);
+}
+
 .settings-icon {
     width: 20px;
     height: 20px;
-    cursor: pointer;
-    transition: transform 0.3s ease;
+    transition: transform var(--transition-normal);
 }
 
-.settings-icon:hover {
-    transform: rotate(45deg);
+.settings-icon-btn:hover .settings-icon {
+    transform: rotate(90deg);
 }
 
 .sign-in-btn {
-    background: linear-gradient(135deg, #a855f7 0%, #8b5cf6 100%);
+    background: var(--gradient-primary);
     color: white;
     border: none;
     padding: 0.7rem 2rem;
-    border-radius: 50px;
+    border-radius: var(--radius-full);
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+    transition: all var(--transition-normal);
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
 }
 
 .sign-in-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(168, 85, 247, 0.6);
+    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6);
 }
 
 .hero-content {
@@ -147,23 +154,23 @@ nav {
 }
 
 .explore-btn {
-    background: linear-gradient(135deg, #a855f7 0%, #8b5cf6 100%);
+    background: var(--gradient-primary);
     color: white;
     border: none;
     padding: 1.2rem 3rem;
-    border-radius: 50px;
+    border-radius: var(--radius-full);
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 8px 25px rgba(168, 85, 247, 0.5);
+    transition: all var(--transition-normal);
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5);
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
 .explore-btn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(168, 85, 247, 0.7);
+    box-shadow: 0 12px 35px rgba(139, 92, 246, 0.7);
 }
 
 .chat-bot {
@@ -172,17 +179,17 @@ nav {
     right: 3rem;
     width: 120px;
     height: 120px;
-    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    background: var(--gradient-primary);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all var(--transition-normal);
     z-index: 999;
     overflow: hidden;
     box-shadow: 0 8px 30px rgba(139, 92, 246, 0.4);
-    border: 3px solid rgba(168, 85, 247, 0.6);
+    border: 3px solid var(--accent-color);
 }
 
 .chat-bot:hover {
@@ -197,8 +204,8 @@ nav {
     width: 400px;
     height: 600px;
     background: white;
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
     display: none;
     flex-direction: column;
     z-index: 998;
@@ -210,7 +217,7 @@ nav {
 }
 
 .chat-header {
-    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    background: var(--gradient-primary);
     padding: 1.5rem;
     color: white;
     display: flex;
@@ -242,7 +249,7 @@ nav {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    transition: background 0.3s;
+    transition: background var(--transition-normal);
 }
 
 .close-chat:hover {
@@ -280,7 +287,7 @@ nav {
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    background: var(--gradient-primary);
     color: white;
     display: flex;
     align-items: center;
@@ -297,10 +304,20 @@ nav {
 .message-content {
     background: white;
     padding: 0.75rem 1rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
     color: #333;
     line-height: 1.5;
+}
+
+.message-content b {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.message-content i {
+    color: #666;
+    font-size: 0.9em;
 }
 
 .chat-message.user .message-content {
@@ -328,7 +345,7 @@ nav {
 .typing-dot {
     width: 8px;
     height: 8px;
-    background: #8b5cf6;
+    background: var(--primary-color);
     border-radius: 50%;
     animation: typing 1.4s infinite;
 }
@@ -365,15 +382,15 @@ nav {
     padding: 0.6rem;
     border: 1px solid #e0e0e0;
     background: white;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     font-size: 0.8rem;
-    transition: all 0.3s;
+    transition: all var(--transition-normal);
 }
 
 .quick-action-btn:hover {
     background: #f8f9fa;
-    border-color: #8b5cf6;
+    border-color: var(--primary-color);
     transform: translateY(-2px);
 }
 
@@ -389,20 +406,20 @@ nav {
     flex: 1;
     padding: 0.75rem 1rem;
     border: 2px solid #e0e0e0;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     outline: none;
     font-size: 0.9rem;
-    transition: border-color 0.3s;
+    transition: border-color var(--transition-normal);
 }
 
 .chat-input:focus {
-    border-color: #8b5cf6;
+    border-color: var(--primary-color);
 }
 
 .send-btn {
     width: 44px;
     height: 44px;
-    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    background: var(--gradient-primary);
     border: none;
     border-radius: 50%;
     color: white;
@@ -410,10 +427,38 @@ nav {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all var(--transition-normal);
 }
 
 .send-btn:hover {
     transform: scale(1.1);
     box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    nav {
+        padding: 1rem 2rem;
+    }
+
+    .hero-title {
+        font-size: 3rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+
+    .chat-window {
+        width: 90%;
+        right: 5%;
+        left: 5%;
+    }
+
+    .chat-bot {
+        width: 80px;
+        height: 80px;
+        bottom: 2rem;
+        right: 2rem;
+    }
 }
