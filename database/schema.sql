@@ -24,8 +24,8 @@ create table public.hotels (
 
 -- 3. ROOM TYPES (Linked to hotels)
 create table public.room_types (
-                                                 id bigserial primary key,
-                                                 hotel_id bigint not null references public.hotels(id) on delete cascade,
+    id bigserial primary key,
+    hotel_id bigint not null references public.hotels(id),
     name varchar not null,
     base_price numeric(10,2),
     max_guests int,
@@ -36,23 +36,23 @@ create table public.room_types (
 
 -- 4. AMENITIES
 create table public.amenities (
-                                                id bigserial primary key,
-                                                name varchar not null unique
+    id bigserial primary key,
+    name varchar not null unique
 );
 
 -- 5. HOTEL_AMENITIES (Many-to-Many)
 create table public.hotel_amenities (
-                                                      hotel_id bigint not null references public.hotels(id) on delete cascade,
-    amenity_id bigint not null references public.amenities(id) on delete cascade,
+    hotel_id bigint not null references public.hotels(id),
+    amenity_id bigint not null references public.amenities(id),
     primary key (hotel_id, amenity_id)
     );
 
 -- 6. BOOKINGS
 create table public.bookings (
-                                               id uuid primary key default gen_random_uuid(),
-    user_id uuid not null references public.users(id) on delete cascade,
-    hotel_id bigint not null references public.hotels(id) on delete cascade,
-    room_type_id bigint references public.room_types(id) on delete set null,
+    id uuid primary key default gen_random_uuid(),
+    user_id uuid not null references public.users(id),
+    hotel_id bigint not null references public.hotels(id),
+    room_type_id bigint references public.room_types(id),
 
     check_in date not null,
     check_out date not null,
@@ -67,8 +67,8 @@ create table public.bookings (
 -- 7. REVIEWS
 create table public.reviews (
     id uuid primary key default gen_random_uuid(),
-    user_id uuid not null references public.users(id) on delete cascade,
-    hotel_id bigint not null references public.hotels(id) on delete cascade,
+    user_id uuid not null references public.users(id),
+    hotel_id bigint not null references public.hotels(id),
     rating int2 not null check (rating between 1 and 5),
     comment text,
     created_at timestamptz default now()
