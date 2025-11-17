@@ -1,9 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import BookingModal from '../components/BookingModal'
 import './HotelsPage.css'
-
-
-
 
 const hotelData = [
     // Dubai Hotels
@@ -120,6 +118,10 @@ export default function HotelsPage() {
     const [inputValue, setInputValue] = useState('')
     const [showTyping, setShowTyping] = useState(false)
 
+    // Booking Modal State
+    const [bookingModalOpen, setBookingModalOpen] = useState(false)
+    const [selectedHotel, setSelectedHotel] = useState(null)
+
     const filteredHotels = hotelData.filter(hotel =>
         hotel.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         hotel.location.toLowerCase().includes(searchQuery.toLowerCase())
@@ -220,6 +222,18 @@ export default function HotelsPage() {
         }, 1500)
     }
 
+    // Handle Book Now button click
+    const handleBookNow = (hotel) => {
+        setSelectedHotel(hotel)
+        setBookingModalOpen(true)
+    }
+
+    // Close booking modal
+    const closeBookingModal = () => {
+        setBookingModalOpen(false)
+        setSelectedHotel(null)
+    }
+
     return (
         <div className="hotels-page">
             <nav>
@@ -273,7 +287,12 @@ export default function HotelsPage() {
                                             <span className="price-amount">${hotel.price}</span>
                                             <span className="price-period">/night</span>
                                         </div>
-                                        <button className="book-btn">Book Now</button>
+                                        <button
+                                            className="book-btn"
+                                            onClick={() => handleBookNow(hotel)}
+                                        >
+                                            Book Now
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -287,6 +306,7 @@ export default function HotelsPage() {
                 </div>
             </div>
 
+            {/* Chatbot */}
             <div className="chat-bot" onClick={() => setChatOpen(!chatOpen)}>
                 <dotlottie-wc
                     src="https://lottie.host/b3e4cac4-349a-4761-b167-2bf30a257e55/Xas0LWY1sY.lottie"
@@ -352,6 +372,13 @@ export default function HotelsPage() {
                     </button>
                 </div>
             </div>
+
+            {/* Booking Modal */}
+            <BookingModal
+                isOpen={bookingModalOpen}
+                onClose={closeBookingModal}
+                hotel={selectedHotel}
+            />
         </div>
     )
 }

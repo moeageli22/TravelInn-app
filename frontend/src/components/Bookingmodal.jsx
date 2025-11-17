@@ -20,7 +20,7 @@ const ROOM_TYPES = {
 }
 
 export default function BookingModal({ isOpen, onClose, hotel }) {
-    const [step, setStep] = useState(1) // 1: Room Selection, 2: Details, 3: Payment
+    const [step, setStep] = useState(1)
     const [selectedRoom, setSelectedRoom] = useState(null)
     const [checkIn, setCheckIn] = useState('')
     const [checkOut, setCheckOut] = useState('')
@@ -69,8 +69,7 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
     }
 
     const handleConfirmBooking = () => {
-        // Here you would integrate with your backend/Supabase
-        alert(`Booking confirmed!\n\nHotel: ${hotel.name}\nRoom: ${selectedRoom.name}\nCheck-in: ${checkIn}\nCheck-out: ${checkOut}\nNights: ${nights}\nTotal: $${totalPrice}`)
+        alert(`🎉 Booking Confirmed!\n\nHotel: ${hotel.name}\nRoom: ${selectedRoom.name}\nCheck-in: ${checkIn}\nCheck-out: ${checkOut}\nNights: ${nights}\nTotal: $${totalPrice}\n\nThank you for choosing Travelinn!`)
         onClose()
         // Reset form
         setStep(1)
@@ -92,14 +91,45 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
         return tomorrow.toISOString().split('T')[0]
     }
 
+    const formatCardNumber = (value) => {
+        const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '')
+        const matches = v.match(/\d{4,16}/g)
+        const match = (matches && matches[0]) || ''
+        const parts = []
+
+        for (let i = 0, len = match.length; i < len; i += 4) {
+            parts.push(match.substring(i, i + 4))
+        }
+
+        if (parts.length) {
+            return parts.join(' ')
+        } else {
+            return value
+        }
+    }
+
+    const formatExpiry = (value) => {
+        const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '')
+        if (v.length >= 2) {
+            return v.substring(0, 2) + (v.length > 2 ? '/' + v.substring(2, 4) : '')
+        }
+        return v
+    }
+
     return (
         <div className="booking-modal-overlay" onClick={onClose}>
             <div className="booking-modal" onClick={(e) => e.stopPropagation()}>
                 {/* Header */}
                 <div className="booking-modal-header">
-                    <div>
+                    <div className="header-content">
                         <h2>{hotel.name}</h2>
-                        <p className="hotel-location-modal">📍 {hotel.location}</p>
+                        <p className="hotel-location-modal">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                            {hotel.location}
+                        </p>
                     </div>
                     <button className="close-modal" onClick={onClose}>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -112,18 +142,30 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                 {/* Progress Steps */}
                 <div className="booking-steps">
                     <div className={`step ${step >= 1 ? 'active' : ''} ${step > 1 ? 'completed' : ''}`}>
-                        <div className="step-number">1</div>
-                        <span>Room</span>
+                        <div className="step-number">
+                            {step > 1 ? (
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            ) : '1'}
+                        </div>
+                        <span className="step-label">Room</span>
                     </div>
                     <div className={`step-line ${step > 1 ? 'active' : ''}`}></div>
                     <div className={`step ${step >= 2 ? 'active' : ''} ${step > 2 ? 'completed' : ''}`}>
-                        <div className="step-number">2</div>
-                        <span>Details</span>
+                        <div className="step-number">
+                            {step > 2 ? (
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            ) : '2'}
+                        </div>
+                        <span className="step-label">Details</span>
                     </div>
                     <div className={`step-line ${step > 2 ? 'active' : ''}`}></div>
                     <div className={`step ${step >= 3 ? 'active' : ''}`}>
                         <div className="step-number">3</div>
-                        <span>Payment</span>
+                        <span className="step-label">Payment</span>
                     </div>
                 </div>
 
@@ -132,7 +174,13 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                     {/* Step 1: Room Selection */}
                     {step === 1 && (
                         <div className="step-content">
-                            <h3>Choose Your Room</h3>
+                            <h3>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                    <polyline points="9 22 9 12 15 12 15 22"/>
+                                </svg>
+                                Choose Your Room
+                            </h3>
                             <div className="rooms-grid">
                                 {roomTypes.map(room => (
                                     <div
@@ -171,7 +219,15 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                     {/* Step 2: Booking Details */}
                     {step === 2 && (
                         <div className="step-content">
-                            <h3>Complete Your Booking</h3>
+                            <h3>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                    <line x1="16" y1="2" x2="16" y2="6"/>
+                                    <line x1="8" y1="2" x2="8" y2="6"/>
+                                    <line x1="3" y1="10" x2="21" y2="10"/>
+                                </svg>
+                                Booking Details
+                            </h3>
 
                             {/* Selected Room Summary */}
                             <div className="selected-room-summary">
@@ -186,7 +242,15 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                             <div className="booking-form">
                                 <div className="form-row">
                                     <div className="form-group">
-                                        <label>Check-in Date</label>
+                                        <label>
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                                <line x1="8" y1="2" x2="8" y2="6"/>
+                                                <line x1="3" y1="10" x2="21" y2="10"/>
+                                            </svg>
+                                            Check-in Date
+                                        </label>
                                         <input
                                             type="date"
                                             value={checkIn}
@@ -196,7 +260,15 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                                         />
                                     </div>
                                     <div className="form-group">
-                                        <label>Check-out Date</label>
+                                        <label>
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                                <line x1="8" y1="2" x2="8" y2="6"/>
+                                                <line x1="3" y1="10" x2="21" y2="10"/>
+                                            </svg>
+                                            Check-out Date
+                                        </label>
                                         <input
                                             type="date"
                                             value={checkOut}
@@ -208,16 +280,31 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                                 </div>
 
                                 <div className="form-group">
-                                    <label>Number of Guests</label>
+                                    <label>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                            <circle cx="9" cy="7" r="4"/>
+                                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                        </svg>
+                                        Number of Guests
+                                    </label>
                                     <select value={guests} onChange={(e) => setGuests(Number(e.target.value))}>
                                         {[...Array(selectedRoom.guests)].map((_, i) => (
-                                            <option key={i + 1} value={i + 1}>{i + 1} Guest{i > 0 ? 's' : ''}</option>
+                                            <option key={i + 1} value={i + 1}>
+                                                {i + 1} Guest{i > 0 ? 's' : ''}
+                                            </option>
                                         ))}
                                     </select>
                                 </div>
 
                                 <div className="form-group">
-                                    <label>Special Requests (Optional)</label>
+                                    <label>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                        </svg>
+                                        Special Requests (Optional)
+                                    </label>
                                     <textarea
                                         placeholder="e.g., Need wheelchair access, dietary requirements, early check-in..."
                                         value={specialRequests}
@@ -228,9 +315,18 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
 
                                 {checkIn && checkOut && (
                                     <div className="booking-summary-box">
-                                        <p><strong>Duration:</strong> {calculateNights(checkIn, checkOut)} night(s)</p>
-                                        <p><strong>Room Rate:</strong> ${selectedRoom.price}/night</p>
-                                        <p className="total"><strong>Estimated Total:</strong> ${selectedRoom.price * calculateNights(checkIn, checkOut)}</p>
+                                        <p>
+                                            <span><strong>Duration:</strong></span>
+                                            <span>{calculateNights(checkIn, checkOut)} night(s)</span>
+                                        </p>
+                                        <p>
+                                            <span><strong>Room Rate:</strong></span>
+                                            <span>${selectedRoom.price}/night</span>
+                                        </p>
+                                        <p className="total">
+                                            <span><strong>Estimated Total:</strong></span>
+                                            <span>${selectedRoom.price * calculateNights(checkIn, checkOut)}</span>
+                                        </p>
                                     </div>
                                 )}
                             </div>
@@ -240,7 +336,13 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                     {/* Step 3: Payment */}
                     {step === 3 && (
                         <div className="step-content">
-                            <h3>Secure Payment</h3>
+                            <h3>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                                    <line x1="1" y1="10" x2="23" y2="10"/>
+                                </svg>
+                                Secure Payment
+                            </h3>
                             <p className="payment-subtitle">Choose your preferred payment method and confirm your stay.</p>
 
                             {/* Payment Methods */}
@@ -272,7 +374,7 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                                     <div className="method-icon">G</div>
                                     <div>
                                         <h4>Google Pay</h4>
-                                        <p>Pay securely with Google Pay</p>
+                                        <p>Fast & secure checkout</p>
                                     </div>
                                 </div>
                                 <div
@@ -282,7 +384,7 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                                     <div className="method-icon">P</div>
                                     <div>
                                         <h4>PayPal</h4>
-                                        <p>Pay securely with PayPal</p>
+                                        <p>Pay with your PayPal account</p>
                                     </div>
                                 </div>
                             </div>
@@ -305,7 +407,7 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                                             type="text"
                                             placeholder="1234 5678 9012 3456"
                                             value={cardNumber}
-                                            onChange={(e) => setCardNumber(e.target.value)}
+                                            onChange={(e) => setCardNumber(formatCardNumber(e.target.value))}
                                             maxLength="19"
                                         />
                                     </div>
@@ -316,7 +418,7 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                                                 type="text"
                                                 placeholder="MM/YY"
                                                 value={expiryDate}
-                                                onChange={(e) => setExpiryDate(e.target.value)}
+                                                onChange={(e) => setExpiryDate(formatExpiry(e.target.value))}
                                                 maxLength="5"
                                             />
                                         </div>
@@ -326,7 +428,7 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                                                 type="text"
                                                 placeholder="123"
                                                 value={cvv}
-                                                onChange={(e) => setCvv(e.target.value)}
+                                                onChange={(e) => setCvv(e.target.value.replace(/\D/g, ''))}
                                                 maxLength="3"
                                             />
                                         </div>
@@ -337,9 +439,23 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                                 </div>
                             )}
 
+                            {paymentMethod !== 'card' && (
+                                <div className="payment-form">
+                                    <div style={{
+                                        padding: '2rem',
+                                        background: 'rgba(139, 92, 246, 0.08)',
+                                        borderRadius: '16px',
+                                        textAlign: 'center',
+                                        color: 'rgba(255, 255, 255, 0.7)'
+                                    }}>
+                                        <p>You'll be redirected to {paymentMethod === 'applepay' ? 'Apple Pay' : paymentMethod === 'googlepay' ? 'Google Pay' : 'PayPal'} to complete your payment securely.</p>
+                                    </div>
+                                </div>
+                            )}
+
                             {/* Final Summary */}
                             <div className="final-summary">
-                                <h4>Final Summary</h4>
+                                <h4>Booking Summary</h4>
                                 <div className="summary-item">
                                     <span>Hotel</span>
                                     <span>{hotel.name}</span>
@@ -373,7 +489,11 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                 <div className="booking-modal-footer">
                     {step > 1 && (
                         <button className="btn-secondary" onClick={handleBack}>
-                            ← Back
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <line x1="19" y1="12" x2="5" y2="12"/>
+                                <polyline points="12 19 5 12 12 5"/>
+                            </svg>
+                            Back
                         </button>
                     )}
                     {step < 3 ? (
@@ -382,10 +502,17 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                             onClick={handleNext}
                             disabled={step === 1 ? !selectedRoom : !checkIn || !checkOut}
                         >
-                            Continue →
+                            Continue
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                                <polyline points="12 5 19 12 12 19"/>
+                            </svg>
                         </button>
                     ) : (
                         <button className="btn-primary" onClick={handleConfirmBooking}>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
                             Confirm & Pay ${totalPrice}
                         </button>
                     )}
