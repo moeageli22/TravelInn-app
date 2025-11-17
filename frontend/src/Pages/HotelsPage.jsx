@@ -2,6 +2,9 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './HotelsPage.css'
 
+
+
+
 const hotelData = [
     // Dubai Hotels
     { name: 'Dubai Luxe Tower', location: 'Downtown Dubai, UAE', price: 680, image: 'https://ralphdeal.s3.amazonaws.com/wp-content/uploads/2024/05/UAE_Blog-321.jpg', rating: 4.9, amenities: 'Pool, Restaurant, Spa, Parking' },
