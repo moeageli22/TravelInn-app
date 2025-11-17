@@ -495,7 +495,7 @@
     right: 3rem;
     width: 120px;
     height: 120px;
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -504,13 +504,13 @@
     transition: all 0.3s ease;
     z-index: 999;
     overflow: hidden;
-    box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4);
-    border: 3px solid rgba(52, 211, 153, 0.6);
+    box-shadow: 0 8px 30px rgba(139, 92, 246, 0.5);
+    border: 3px solid rgba(168, 85, 247, 0.6);
 }
 
 .chat-bot:hover {
     transform: scale(1.1);
-    box-shadow: 0 12px 40px rgba(16, 185, 129, 0.6);
+    box-shadow: 0 12px 40px rgba(139, 92, 246, 0.7);
 }
 
 .chat-window {
@@ -535,7 +535,7 @@
 }
 
 .chat-header {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
     padding: 1.5rem;
     color: white;
     display: flex;
@@ -605,7 +605,7 @@
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
     color: white;
     display: flex;
     align-items: center;
@@ -651,7 +651,7 @@
 .typing-dot {
     width: 8px;
     height: 8px;
-    background: #10b981;
+    background: #8b5cf6;
     border-radius: 50%;
     animation: typing 1.4s infinite;
 }
@@ -697,7 +697,7 @@
 
 .quick-action-btn:hover {
     background: rgba(255, 255, 255, 0.1);
-    border-color: #10b981;
+    border-color: #8b5cf6;
     transform: translateY(-2px);
 }
 
@@ -726,14 +726,14 @@
 }
 
 .chat-input:focus {
-    border-color: #10b981;
+    border-color: #8b5cf6;
     background: rgba(255, 255, 255, 0.08);
 }
 
 .send-btn {
     width: 44px;
     height: 44px;
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
     border: none;
     border-radius: 50%;
     color: white;
@@ -746,7 +746,7 @@
 
 .send-btn:hover {
     transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
 }
 
 /* Responsive Design */

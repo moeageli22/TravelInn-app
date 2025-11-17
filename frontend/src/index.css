@@ -5,6 +5,11 @@
     --accent-color: #c084fc;
     --background-color: #0f172a;
 
+    /* RGB values for rgba() usage in shadows - NEW! */
+    --primary-rgb: 139, 92, 246;
+    --secondary-rgb: 168, 85, 247;
+    --accent-rgb: 192, 132, 252;
+
     /* Text Colors */
     --text-primary: #ffffff;
     --text-secondary: rgba(255, 255, 255, 0.8);
