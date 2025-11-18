@@ -4,6 +4,8 @@ import HotelsPage from './Pages/HotelsPage'
 import WellbeingPage from './Pages/WellbeingPage'
 import SignInPage from './Pages/SignInPage'
 import SignUpPage from './Pages/SignUpPage'
+import GroupsPage from './Pages/Groupspage'
+import GroupChatRoom from './Pages/Groupchatroom'
 import './App.css'
 
 function App() {
@@ -13,6 +15,8 @@ function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/hotels" element={<HotelsPage />} />
                 <Route path="/wellbeing" element={<WellbeingPage />} />
+                <Route path="/groups" element={<GroupsPage />} />
+                <Route path="/groups/:groupId" element={<GroupChatRoom />} />
                 <Route path="/signin" element={<SignInPage />} />
                 <Route path="/signup" element={<SignUpPage />} />
             </Routes>

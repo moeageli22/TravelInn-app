@@ -153,7 +153,7 @@ export default function Wellbeingpage() {
                     <li><a href="/" onClick={(e) => { e.preventDefault(); navigate('/') }}>Home</a></li>
                     <li><a href="/hotels" onClick={(e) => { e.preventDefault(); navigate('/hotels') }}>Hotels</a></li>
                     <li><a href="/wellbeing" className="active">Wellbeing</a></li>
-                    <li><a href="#groups">Groups</a></li>
+                    <li><a href="#groups" onClick={(e) => { e.preventDefault(); navigate('/groups') }}>Groups</a></li>
                     <li><a href="#about">About</a></li>
                 </ul>
                 <button className="sign-in-btn" onClick={() => navigate('/signin')}>Sign In</button>
