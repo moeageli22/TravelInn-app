@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { AuthProvider } from './contexts/AuthContext'
+import { ProtectedRoute } from './components/ProtectedRoute'
 import HomePage from './Pages/HomePage'
 import HotelsPage from './Pages/HotelsPage'
 import WellbeingPage from './Pages/Wellbeingpage'
@@ -6,25 +8,48 @@ import GroupsPage from './Pages/Groupspage'
 import AboutPage from './Pages/AboutPage'
 import SignInPage from './Pages/SignInPage'
 import SignUpPage from './Pages/SignUpPage'
-import ForgotPasswordPage from './Pages/ForgotPasswordPage'
+import ForgotPasswordPage from './Pages/Forgotpasswordpage'
 import ResetPasswordPage from './Pages/ResetPasswordPage'
 import './index.css'
 
 function App() {
     return (
-        <Router>
-            <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/hotels" element={<HotelsPage />} />
-                <Route path="/wellbeing" element={<WellbeingPage />} />
-                <Route path="/groups" element={<GroupsPage />} />
-                <Route path="/about" element={<AboutPage />} />
-                <Route path="/signin" element={<SignInPage />} />
-                <Route path="/signup" element={<SignUpPage />} />
-                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-                <Route path="/reset-password" element={<ResetPasswordPage />} />
-            </Routes>
-        </Router>
+        <AuthProvider>
+            <Router>
+                <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route
+                        path="/hotels"
+                        element={
+                            <ProtectedRoute>
+                                <HotelsPage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/wellbeing"
+                        element={
+                            <ProtectedRoute>
+                                <WellbeingPage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/groups"
+                        element={
+                            <ProtectedRoute>
+                                <GroupsPage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route path="/about" element={<AboutPage />} />
+                    <Route path="/signin" element={<SignInPage />} />
+                    <Route path="/signup" element={<SignUpPage />} />
+                    <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                    <Route path="/reset-password" element={<ResetPasswordPage />} />
+                </Routes>
+            </Router>
+        </AuthProvider>
     )
 }
 
