@@ -75,7 +75,7 @@ export default function GroupsPage() {
                     <li><a href="/hotels" onClick={(e) => { e.preventDefault(); navigate('/hotels') }}>Hotels</a></li>
                     <li><a href="/wellbeing" onClick={(e) => { e.preventDefault(); navigate('/wellbeing') }}>Wellbeing</a></li>
                     <li><a href="/groups" className="active">Groups</a></li>
-                    <li><a href="#about">About</a></li>
+                    <li><a href="#about" onClick={(e) => { e.preventDefault(); navigate('/about') }}>About</a></li>
                 </ul>
                 <button className="sign-in-btn" onClick={() => navigate('/signin')}>Sign In</button>
             </nav>
