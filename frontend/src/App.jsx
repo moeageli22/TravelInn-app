@@ -5,6 +5,7 @@ import HomePage from './Pages/HomePage'
 import HotelsPage from './Pages/HotelsPage'
 import WellbeingPage from './Pages/Wellbeingpage'
 import GroupsPage from './Pages/Groupspage'
+import GroupChatRoom from './Pages/Groupchatroom'  // ← ADD THIS IMPORT
 import AboutPage from './Pages/AboutPage'
 import SignInPage from './Pages/SignInPage'
 import SignUpPage from './Pages/SignUpPage'
@@ -39,6 +40,15 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <GroupsPage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    {/* ← ADD THIS NEW ROUTE FOR INDIVIDUAL GROUP CHAT ROOMS */}
+                    <Route
+                        path="/groups/:groupId"
+                        element={
+                            <ProtectedRoute>
+                                <GroupChatRoom />
                             </ProtectedRoute>
                         }
                     />
