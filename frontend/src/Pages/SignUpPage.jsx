@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { supabase } from "../lib/supabase";
+import { useAuth } from '../contexts/AuthContext'
 import './AuthPages.css'
 
 export default function SignUpPage() {
     const navigate = useNavigate()
+    const { signUp, signInWithOAuth } = useAuth()
     const [fullName, setFullName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -38,17 +39,9 @@ export default function SignUpPage() {
         setLoading(true)
 
         try {
-            const { data, error } = await supabase.auth.signUp({
-                email,
-                password,
-                options: {
-                    data: {
-                        full_name: fullName,
-                    }
-                }
+            const data = await signUp(email, password, {
+                full_name: fullName,
             })
-
-            if (error) throw error
 
             // Check if email confirmation is required
             if (data?.user?.identities?.length === 0) {
@@ -67,13 +60,7 @@ export default function SignUpPage() {
 
     const handleGoogleSignUp = async () => {
         try {
-            const { error } = await supabase.auth.signInWithOAuth({
-                provider: 'google',
-                options: {
-                    redirectTo: `${window.location.origin}/`
-                }
-            })
-            if (error) throw error
+            await signInWithOAuth('google')
         } catch (error) {
             setError(error.message)
         }
@@ -81,13 +68,7 @@ export default function SignUpPage() {
 
     const handleFacebookSignUp = async () => {
         try {
-            const { error } = await supabase.auth.signInWithOAuth({
-                provider: 'facebook',
-                options: {
-                    redirectTo: `${window.location.origin}/`
-                }
-            })
-            if (error) throw error
+            await signInWithOAuth('facebook')
         } catch (error) {
             setError(error.message)
         }

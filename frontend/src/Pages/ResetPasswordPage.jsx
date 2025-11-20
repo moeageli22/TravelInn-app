@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 import { supabase } from "../lib/supabase"
 import './AuthPages.css'
 
 export default function ResetPasswordPage() {
     const navigate = useNavigate()
+    const { updatePassword } = useAuth()
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [loading, setLoading] = useState(false)
@@ -41,12 +43,7 @@ export default function ResetPasswordPage() {
         setLoading(true)
 
         try {
-            const { error } = await supabase.auth.updateUser({
-                password: password
-            })
-
-            if (error) throw error
-
+            await updatePassword(password)
             setSuccess(true)
 
             // Redirect to sign in after 3 seconds

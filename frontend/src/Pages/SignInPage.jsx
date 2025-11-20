@@ -1,10 +1,12 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { supabase } from "../lib/supabase";
+import { useNavigate, useLocation } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 import './AuthPages.css'
 
 export default function SignInPage() {
     const navigate = useNavigate()
+    const location = useLocation()
+    const { signIn, signInWithOAuth } = useAuth()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
@@ -12,21 +14,18 @@ export default function SignInPage() {
     const [showPassword, setShowPassword] = useState(false)
     const [rememberMe, setRememberMe] = useState(false)
 
+    // Get the page user was trying to access before being redirected to sign in
+    const from = location.state?.from?.pathname || '/'
+
     const handleEmailSignIn = async (e) => {
         e.preventDefault()
         setError('')
         setLoading(true)
 
         try {
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email,
-                password,
-            })
-
-            if (error) throw error
-
-            // Successful sign in
-            navigate('/')
+            await signIn(email, password)
+            // Redirect to the page they were trying to access, or home
+            navigate(from, { replace: true })
         } catch (error) {
             setError(error.message)
         } finally {
@@ -36,13 +35,7 @@ export default function SignInPage() {
 
     const handleGoogleSignIn = async () => {
         try {
-            const { error } = await supabase.auth.signInWithOAuth({
-                provider: 'google',
-                options: {
-                    redirectTo: `${window.location.origin}/`
-                }
-            })
-            if (error) throw error
+            await signInWithOAuth('google')
         } catch (error) {
             setError(error.message)
         }
@@ -50,13 +43,7 @@ export default function SignInPage() {
 
     const handleFacebookSignIn = async () => {
         try {
-            const { error } = await supabase.auth.signInWithOAuth({
-                provider: 'facebook',
-                options: {
-                    redirectTo: `${window.location.origin}/`
-                }
-            })
-            if (error) throw error
+            await signInWithOAuth('facebook')
         } catch (error) {
             setError(error.message)
         }

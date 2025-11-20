@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { supabase } from "../lib/supabase"
+import { useAuth } from '../contexts/AuthContext'
 import './AuthPages.css'
 
 export default function ForgotPasswordPage() {
     const navigate = useNavigate()
+    const { resetPassword } = useAuth()
     const [email, setEmail] = useState('')
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
@@ -16,12 +17,7 @@ export default function ForgotPasswordPage() {
         setLoading(true)
 
         try {
-            const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                redirectTo: `${window.location.origin}/reset-password`,
-            })
-
-            if (error) throw error
-
+            await resetPassword(email)
             setSuccess(true)
         } catch (error) {
             setError(error.message)
