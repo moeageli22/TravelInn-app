@@ -11,47 +11,47 @@ const hotelData = [
 
     // Paris Hotels
     { name: 'Le Royale Paris', location: 'Champs-Élysées, Paris', price: 920, image: 'https://images.unsplash.com/photo-1549294413-26f195200c16', rating: 4.9, amenities: 'Eiffel View, Michelin Star, Butler Service' },
-    { name: 'Maison Élégance', location: 'Le Marais, Paris', price: 850, image: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa', rating: 4.8, amenities: 'Luxury Spa, Fine Dining' },
-    { name: 'Château Lumière', location: 'Saint-Germain, Paris', price: 980, image: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791', rating: 5.0, amenities: 'Art Collection, Rooftop Pool' },
+    { name: 'Maison Élégance', location: 'Le Marais, Paris', price: 850, image: 'https://cdn.wallpapersafari.com/15/5/RQF2z0.jpg', rating: 4.8, amenities: 'Luxury Spa, Fine Dining' },
+    { name: 'Château Lumière', location: 'Saint-Germain, Paris', price: 980, image: 'https://images.photowall.com/products/61949/view-over-paris.jpg?h=699&q=85', rating: 5.0, amenities: 'Art Collection, Rooftop Pool' },
 
     // Tokyo Hotels
-    { name: 'Skyline Imperial Tokyo', location: 'Shinjuku, Tokyo', price: 890, image: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5', rating: 4.9, amenities: 'Skyline View, Onsen, Japanese Cuisine' },
+    { name: 'Skyline Imperial Tokyo', location: 'Shinjuku, Tokyo', price: 890, image: 'https://cdn.craft.cloud/101e4579-0e19-46b6-95c6-7eb27e4afc41/assets/uploads/Tokyo-for-Hero.jpg', rating: 4.9, amenities: 'Skyline View, Onsen, Japanese Cuisine' },
     { name: 'Harmony Gardens Tokyo', location: 'Ginza, Tokyo', price: 720, image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4', rating: 4.7, amenities: 'Imperial Palace View, Spa' },
     { name: 'Zen Luxury Suites', location: 'Roppongi, Tokyo', price: 680, image: 'https://images.unsplash.com/photo-1496417263034-38ec4f0b665a', rating: 4.8, amenities: 'City View, Michelin Dining' },
 
     // London Hotels
-    { name: 'Thames Royale', location: 'Westminster, London', price: 780, image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945', rating: 4.8, amenities: 'Thames View, American Bar, Concierge' },
-    { name: 'Mayfair Heritage', location: 'Mayfair, London', price: 820, image: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa', rating: 4.9, amenities: 'Art Deco, Afternoon Tea' },
-    { name: 'Crown Palace London', location: 'Piccadilly, London', price: 890, image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb', rating: 5.0, amenities: 'Royal Suite, Palm Court' },
+    { name: 'Thames Royale', location: 'Westminster, London', price: 780, image: 'https://media.istockphoto.com/id/538409031/photo/big-ben-and-houses-of-parliament-london.jpg?s=612x612&w=0&k=20&c=hwzZlXdyXkn00chbiG8H1tffSiCnXmRRLmt4Q01xi6Y=', rating: 4.8, amenities: 'Thames View, American Bar, Concierge' },
+    { name: 'Mayfair Heritage', location: 'Mayfair, London', price: 820, image: 'https://c0.wallpaperflare.com/preview/320/877/213/london-united-kingdom-mayfair-britain.jpg', rating: 4.9, amenities: 'Art Deco, Afternoon Tea' },
+    { name: 'Crown Palace London', location: 'Piccadilly, London', price: 890, image: 'https://img.goodfon.com/original/2048x1365/1/21/london-angliia-ploshchad-pikadilli-sokho-fontan-shaftesbari.jpg', rating: 5.0, amenities: 'Royal Suite, Palm Court' },
 
     // Maldives Hotels
-    { name: 'Azure Paradise Resort', location: 'North Malé Atoll, Maldives', price: 450, image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19', rating: 4.7, amenities: 'Beach, Diving, Bar, Seaplane' },
+    { name: 'Azure Paradise Resort', location: 'North Malé Atoll, Maldives', price: 450, image: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2b/0b/a5/a6/caption.jpg?w=1200&h=-1&s=1&cx=1920&cy=1080&chk=v1_15c12bc8431b4bf1b61e', rating: 4.7, amenities: 'Beach, Diving, Bar, Seaplane' },
     { name: 'Coral Dreams Resort', location: 'Baa Atoll, Maldives', price: 1450, image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b', rating: 5.0, amenities: 'Private Island, Water Slide, Snorkeling' },
     { name: 'Ocean Breeze Villas', location: 'Ari Atoll, Maldives', price: 950, image: 'https://images.unsplash.com/photo-1611892440504-42a792e24d32', rating: 4.9, amenities: 'Underwater Restaurant, Spa' },
 
     // New York Hotels
-    { name: 'Manhattan Luxe Hotel', location: 'Fifth Avenue, New York', price: 890, image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945', rating: 4.9, amenities: 'Fifth Avenue, Butler Service' },
-    { name: 'Central Park Plaza', location: 'Midtown, New York', price: 950, image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb', rating: 5.0, amenities: 'Central Park, Palm Court' },
-    { name: 'Empire Suites NYC', location: 'Times Square, New York', price: 820, image: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa', rating: 4.8, amenities: 'Rooftop Dining, City Views' },
+    { name: 'Manhattan Luxe Hotel', location: 'Fifth Avenue, New York', price: 890, image: 'https://img.freepik.com/free-photo/high-angle-shot-city-buildings-new-york-manhattan_181624-24684.jpg', rating: 4.9, amenities: 'Fifth Avenue, Butler Service' },
+    { name: 'Central Park Plaza', location: 'Midtown, New York', price: 950, image: 'https://images.fineartamerica.com/images/artworkimages/mediumlarge/2/new-york-city-midtown-skyline-enzo-figueres.jpg', rating: 5.0, amenities: 'Central Park, Palm Court' },
+    { name: 'Empire Suites NYC', location: 'Times Square, New York', price: 820, image: 'https://media.istockphoto.com/id/523513953/photo/times-square-in-new-york-city.jpg?s=612x612&w=0&k=20&c=ibPzzIPHrsIdPElVpZYHyWyvqIN4VXTzNP5UXiQcpu8=', rating: 4.8, amenities: 'Rooftop Dining, City Views' },
 
     // Santorini Hotels
     { name: 'Sunset Cliffs Resort', location: 'Oia, Santorini', price: 680, image: 'https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e', rating: 4.9, amenities: 'Caldera View, Infinity Pool, Wine Tasting' },
     { name: 'Aegean Dream Suites', location: 'Fira, Santorini', price: 620, image: 'https://images.unsplash.com/photo-1582719508461-905c673771fd', rating: 4.8, amenities: 'Sunset View, Cave Suites' },
-    { name: 'Whitewashed Paradise', location: 'Imerovigli, Santorini', price: 590, image: 'https://images.unsplash.com/photo-1562791069-e6c21d88b665', rating: 4.7, amenities: 'Cliffside, Champagne Lounge' },
+    { name: 'Whitewashed Paradise', location: 'Imerovigli, Santorini', price: 590, image: 'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YmVhY2glMjBob3RlbHxlbnwwfHwwfHx8MA%3D%3D', rating: 4.7, amenities: 'Cliffside, Champagne Lounge' },
 
     // Riyadh Hotels
     { name: 'Kingdom Heights Hotel', location: 'King Fahd Road, Riyadh', price: 420, image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb', rating: 4.7, amenities: 'Kingdom Tower View, Spa' },
-    { name: 'Royal Oasis Riyadh', location: 'Al Malqa, Riyadh', price: 480, image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945', rating: 4.8, amenities: 'Palace Design, Fine Dining' },
+    { name: 'Royal Oasis Riyadh', location: 'Al Malqa, Riyadh', price: 480, image: 'https://thumbs.dreamstime.com/b/blue-hour-kafd-buildings-riyadh-saudi-arabia-stand-out-ai-generative-design-background-instagram-facebook-wall-324270807.jpg', rating: 4.8, amenities: 'Palace Design, Fine Dining' },
     { name: 'Desert Pearl Hotel', location: 'Olaya District, Riyadh', price: 350, image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d', rating: 4.6, amenities: 'City Center, Modern Luxury' },
 
     // Makkah Hotels
-    { name: 'Grand Haram Tower', location: 'Central Area, Makkah', price: 380, image: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791', rating: 4.8, amenities: 'Haram View, Prayer Rooms' },
-    { name: 'Sacred Valley Hotel', location: 'Abraj Al Bait, Makkah', price: 420, image: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa', rating: 4.9, amenities: 'Holy Mosque Access, Dining' },
+    { name: 'Grand Haram Tower', location: 'Central Area, Makkah', price: 380, image: 'https://www.shutterstock.com/image-photo/makkah-saudi-arabia-afril-2018-600nw-2528493651.jpg', rating: 4.8, amenities: 'Haram View, Prayer Rooms' },
+    { name: 'Sacred Valley Hotel', location: 'Abraj Al Bait, Makkah', price: 420, image: 'https://t4.ftcdn.net/jpg/16/13/31/55/360_F_1613315585_YqprDPfsZvI8FioV2nwv6xgM9T3MrFvd.jpg', rating: 4.9, amenities: 'Holy Mosque Access, Dining' },
     { name: 'Pilgrim Suites Makkah', location: 'Ajyad Street, Makkah', price: 350, image: 'https://images.unsplash.com/photo-1549294413-26f195200c16', rating: 4.7, amenities: 'Kaaba View, Spa' },
 
     // Switzerland Hotels
     { name: 'Alpine Crown Resort', location: 'Andermatt, Switzerland', price: 780, image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4', rating: 4.9, amenities: 'Alpine Spa, Ski Access' },
-    { name: 'Mountain Majesty Lodge', location: 'St. Moritz, Switzerland', price: 950, image: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800', rating: 5.0, amenities: 'Mountain View, Ice Rink' },
+    { name: 'Mountain Majesty Lodge', location: 'St. Moritz, Switzerland', price: 950, image: 'https://media.istockphoto.com/id/517599616/photo/panorama-view-of-oeschinensee-on-bernese-oberla.jpg?s=612x612&w=0&k=20&c=PkX0ebgjcsBK4_dnDGClLGspqI4bUZqGB-qUyBnoyIo=', rating: 5.0, amenities: 'Mountain View, Ice Rink' },
     { name: 'Lake View Grand Hotel', location: 'Zurich, Switzerland', price: 680, image: 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1', rating: 4.8, amenities: 'City & Lake View, Art Collection' }
 ]
 

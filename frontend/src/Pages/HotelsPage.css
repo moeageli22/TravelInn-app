@@ -77,7 +77,7 @@
 .container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 120px 2rem 4rem;
+    padding: 140px 2rem 4rem;
     position: relative;
     z-index: 1;
 }
@@ -85,6 +85,8 @@
 .page-header {
     text-align: center;
     margin-bottom: 3rem;
+    margin-top: 2rem;
+    padding-top: 1rem;
 }
 
 .page-header h1 {
@@ -94,6 +96,8 @@
     background: linear-gradient(135deg, #60a5fa 0%, #a855f7 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    line-height: 1.2;
+    padding: 0.5rem 0;
 }
 
 .page-header p {
