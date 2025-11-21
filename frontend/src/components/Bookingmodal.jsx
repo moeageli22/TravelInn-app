@@ -31,10 +31,12 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
 
     // Payment details
     const [paymentMethod, setPaymentMethod] = useState('card')
+    const [email, setEmail] = useState('')
     const [cardName, setCardName] = useState('')
     const [cardNumber, setCardNumber] = useState('')
     const [expiryDate, setExpiryDate] = useState('')
     const [cvv, setCvv] = useState('')
+    const [isProcessing, setIsProcessing] = useState(false)
 
     if (!isOpen || !hotel) return null
 
@@ -68,16 +70,105 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
         if (step > 1) setStep(step - 1)
     }
 
-    const handleConfirmBooking = () => {
-        alert(`🎉 Booking Confirmed!\n\nHotel: ${hotel.name}\nRoom: ${selectedRoom.name}\nCheck-in: ${checkIn}\nCheck-out: ${checkOut}\nNights: ${nights}\nTotal: $${totalPrice}\n\nThank you for choosing Travelinn!`)
-        onClose()
-        // Reset form
-        setStep(1)
-        setSelectedRoom(null)
-        setCheckIn('')
-        setCheckOut('')
-        setGuests(2)
-        setSpecialRequests('')
+    const sendConfirmationEmail = async (bookingDetails) => {
+        try {
+            // Use Supabase Edge Function
+            const supabaseUrl = 'https://zeeimyqduvannrxhevws.supabase.co'
+            const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InplZWlteXFkdXZhbm5yeGhldndzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI1MTI1ODQsImV4cCI6MjA3ODA4ODU4NH0.xRnMy2jaEpOKTJCCIf1BuZERatHor0ToheWZM0zP-Ho'
+
+            const response = await fetch(`${supabaseUrl}/functions/v1/send-booking-confirmation`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${supabaseAnonKey}`
+                },
+                body: JSON.stringify(bookingDetails)
+            })
+
+            const data = await response.json()
+
+            if (data.success) {
+                console.log('Confirmation email sent successfully:', data.confirmationId)
+
+                // Optional: Display the email preview in development
+                if (data.emailPreview) {
+                    console.log('Email Preview Available - Check console for HTML')
+                }
+
+                return data.confirmationId
+            } else {
+                console.error('Failed to send confirmation email:', data.message)
+                return null
+            }
+        } catch (error) {
+            console.error('Error sending confirmation email:', error)
+            return null
+        }
+    }
+
+    const handleConfirmBooking = async () => {
+        // Validate email
+        if (!email || !email.includes('@')) {
+            alert('Please enter a valid email address to receive your confirmation.')
+            return
+        }
+
+        // Validate payment details for card payment
+        if (paymentMethod === 'card') {
+            if (!cardName || !cardNumber || !expiryDate || !cvv) {
+                alert('Please fill in all card details.')
+                return
+            }
+        }
+
+        setIsProcessing(true)
+
+        try {
+            // Prepare booking details
+            const bookingDetails = {
+                email: email,
+                hotelName: hotel.name,
+                hotelLocation: hotel.location,
+                roomName: selectedRoom.name,
+                roomPrice: selectedRoom.price,
+                checkIn: checkIn,
+                checkOut: checkOut,
+                nights: nights,
+                guests: guests,
+                totalPrice: totalPrice,
+                specialRequests: specialRequests,
+                paymentMethod: paymentMethod
+            }
+
+            // Send confirmation email
+            const confirmationId = await sendConfirmationEmail(bookingDetails)
+
+            // Show success message
+            if (confirmationId) {
+                alert(`🎉 Booking Confirmed!\n\nConfirmation ID: ${confirmationId}\n\nHotel: ${hotel.name}\nRoom: ${selectedRoom.name}\nCheck-in: ${checkIn}\nCheck-out: ${checkOut}\nNights: ${nights}\nTotal: $${totalPrice}\n\n📧 A confirmation email has been sent to ${email}\n\nThank you for choosing Travelinn!`)
+            } else {
+                alert(`🎉 Booking Confirmed!\n\nHotel: ${hotel.name}\nRoom: ${selectedRoom.name}\nCheck-in: ${checkIn}\nCheck-out: ${checkOut}\nNights: ${nights}\nTotal: $${totalPrice}\n\n⚠️ Note: Confirmation email could not be sent at this time, but your booking is confirmed.\n\nThank you for choosing Travelinn!`)
+            }
+
+            onClose()
+            // Reset form
+            setStep(1)
+            setSelectedRoom(null)
+            setCheckIn('')
+            setCheckOut('')
+            setGuests(2)
+            setSpecialRequests('')
+            setEmail('')
+            setCardName('')
+            setCardNumber('')
+            setExpiryDate('')
+            setCvv('')
+        } catch (error) {
+            console.error('Error processing booking:', error)
+            alert('There was an error processing your booking. Please try again.')
+        } finally {
+            setIsProcessing(false)
+        }
     }
 
     const getTodayDate = () => {
@@ -345,6 +436,43 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                             </h3>
                             <p className="payment-subtitle">Choose your preferred payment method and confirm your stay.</p>
 
+                            {/* Email Input for Receipt */}
+                            <div className="payment-form" style={{ marginBottom: '2rem' }}>
+                                <div className="form-group">
+                                    <label>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                            <polyline points="22,6 12,13 2,6"/>
+                                        </svg>
+                                        Email Address for Receipt & Confirmation *
+                                    </label>
+                                    <input
+                                        type="email"
+                                        placeholder="your.email@example.com"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        required
+                                        style={{
+                                            padding: '1rem 1.25rem',
+                                            background: 'rgba(15, 23, 42, 0.6)',
+                                            border: '2px solid rgba(139, 92, 246, 0.3)',
+                                            borderRadius: '14px',
+                                            color: 'white',
+                                            fontSize: '0.95rem',
+                                            outline: 'none',
+                                            transition: 'all 0.3s'
+                                        }}
+                                    />
+                                    <p style={{
+                                        margin: '0.5rem 0 0',
+                                        color: 'rgba(255, 255, 255, 0.6)',
+                                        fontSize: '0.85rem'
+                                    }}>
+                                        📧 Your booking confirmation and receipt will be sent to this email
+                                    </p>
+                                </div>
+                            </div>
+
                             {/* Payment Methods */}
                             <div className="payment-methods">
                                 <div
@@ -488,7 +616,7 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                 {/* Footer Actions */}
                 <div className="booking-modal-footer">
                     {step > 1 && (
-                        <button className="btn-secondary" onClick={handleBack}>
+                        <button className="btn-secondary" onClick={handleBack} disabled={isProcessing}>
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                 <line x1="19" y1="12" x2="5" y2="12"/>
                                 <polyline points="12 19 5 12 12 5"/>
@@ -509,11 +637,31 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                             </svg>
                         </button>
                     ) : (
-                        <button className="btn-primary" onClick={handleConfirmBooking}>
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <polyline points="20 6 9 17 4 12"/>
-                            </svg>
-                            Confirm & Pay ${totalPrice}
+                        <button
+                            className="btn-primary"
+                            onClick={handleConfirmBooking}
+                            disabled={isProcessing || !email}
+                        >
+                            {isProcessing ? (
+                                <>
+                                    <div className="spinner" style={{
+                                        width: '20px',
+                                        height: '20px',
+                                        border: '3px solid rgba(255, 255, 255, 0.3)',
+                                        borderTop: '3px solid white',
+                                        borderRadius: '50%',
+                                        animation: 'spin 1s linear infinite'
+                                    }}></div>
+                                    Processing...
+                                </>
+                            ) : (
+                                <>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                    Confirm & Pay ${totalPrice}
+                                </>
+                            )}
                         </button>
                     )}
                 </div>
