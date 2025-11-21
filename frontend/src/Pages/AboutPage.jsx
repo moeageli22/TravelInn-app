@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
+import UserMenu from '../components/UserMenu'
 import logo from '../assets/IMG_3327.png' // Ensure the image is in src/assets
 import './AboutPage.css'
 
@@ -11,6 +13,7 @@ const backgroundImages = [
 
 export default function AboutPage() {
     const navigate = useNavigate()
+    const { user } = useAuth()
     const [currentSlide, setCurrentSlide] = useState(0)
     const [chatOpen, setChatOpen] = useState(false)
 
@@ -64,7 +67,11 @@ export default function AboutPage() {
                     <li><a href="/groups" onClick={(e) => { e.preventDefault(); navigate('/groups') }}>Groups</a></li>
                     <li><a href="/about" className="active">About</a></li>
                 </ul>
-                <button className="sign-in-btn" onClick={() => navigate('/signin')}>Sign In</button>
+                {user ? (
+                    <UserMenu />
+                ) : (
+                    <button className="sign-in-btn" onClick={() => navigate('/signin')}>Sign In</button>
+                )}
             </nav>
 
             {/* Hero Section */}

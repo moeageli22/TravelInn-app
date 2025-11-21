@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 import SettingsModal from '../components/SettingsModal'
+import UserMenu from '../components/UserMenu'
 import './HomePage.css'
 
 const backgroundImages = [
@@ -11,6 +13,7 @@ const backgroundImages = [
 
 export default function HomePage() {
     const navigate = useNavigate()
+    const { user } = useAuth()
     const [currentSlide, setCurrentSlide] = useState(0)
     const [chatOpen, setChatOpen] = useState(false)
     const [settingsOpen, setSettingsOpen] = useState(false)
@@ -163,7 +166,11 @@ export default function HomePage() {
                             <path d="M12 1v6m0 6v6m10-7h-6m-6 0H4m15.364 6.364l-4.243-4.243m-6.364 0l-4.243 4.243m16.485-12.728l-4.243 4.243m-6.364 0L4.222 4.222"/>
                         </svg>
                     </button>
-                    <button className="sign-in-btn" onClick={() => navigate('/signin')}>Sign In</button>
+                    {user ? (
+                        <UserMenu />
+                    ) : (
+                        <button className="sign-in-btn" onClick={() => navigate('/signin')}>Sign In</button>
+                    )}
                 </div>
             </nav>
 

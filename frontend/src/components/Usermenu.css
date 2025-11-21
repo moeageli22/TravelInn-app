@@ -1,0 +1,219 @@
+/* User Menu Styles */
+.user-menu {
+    position: relative;
+    z-index: 1000;
+}
+
+.user-menu-trigger {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.user-menu-trigger:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.user-email {
+    font-weight: 500;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dropdown-arrow {
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+}
+
+.dropdown-arrow.open {
+    transform: rotate(180deg);
+}
+
+/* Dropdown Menu */
+.user-dropdown {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    min-width: 280px;
+    background: rgba(20, 20, 30, 0.98);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(20px);
+    animation: dropdownSlideIn 0.3s ease;
+    overflow: hidden;
+}
+
+@keyframes dropdownSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: rgba(139, 92, 246, 0.1);
+}
+
+.dropdown-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.dropdown-user-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.dropdown-name {
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    margin: 0 0 0.25rem 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dropdown-email {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.85rem;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 0.5rem 0;
+}
+
+.dropdown-menu {
+    padding: 0.5rem;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.dropdown-item:hover {
+    background: rgba(139, 92, 246, 0.15);
+    color: white;
+}
+
+.dropdown-item svg {
+    flex-shrink: 0;
+    opacity: 0.7;
+}
+
+.dropdown-item:hover svg {
+    opacity: 1;
+}
+
+.sign-out-item {
+    color: rgba(239, 68, 68, 0.9);
+}
+
+.sign-out-item:hover {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .user-email {
+        display: none;
+    }
+
+    .user-menu-trigger {
+        padding: 0.5rem;
+        min-width: auto;
+    }
+
+    .user-dropdown {
+        min-width: 260px;
+        right: -1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .user-dropdown {
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        min-width: 100%;
+        border-radius: 16px 16px 0 0;
+        animation: dropdownSlideUp 0.3s ease;
+    }
+
+    @keyframes dropdownSlideUp {
+        from {
+            opacity: 0;
+            transform: translateY(100%);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+}

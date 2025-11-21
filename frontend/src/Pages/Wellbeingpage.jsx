@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
+import UserMenu from '../components/UserMenu'
 import './Wellbeingpage.css'
 
 // Background images for the slideshow (Blue themed - Ocean, Sky, Nature)
@@ -13,6 +15,7 @@ const backgroundImages = [
 
 export default function Wellbeingpage() {
     const navigate = useNavigate()
+    const { user } = useAuth()
     const [currentSlide, setCurrentSlide] = useState(0)
     const [chatOpen, setChatOpen] = useState(false)
     const [soloTravelerEnabled, setSoloTravelerEnabled] = useState(false)
@@ -255,7 +258,11 @@ export default function Wellbeingpage() {
                     <li><a href="/groups" onClick={(e) => { e.preventDefault(); navigate('/groups'); setMobileMenuOpen(false); }}>Groups</a></li>
                     <li><a href="/about" onClick={(e) => { e.preventDefault(); navigate('/about'); setMobileMenuOpen(false); }}>About</a></li>
                 </ul>
-                <button className="sign-in-btn" onClick={() => navigate('/signin')}>Sign In</button>
+                {user ? (
+                    <UserMenu />
+                ) : (
+                    <button className="sign-in-btn" onClick={() => navigate('/signin')}>Sign In</button>
+                )}
             </nav>
 
             <div className="container">

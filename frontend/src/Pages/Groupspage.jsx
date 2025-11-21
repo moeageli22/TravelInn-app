@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
+import UserMenu from '../components/UserMenu'
 import './GroupsPage.css'
 
 const COMMUNITY_GROUPS = [
@@ -55,6 +57,7 @@ const COMMUNITY_GROUPS = [
 
 export default function GroupsPage() {
     const navigate = useNavigate()
+    const { user } = useAuth()
     const [searchQuery, setSearchQuery] = useState('')
 
     const filteredGroups = COMMUNITY_GROUPS.filter(group =>
@@ -77,7 +80,11 @@ export default function GroupsPage() {
                     <li><a href="/groups" className="active">Groups</a></li>
                     <li><a href="#about" onClick={(e) => { e.preventDefault(); navigate('/about') }}>About</a></li>
                 </ul>
-                <button className="sign-in-btn" onClick={() => navigate('/signin')}>Sign In</button>
+                {user ? (
+                    <UserMenu />
+                ) : (
+                    <button className="sign-in-btn" onClick={() => navigate('/signin')}>Sign In</button>
+                )}
             </nav>
 
             <div className="container">
