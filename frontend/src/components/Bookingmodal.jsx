@@ -479,7 +479,13 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                                     className={`payment-method ${paymentMethod === 'card' ? 'selected' : ''}`}
                                     onClick={() => setPaymentMethod('card')}
                                 >
-                                    <div className="method-icon">💳</div>
+                                    <div className="method-icon">
+                                        <img
+                                            src="https://t4.ftcdn.net/jpg/04/06/75/39/360_F_406753914_SFSBhjhp6kbHblNiUFZ1MXHcuEKe7e7P.jpg"
+                                            alt="Credit Card"
+                                            style={{ width: '50px', height: '50px', objectFit: 'contain' }}
+                                        />
+                                    </div>
                                     <div>
                                         <h4>Credit / Debit Card</h4>
                                         <p>Pay with Visa, MasterCard, or AmEx</p>
@@ -489,7 +495,13 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                                     className={`payment-method ${paymentMethod === 'applepay' ? 'selected' : ''}`}
                                     onClick={() => setPaymentMethod('applepay')}
                                 >
-                                    <div className="method-icon"></div>
+                                    <div className="method-icon">
+                                        <img
+                                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWxYUQvdwKXZ9meVu4Jx6fr7nNNo99TLl-bA&s"
+                                            alt="Apple Pay"
+                                            style={{ width: '50px', height: '50px', objectFit: 'contain' }}
+                                        />
+                                    </div>
                                     <div>
                                         <h4>Apple Pay</h4>
                                         <p>Pay securely with Apple Pay</p>
@@ -499,7 +511,13 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                                     className={`payment-method ${paymentMethod === 'googlepay' ? 'selected' : ''}`}
                                     onClick={() => setPaymentMethod('googlepay')}
                                 >
-                                    <div className="method-icon">G</div>
+                                    <div className="method-icon">
+                                        <img
+                                            src="https://developers.google.com/static/pay/api/images/brand-guidelines/google-pay-mark.png"
+                                            alt="Google Pay"
+                                            style={{ width: '50px', height: '50px', objectFit: 'contain' }}
+                                        />
+                                    </div>
                                     <div>
                                         <h4>Google Pay</h4>
                                         <p>Fast & secure checkout</p>
@@ -509,14 +527,19 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                                     className={`payment-method ${paymentMethod === 'paypal' ? 'selected' : ''}`}
                                     onClick={() => setPaymentMethod('paypal')}
                                 >
-                                    <div className="method-icon">P</div>
+                                    <div className="method-icon">
+                                        <img
+                                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/PayPal.svg/2560px-PayPal.svg.png"
+                                            alt="PayPal"
+                                            style={{ width: '50px', height: 'auto', objectFit: 'contain' }}
+                                        />
+                                    </div>
                                     <div>
                                         <h4>PayPal</h4>
                                         <p>Pay with your PayPal account</p>
                                     </div>
                                 </div>
                             </div>
-
                             {/* Card Details Form */}
                             {paymentMethod === 'card' && (
                                 <div className="payment-form">
