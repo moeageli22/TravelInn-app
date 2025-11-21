@@ -1,7 +1,7 @@
 -- TravelInn Database Schema
 -- Add your CREATE TABLE statements here.
 -- ============================================================
--- TravelInn Database Schema (with all foreign keys)
+-- TravelInn Database Schema (with all foreign keys).
 -- ============================================================
 
 -- 1. USERS (Linked to Supabase Auth)
