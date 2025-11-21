@@ -11,6 +11,7 @@ export default function ProfilePage() {
     const [loading, setLoading] = useState(true)
     const [uploading, setUploading] = useState(false)
     const [saving, setSaving] = useState(false)
+    const [successMessage, setSuccessMessage] = useState('')
 
     // Profile data
     const [profile, setProfile] = useState({
@@ -53,6 +54,16 @@ export default function ProfilePage() {
             navigate('/signin')
         }
     }, [user, navigate])
+
+    // Auto-hide success message after 5 seconds
+    useEffect(() => {
+        if (successMessage) {
+            const timer = setTimeout(() => {
+                setSuccessMessage('')
+            }, 5000)
+            return () => clearTimeout(timer)
+        }
+    }, [successMessage])
 
     const loadProfile = async () => {
         try {
@@ -107,6 +118,19 @@ export default function ProfilePage() {
             }
 
             const file = event.target.files[0]
+
+            // Check file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('File size must be less than 5MB')
+                return
+            }
+
+            // Check file type
+            if (!file.type.startsWith('image/')) {
+                alert('Please upload an image file')
+                return
+            }
+
             const fileExt = file.name.split('.').pop()
             const fileName = `${user.id}-${Math.random()}.${fileExt}`
             const filePath = `avatars/${fileName}`
@@ -139,6 +163,7 @@ export default function ProfilePage() {
 
             setProfile({ ...profile, avatar_url: avatarUrl })
             setEditedProfile({ ...editedProfile, avatar_url: avatarUrl })
+            setSuccessMessage('Profile picture updated successfully!')
         } catch (error) {
             console.error('Error uploading avatar:', error)
             alert('Error uploading image. Please try again.')
@@ -156,6 +181,19 @@ export default function ProfilePage() {
             }
 
             const file = event.target.files[0]
+
+            // Check file size (max 10MB)
+            if (file.size > 10 * 1024 * 1024) {
+                alert('File size must be less than 10MB')
+                return
+            }
+
+            // Check file type
+            if (!file.type.startsWith('image/')) {
+                alert('Please upload an image file')
+                return
+            }
+
             const fileExt = file.name.split('.').pop()
             const fileName = `${user.id}-cover-${Math.random()}.${fileExt}`
             const filePath = `covers/${fileName}`
@@ -185,6 +223,7 @@ export default function ProfilePage() {
 
             setProfile({ ...profile, cover_photo_url: coverUrl })
             setEditedProfile({ ...editedProfile, cover_photo_url: coverUrl })
+            setSuccessMessage('Cover photo updated successfully!')
         } catch (error) {
             console.error('Error uploading cover photo:', error)
             alert('Error uploading image. Please try again.')
@@ -215,7 +254,7 @@ export default function ProfilePage() {
 
             setProfile(editedProfile)
             setIsEditing(false)
-            alert('Profile updated successfully!')
+            setSuccessMessage('Profile updated successfully!')
         } catch (error) {
             console.error('Error updating profile:', error)
             alert('Error updating profile. Please try again.')
@@ -244,7 +283,7 @@ export default function ProfilePage() {
 
             if (error) throw error
 
-            alert('Password updated successfully!')
+            setSuccessMessage('Password updated successfully!')
             setPasswordData({ newPassword: '', confirmPassword: '' })
         } catch (error) {
             console.error('Error updating password:', error)
@@ -263,7 +302,15 @@ export default function ProfilePage() {
         return (
             <div className="profile-page">
                 <nav>
-                    <div className="logo" onClick={() => navigate('/')}>Travelinn</div>
+                    <div className="nav-left">
+                        <button className="back-button" onClick={() => navigate(-1)}>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <line x1="19" y1="12" x2="5" y2="12"/>
+                                <polyline points="12 19 5 12 12 5"/>
+                            </svg>
+                        </button>
+                        <div className="logo" onClick={() => navigate('/')}>Travelinn</div>
+                    </div>
                     <ul className="nav-links">
                         <li><a href="/" onClick={(e) => { e.preventDefault(); navigate('/') }}>Home</a></li>
                         <li><a href="/hotels" onClick={(e) => { e.preventDefault(); navigate('/hotels') }}>Hotels</a></li>
@@ -284,7 +331,15 @@ export default function ProfilePage() {
     return (
         <div className="profile-page">
             <nav>
-                <div className="logo" onClick={() => navigate('/')}>Travelinn</div>
+                <div className="nav-left">
+                    <button className="back-button" onClick={() => navigate(-1)} aria-label="Go back">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <line x1="19" y1="12" x2="5" y2="12"/>
+                            <polyline points="12 19 5 12 12 5"/>
+                        </svg>
+                    </button>
+                    <div className="logo" onClick={() => navigate('/')}>Travelinn</div>
+                </div>
                 <ul className="nav-links">
                     <li><a href="/" onClick={(e) => { e.preventDefault(); navigate('/') }}>Home</a></li>
                     <li><a href="/hotels" onClick={(e) => { e.preventDefault(); navigate('/hotels') }}>Hotels</a></li>
@@ -314,7 +369,7 @@ export default function ProfilePage() {
                             <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
                             <circle cx="12" cy="13" r="4"></circle>
                         </svg>
-                        Change Cover
+                        {uploading ? 'Uploading...' : 'Change Cover'}
                         <input
                             type="file"
                             accept="image/*"
@@ -404,6 +459,16 @@ export default function ProfilePage() {
 
                 {/* Tab Content */}
                 <div className="tab-content">
+                    {/* Success Message */}
+                    {successMessage && (
+                        <div className="success-message">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                            </svg>
+                            {successMessage}
+                        </div>
+                    )}
+
                     {activeTab === 'profile' && (
                         <div className="profile-details">
                             {isEditing ? (
@@ -411,7 +476,13 @@ export default function ProfilePage() {
                                     <h2>Edit Profile</h2>
                                     <div className="form-grid">
                                         <div className="form-group">
-                                            <label>Full Name</label>
+                                            <label>
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                                    <circle cx="12" cy="7" r="4"></circle>
+                                                </svg>
+                                                Full Name
+                                            </label>
                                             <input
                                                 type="text"
                                                 value={editedProfile.full_name || ''}
@@ -421,7 +492,14 @@ export default function ProfilePage() {
                                         </div>
 
                                         <div className="form-group">
-                                            <label>Username</label>
+                                            <label>
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                                    <circle cx="8.5" cy="7" r="4"></circle>
+                                                    <polyline points="17 11 19 13 23 9"></polyline>
+                                                </svg>
+                                                Username
+                                            </label>
                                             <input
                                                 type="text"
                                                 value={editedProfile.username || ''}
@@ -431,7 +509,12 @@ export default function ProfilePage() {
                                         </div>
 
                                         <div className="form-group full-width">
-                                            <label>Bio</label>
+                                            <label>
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                                </svg>
+                                                Bio
+                                            </label>
                                             <textarea
                                                 value={editedProfile.bio || ''}
                                                 onChange={(e) => setEditedProfile({...editedProfile, bio: e.target.value})}
@@ -441,7 +524,12 @@ export default function ProfilePage() {
                                         </div>
 
                                         <div className="form-group">
-                                            <label>Phone</label>
+                                            <label>
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                                                </svg>
+                                                Phone
+                                            </label>
                                             <input
                                                 type="tel"
                                                 value={editedProfile.phone || ''}
@@ -451,7 +539,15 @@ export default function ProfilePage() {
                                         </div>
 
                                         <div className="form-group">
-                                            <label>Date of Birth</label>
+                                            <label>
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                                </svg>
+                                                Date of Birth
+                                            </label>
                                             <input
                                                 type="date"
                                                 value={editedProfile.date_of_birth || ''}
@@ -460,7 +556,13 @@ export default function ProfilePage() {
                                         </div>
 
                                         <div className="form-group">
-                                            <label>Country</label>
+                                            <label>
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                    <circle cx="12" cy="10" r="3"></circle>
+                                                    <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 6.9 8 11.7z"></path>
+                                                </svg>
+                                                Country
+                                            </label>
                                             <input
                                                 type="text"
                                                 value={editedProfile.country || ''}
@@ -470,7 +572,13 @@ export default function ProfilePage() {
                                         </div>
 
                                         <div className="form-group">
-                                            <label>City</label>
+                                            <label>
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                                    <circle cx="12" cy="10" r="3"></circle>
+                                                </svg>
+                                                City
+                                            </label>
                                             <input
                                                 type="text"
                                                 value={editedProfile.city || ''}
@@ -485,6 +593,10 @@ export default function ProfilePage() {
                                             setEditedProfile(profile)
                                             setIsEditing(false)
                                         }}>
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                                            </svg>
                                             Cancel
                                         </button>
                                         <button
@@ -492,7 +604,19 @@ export default function ProfilePage() {
                                             onClick={handleSaveProfile}
                                             disabled={saving}
                                         >
-                                            {saving ? 'Saving...' : 'Save Changes'}
+                                            {saving ? (
+                                                <>
+                                                    <div className="spinner" style={{ width: '18px', height: '18px', borderWidth: '2px' }}></div>
+                                                    Saving...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                                    </svg>
+                                                    Save Changes
+                                                </>
+                                            )}
                                         </button>
                                     </div>
                                 </div>
@@ -501,27 +625,27 @@ export default function ProfilePage() {
                                     <h2>Profile Information</h2>
                                     <div className="info-grid">
                                         <div className="info-item">
-                                            <label>Full Name</label>
+                                            <label>👤 Full Name</label>
                                             <p>{profile.full_name || 'Not provided'}</p>
                                         </div>
                                         <div className="info-item">
-                                            <label>Username</label>
+                                            <label>@️ Username</label>
                                             <p>{profile.username || 'Not set'}</p>
                                         </div>
                                         <div className="info-item">
-                                            <label>Email</label>
+                                            <label>📧 Email</label>
                                             <p>{user?.email}</p>
                                         </div>
                                         <div className="info-item">
-                                            <label>Phone</label>
+                                            <label>📞 Phone</label>
                                             <p>{profile.phone || 'Not provided'}</p>
                                         </div>
                                         <div className="info-item">
-                                            <label>Date of Birth</label>
+                                            <label>🎂 Date of Birth</label>
                                             <p>{profile.date_of_birth || 'Not provided'}</p>
                                         </div>
                                         <div className="info-item">
-                                            <label>Location</label>
+                                            <label>📍 Location</label>
                                             <p>
                                                 {profile.city && profile.country
                                                     ? `${profile.city}, ${profile.country}`
@@ -530,8 +654,8 @@ export default function ProfilePage() {
                                         </div>
                                     </div>
                                     {profile.bio && (
-                                        <div className="info-item full-width">
-                                            <label>Bio</label>
+                                        <div className="info-item full-width" style={{ marginTop: '1.5rem' }}>
+                                            <label>💬 Bio</label>
                                             <p>{profile.bio}</p>
                                         </div>
                                     )}
@@ -583,7 +707,7 @@ export default function ProfilePage() {
                             <div className="preferences-list">
                                 <div className="preference-item">
                                     <div className="preference-info">
-                                        <h3>Email Notifications</h3>
+                                        <h3>📧 Email Notifications</h3>
                                         <p>Receive email notifications about your bookings and updates</p>
                                     </div>
                                     <label className="toggle-switch">
@@ -598,7 +722,7 @@ export default function ProfilePage() {
 
                                 <div className="preference-item">
                                     <div className="preference-info">
-                                        <h3>Push Notifications</h3>
+                                        <h3>🔔 Push Notifications</h3>
                                         <p>Get push notifications on your device</p>
                                     </div>
                                     <label className="toggle-switch">
@@ -613,7 +737,7 @@ export default function ProfilePage() {
 
                                 <div className="preference-item">
                                     <div className="preference-info">
-                                        <h3>Newsletter</h3>
+                                        <h3>📰 Newsletter</h3>
                                         <p>Receive our weekly newsletter with travel tips</p>
                                     </div>
                                     <label className="toggle-switch">
@@ -628,7 +752,7 @@ export default function ProfilePage() {
 
                                 <div className="preference-item">
                                     <div className="preference-info">
-                                        <h3>Marketing Emails</h3>
+                                        <h3>🎯 Marketing Emails</h3>
                                         <p>Receive promotional offers and deals</p>
                                     </div>
                                     <label className="toggle-switch">

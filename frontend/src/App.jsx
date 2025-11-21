@@ -5,8 +5,9 @@ import HomePage from './Pages/HomePage'
 import HotelsPage from './Pages/HotelsPage'
 import WellbeingPage from './Pages/Wellbeingpage'
 import GroupsPage from './Pages/Groupspage'
-import GroupChatRoom from './Pages/Groupchatroom'  // ← ADD THIS IMPORT
+import GroupChatRoom from './Pages/Groupchatroom'
 import AboutPage from './Pages/AboutPage'
+import ProfilePage from './Pages/Profilepage'  // ← ADD THIS IMPORT
 import SignInPage from './Pages/SignInPage'
 import SignUpPage from './Pages/SignUpPage'
 import ForgotPasswordPage from './Pages/Forgotpasswordpage'
@@ -43,12 +44,20 @@ function App() {
                             </ProtectedRoute>
                         }
                     />
-                    {/* ← ADD THIS NEW ROUTE FOR INDIVIDUAL GROUP CHAT ROOMS */}
                     <Route
                         path="/groups/:groupId"
                         element={
                             <ProtectedRoute>
                                 <GroupChatRoom />
+                            </ProtectedRoute>
+                        }
+                    />
+                    {/* ← ADD THIS NEW ROUTE FOR PROFILE PAGE */}
+                    <Route
+                        path="/profile"
+                        element={
+                            <ProtectedRoute>
+                                <ProfilePage />
                             </ProtectedRoute>
                         }
                     />
