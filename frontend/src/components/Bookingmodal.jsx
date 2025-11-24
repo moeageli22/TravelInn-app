@@ -88,7 +88,7 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                 user_id: user.id,
                 guest_email: email,
                 guest_name: user.user_metadata?.full_name || cardName,
-                hotel_id: null, // You can map hotel names to IDs if you have them in the database
+                hotel_id: null,
                 room_type_id: null,
                 room_name: selectedRoom.name,
                 room_price: selectedRoom.price,
@@ -183,26 +183,68 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
             // Generate confirmation ID
             const confirmationId = generateConfirmationId()
 
-            // Save booking to database
-            await saveBookingToDatabase(confirmationId)
+            // Save booking to database (this is critical)
+            const savedBooking = await saveBookingToDatabase(confirmationId)
 
-            // Send confirmation email
-            const emailResult = await sendConfirmationEmail(confirmationId)
+            // Try to send email (but don't fail the booking if it doesn't work)
+            let emailSent = false
+            let emailError = null
 
-            // Show success message
-            if (emailResult?.success) {
-                alert(`🎉 Booking Confirmed!\n\nConfirmation ID: ${confirmationId}\n\nHotel: ${hotel.name}\nRoom: ${selectedRoom.name}\nCheck-in: ${checkIn}\nCheck-out: ${checkOut}\nNights: ${nights}\nTotal: $${totalPrice}\n\n📧 A confirmation email has been sent to ${email}\n\nThank you for choosing Travelinn!`)
-            } else {
-                alert(`🎉 Booking Confirmed!\n\nConfirmation ID: ${confirmationId}\n\nHotel: ${hotel.name}\nRoom: ${selectedRoom.name}\nCheck-in: ${checkIn}\nCheck-out: ${checkOut}\nNights: ${nights}\nTotal: $${totalPrice}\n\n⚠️ Note: Confirmation email could not be sent at this time, but your booking is saved.\n\nThank you for choosing Travelinn!`)
+            try {
+                const emailResult = await sendConfirmationEmail(confirmationId)
+                emailSent = emailResult?.success || false
+            } catch (error) {
+                console.error('Email sending failed:', error)
+                emailError = error.message
             }
 
-            // Reset form and close modal
+            // Show appropriate success message
+            if (emailSent) {
+                alert(
+                    `🎉 Booking Confirmed!\n\n` +
+                    `Confirmation ID: ${confirmationId}\n\n` +
+                    `Hotel: ${hotel.name}\n` +
+                    `Room: ${selectedRoom.name}\n` +
+                    `Check-in: ${checkIn}\n` +
+                    `Check-out: ${checkOut}\n` +
+                    `Nights: ${nights}\n` +
+                    `Total: $${totalPrice}\n\n` +
+                    `📧 Confirmation email sent to ${email}\n\n` +
+                    `Thank you for choosing Travelinn!`
+                )
+            } else {
+                alert(
+                    `🎉 Booking Confirmed!\n\n` +
+                    `Confirmation ID: ${confirmationId}\n\n` +
+                    `Hotel: ${hotel.name}\n` +
+                    `Room: ${selectedRoom.name}\n` +
+                    `Check-in: ${checkIn}\n` +
+                    `Check-out: ${checkOut}\n` +
+                    `Nights: ${nights}\n` +
+                    `Total: $${totalPrice}\n\n` +
+                    `⚠️ Email Notice:\n` +
+                    `Your booking is confirmed and saved!\n` +
+                    `However, email could not be sent to ${email}.\n\n` +
+                    `Possible reasons:\n` +
+                    `• Email address may not be verified in our system\n` +
+                    `• Please save your confirmation ID: ${confirmationId}\n\n` +
+                    `You can view your booking in your profile.\n\n` +
+                    `Thank you for choosing Travelinn!`
+                )
+            }
+
+            // Close modal and reset
             onClose()
             resetForm()
 
         } catch (error) {
             console.error('Error processing booking:', error)
-            alert(`There was an error processing your booking: ${error.message}\n\nPlease try again or contact support.`)
+            alert(
+                `❌ Booking Error\n\n` +
+                `There was an error processing your booking:\n` +
+                `${error.message}\n\n` +
+                `Please try again or contact support.`
+            )
         } finally {
             setIsProcessing(false)
         }
@@ -312,7 +354,7 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                     </div>
                 </div>
 
-                {/* Modal Content - Continuing in next part due to length... */}
+                {/* Modal Content */}
                 <div className="booking-modal-content">
                     {/* Step 1: Room Selection */}
                     {step === 1 && (
@@ -476,7 +518,7 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                         </div>
                     )}
 
-                    {/* Step 3: Payment - continued in next message due to length */}
+                    {/* Step 3: Payment */}
                     {step === 3 && (
                         <div className="step-content">
                             <h3>
