@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { supabase } from '../lib/supabase'
+import { useAuth } from '../contexts/AuthContext'
 import './BookingModal.css'
 
 const ROOM_TYPES = {
@@ -20,6 +22,7 @@ const ROOM_TYPES = {
 }
 
 export default function BookingModal({ isOpen, onClose, hotel }) {
+    const { user } = useAuth()
     const [step, setStep] = useState(1)
     const [selectedRoom, setSelectedRoom] = useState(null)
     const [checkIn, setCheckIn] = useState('')
@@ -70,61 +73,57 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
         if (step > 1) setStep(step - 1)
     }
 
-    const sendConfirmationEmail = async (bookingDetails) => {
+    const generateConfirmationId = () => {
+        return `TRV-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`
+    }
+
+    const saveBookingToDatabase = async (confirmationId) => {
         try {
-            // Use Supabase Edge Function
-            const supabaseUrl = 'https://zeeimyqduvannrxhevws.supabase.co'
-            const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InplZWlteXFkdXZhbm5yeGhldndzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI1MTI1ODQsImV4cCI6MjA3ODA4ODU4NH0.xRnMy2jaEpOKTJCCIf1BuZERatHor0ToheWZM0zP-Ho'
-
-            const response = await fetch(`${supabaseUrl}/functions/v1/send-booking-confirmation`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${supabaseAnonKey}`
-                },
-                body: JSON.stringify(bookingDetails)
-            })
-
-            const data = await response.json()
-
-            if (data.success) {
-                console.log('Confirmation email sent successfully:', data.confirmationId)
-
-                // Optional: Display the email preview in development
-                if (data.emailPreview) {
-                    console.log('Email Preview Available - Check console for HTML')
-                }
-
-                return data.confirmationId
-            } else {
-                console.error('Failed to send confirmation email:', data.message)
-                return null
+            if (!user) {
+                throw new Error('User not authenticated')
             }
+
+            const bookingData = {
+                confirmation_id: confirmationId,
+                user_id: user.id,
+                guest_email: email,
+                guest_name: user.user_metadata?.full_name || cardName,
+                hotel_id: null, // You can map hotel names to IDs if you have them in the database
+                room_type_id: null,
+                room_name: selectedRoom.name,
+                room_price: selectedRoom.price,
+                check_in: checkIn,
+                check_out: checkOut,
+                nights: nights,
+                guests: guests,
+                special_requests: specialRequests,
+                total_price: totalPrice,
+                payment_method: paymentMethod,
+                payment_status: 'paid',
+                status: 'confirmed'
+            }
+
+            const { data, error } = await supabase
+                .from('bookings')
+                .insert([bookingData])
+                .select()
+                .single()
+
+            if (error) {
+                console.error('Error saving booking to database:', error)
+                throw error
+            }
+
+            console.log('Booking saved successfully:', data)
+            return data
         } catch (error) {
-            console.error('Error sending confirmation email:', error)
-            return null
+            console.error('Error in saveBookingToDatabase:', error)
+            throw error
         }
     }
 
-    const handleConfirmBooking = async () => {
-        // Validate email
-        if (!email || !email.includes('@')) {
-            alert('Please enter a valid email address to receive your confirmation.')
-            return
-        }
-
-        // Validate payment details for card payment
-        if (paymentMethod === 'card') {
-            if (!cardName || !cardNumber || !expiryDate || !cvv) {
-                alert('Please fill in all card details.')
-                return
-            }
-        }
-
-        setIsProcessing(true)
-
+    const sendConfirmationEmail = async (confirmationId) => {
         try {
-            // Prepare booking details
             const bookingDetails = {
                 email: email,
                 hotelName: hotel.name,
@@ -137,38 +136,91 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                 guests: guests,
                 totalPrice: totalPrice,
                 specialRequests: specialRequests,
+                bookingId: confirmationId,
                 paymentMethod: paymentMethod
             }
 
-            // Send confirmation email
-            const confirmationId = await sendConfirmationEmail(bookingDetails)
+            // Call Supabase Edge Function
+            const { data, error } = await supabase.functions.invoke('send-booking-confirmation', {
+                body: bookingDetails
+            })
 
-            // Show success message
-            if (confirmationId) {
-                alert(`🎉 Booking Confirmed!\n\nConfirmation ID: ${confirmationId}\n\nHotel: ${hotel.name}\nRoom: ${selectedRoom.name}\nCheck-in: ${checkIn}\nCheck-out: ${checkOut}\nNights: ${nights}\nTotal: $${totalPrice}\n\n📧 A confirmation email has been sent to ${email}\n\nThank you for choosing Travelinn!`)
-            } else {
-                alert(`🎉 Booking Confirmed!\n\nHotel: ${hotel.name}\nRoom: ${selectedRoom.name}\nCheck-in: ${checkIn}\nCheck-out: ${checkOut}\nNights: ${nights}\nTotal: $${totalPrice}\n\n⚠️ Note: Confirmation email could not be sent at this time, but your booking is confirmed.\n\nThank you for choosing Travelinn!`)
+            if (error) {
+                console.error('Error calling edge function:', error)
+                throw error
             }
 
+            console.log('Email sent successfully:', data)
+            return data
+        } catch (error) {
+            console.error('Error sending confirmation email:', error)
+            throw error
+        }
+    }
+
+    const handleConfirmBooking = async () => {
+        // Validation
+        if (!email || !email.includes('@')) {
+            alert('Please enter a valid email address to receive your confirmation.')
+            return
+        }
+
+        if (paymentMethod === 'card') {
+            if (!cardName || !cardNumber || !expiryDate || !cvv) {
+                alert('Please fill in all card details.')
+                return
+            }
+        }
+
+        if (!user) {
+            alert('Please sign in to complete your booking.')
+            return
+        }
+
+        setIsProcessing(true)
+
+        try {
+            // Generate confirmation ID
+            const confirmationId = generateConfirmationId()
+
+            // Save booking to database
+            await saveBookingToDatabase(confirmationId)
+
+            // Send confirmation email
+            const emailResult = await sendConfirmationEmail(confirmationId)
+
+            // Show success message
+            if (emailResult?.success) {
+                alert(`🎉 Booking Confirmed!\n\nConfirmation ID: ${confirmationId}\n\nHotel: ${hotel.name}\nRoom: ${selectedRoom.name}\nCheck-in: ${checkIn}\nCheck-out: ${checkOut}\nNights: ${nights}\nTotal: $${totalPrice}\n\n📧 A confirmation email has been sent to ${email}\n\nThank you for choosing Travelinn!`)
+            } else {
+                alert(`🎉 Booking Confirmed!\n\nConfirmation ID: ${confirmationId}\n\nHotel: ${hotel.name}\nRoom: ${selectedRoom.name}\nCheck-in: ${checkIn}\nCheck-out: ${checkOut}\nNights: ${nights}\nTotal: $${totalPrice}\n\n⚠️ Note: Confirmation email could not be sent at this time, but your booking is saved.\n\nThank you for choosing Travelinn!`)
+            }
+
+            // Reset form and close modal
             onClose()
-            // Reset form
-            setStep(1)
-            setSelectedRoom(null)
-            setCheckIn('')
-            setCheckOut('')
-            setGuests(2)
-            setSpecialRequests('')
-            setEmail('')
-            setCardName('')
-            setCardNumber('')
-            setExpiryDate('')
-            setCvv('')
+            resetForm()
+
         } catch (error) {
             console.error('Error processing booking:', error)
-            alert('There was an error processing your booking. Please try again.')
+            alert(`There was an error processing your booking: ${error.message}\n\nPlease try again or contact support.`)
         } finally {
             setIsProcessing(false)
         }
+    }
+
+    const resetForm = () => {
+        setStep(1)
+        setSelectedRoom(null)
+        setCheckIn('')
+        setCheckOut('')
+        setGuests(2)
+        setSpecialRequests('')
+        setEmail('')
+        setCardName('')
+        setCardNumber('')
+        setExpiryDate('')
+        setCvv('')
+        setPaymentMethod('card')
     }
 
     const getTodayDate = () => {
@@ -260,7 +312,7 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                     </div>
                 </div>
 
-                {/* Modal Content */}
+                {/* Modal Content - Continuing in next part due to length... */}
                 <div className="booking-modal-content">
                     {/* Step 1: Room Selection */}
                     {step === 1 && (
@@ -424,7 +476,7 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                         </div>
                     )}
 
-                    {/* Step 3: Payment */}
+                    {/* Step 3: Payment - continued in next message due to length */}
                     {step === 3 && (
                         <div className="step-content">
                             <h3>
@@ -436,7 +488,7 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                             </h3>
                             <p className="payment-subtitle">Choose your preferred payment method and confirm your stay.</p>
 
-                            {/* Email Input for Receipt */}
+                            {/* Email Input */}
                             <div className="payment-form" style={{ marginBottom: '2rem' }}>
                                 <div className="form-group">
                                     <label>
@@ -458,9 +510,7 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                                             border: '2px solid rgba(139, 92, 246, 0.3)',
                                             borderRadius: '14px',
                                             color: 'white',
-                                            fontSize: '0.95rem',
-                                            outline: 'none',
-                                            transition: 'all 0.3s'
+                                            fontSize: '0.95rem'
                                         }}
                                     />
                                     <p style={{
@@ -468,7 +518,7 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                                         color: 'rgba(255, 255, 255, 0.6)',
                                         fontSize: '0.85rem'
                                     }}>
-                                        📧 Your booking confirmation and receipt will be sent to this email
+                                        📧 Your booking confirmation will be sent to this email
                                     </p>
                                 </div>
                             </div>
@@ -479,13 +529,7 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                                     className={`payment-method ${paymentMethod === 'card' ? 'selected' : ''}`}
                                     onClick={() => setPaymentMethod('card')}
                                 >
-                                    <div className="method-icon">
-                                        <img
-                                            src="https://t4.ftcdn.net/jpg/04/06/75/39/360_F_406753914_SFSBhjhp6kbHblNiUFZ1MXHcuEKe7e7P.jpg"
-                                            alt="Credit Card"
-                                            style={{ width: '50px', height: '50px', objectFit: 'contain' }}
-                                        />
-                                    </div>
+                                    <div className="method-icon">💳</div>
                                     <div>
                                         <h4>Credit / Debit Card</h4>
                                         <p>Pay with Visa, MasterCard, or AmEx</p>
@@ -495,51 +539,14 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                                     className={`payment-method ${paymentMethod === 'applepay' ? 'selected' : ''}`}
                                     onClick={() => setPaymentMethod('applepay')}
                                 >
-                                    <div className="method-icon">
-                                        <img
-                                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWxYUQvdwKXZ9meVu4Jx6fr7nNNo99TLl-bA&s"
-                                            alt="Apple Pay"
-                                            style={{ width: '50px', height: '50px', objectFit: 'contain' }}
-                                        />
-                                    </div>
+                                    <div className="method-icon">🍎</div>
                                     <div>
                                         <h4>Apple Pay</h4>
                                         <p>Pay securely with Apple Pay</p>
                                     </div>
                                 </div>
-                                <div
-                                    className={`payment-method ${paymentMethod === 'googlepay' ? 'selected' : ''}`}
-                                    onClick={() => setPaymentMethod('googlepay')}
-                                >
-                                    <div className="method-icon">
-                                        <img
-                                            src="https://developers.google.com/static/pay/api/images/brand-guidelines/google-pay-mark.png"
-                                            alt="Google Pay"
-                                            style={{ width: '50px', height: '50px', objectFit: 'contain' }}
-                                        />
-                                    </div>
-                                    <div>
-                                        <h4>Google Pay</h4>
-                                        <p>Fast & secure checkout</p>
-                                    </div>
-                                </div>
-                                <div
-                                    className={`payment-method ${paymentMethod === 'paypal' ? 'selected' : ''}`}
-                                    onClick={() => setPaymentMethod('paypal')}
-                                >
-                                    <div className="method-icon">
-                                        <img
-                                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/PayPal.svg/2560px-PayPal.svg.png"
-                                            alt="PayPal"
-                                            style={{ width: '50px', height: 'auto', objectFit: 'contain' }}
-                                        />
-                                    </div>
-                                    <div>
-                                        <h4>PayPal</h4>
-                                        <p>Pay with your PayPal account</p>
-                                    </div>
-                                </div>
                             </div>
+
                             {/* Card Details Form */}
                             {paymentMethod === 'card' && (
                                 <div className="payment-form">
@@ -585,22 +592,8 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                                         </div>
                                     </div>
                                     <p className="security-note">
-                                        🔒 All payments are processed securely. Your card details are never stored on our servers.
+                                        🔒 All payments are processed securely
                                     </p>
-                                </div>
-                            )}
-
-                            {paymentMethod !== 'card' && (
-                                <div className="payment-form">
-                                    <div style={{
-                                        padding: '2rem',
-                                        background: 'rgba(139, 92, 246, 0.08)',
-                                        borderRadius: '16px',
-                                        textAlign: 'center',
-                                        color: 'rgba(255, 255, 255, 0.7)'
-                                    }}>
-                                        <p>You'll be redirected to {paymentMethod === 'applepay' ? 'Apple Pay' : paymentMethod === 'googlepay' ? 'Google Pay' : 'PayPal'} to complete your payment securely.</p>
-                                    </div>
                                 </div>
                             )}
 
@@ -622,10 +615,6 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                                 <div className="summary-item">
                                     <span>Check-out</span>
                                     <span>{new Date(checkOut).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                                </div>
-                                <div className="summary-item">
-                                    <span>{nights} night(s) × ${selectedRoom.price}</span>
-                                    <span>${totalPrice}</span>
                                 </div>
                                 <div className="summary-total">
                                     <span>Total Amount</span>
@@ -667,14 +656,7 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                         >
                             {isProcessing ? (
                                 <>
-                                    <div className="spinner" style={{
-                                        width: '20px',
-                                        height: '20px',
-                                        border: '3px solid rgba(255, 255, 255, 0.3)',
-                                        borderTop: '3px solid white',
-                                        borderRadius: '50%',
-                                        animation: 'spin 1s linear infinite'
-                                    }}></div>
+                                    <div className="spinner"></div>
                                     Processing...
                                 </>
                             ) : (
