@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import UserMenu from '../components/UserMenu.jsx'
-import BookingModal from '../components/BookingModal'
+import BookingModal from '../components/BookingModal.jsx'
 import './HotelsPage.css'
 
 const hotelData = [
