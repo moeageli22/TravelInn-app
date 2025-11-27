@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
-import UserMenu from '../components/UserMenu'
+import UserMenu from '../components/UserMenu.jsx'
 import './ProfilePage.css'
 
 export default function ProfilePage() {

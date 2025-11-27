@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import UserMenu from '../components/UserMenu'
+import UserMenu from '../components/UserMenu.jsx'
 import logo from '../assets/IMG_3327.png' // Ensure the image is in src/assets
 import './AboutPage.css'
 

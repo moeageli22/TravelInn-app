@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import UserMenu from '../components/UserMenu'
+import UserMenu from '../components/UserMenu.jsx'
 import './Wellbeingpage.css'
 
 // Background images for the slideshow (Blue themed - Ocean, Sky, Nature)
