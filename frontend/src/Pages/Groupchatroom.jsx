@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import './GroupChatRoom.css'
+import './GroupchatRoom.css'
 
 // AI-generated community members
 const COMMUNITY_MEMBERS = {
