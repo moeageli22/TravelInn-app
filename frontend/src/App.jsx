@@ -7,7 +7,8 @@ import WellbeingPage from './Pages/Wellbeingpage'
 import GroupsPage from './Pages/GroupsPage.jsx'
 import GroupchatRoom from './Pages/GroupchatRoom.jsx'
 import AboutPage from './Pages/AboutPage'
-import ProfilePage from './Pages/ProfilePage.jsx'  // ← ADD THIS IMPORT
+import ProfilePage from './Pages/ProfilePage.jsx'
+import MyBookingsPage from './Pages/MyBookingsPage.jsx'  // ← NEW: Import My Bookings Page
 import SignInPage from './Pages/SignInPage'
 import SignUpPage from './Pages/SignUpPage'
 import ForgotPasswordPage from './Pages/Forgotpasswordpage'
@@ -52,12 +53,20 @@ function App() {
                             </ProtectedRoute>
                         }
                     />
-                    {/* ← ADD THIS NEW ROUTE FOR PROFILE PAGE */}
                     <Route
                         path="/profile"
                         element={
                             <ProtectedRoute>
                                 <ProfilePage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    {/* ← NEW: My Bookings Route */}
+                    <Route
+                        path="/bookings"
+                        element={
+                            <ProtectedRoute>
+                                <MyBookingsPage />
                             </ProtectedRoute>
                         }
                     />
