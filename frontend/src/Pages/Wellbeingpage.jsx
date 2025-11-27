@@ -34,18 +34,124 @@ export default function Wellbeingpage() {
         steps: 0,
         heartRate: 0,
         sleep: 0,
-        hydration: 0
+        hydration: 0,
+        calories: 0,
+        activeMinutes: 0
     })
     const [animateStats, setAnimateStats] = useState(false)
+    const [selectedBreathingExercise, setSelectedBreathingExercise] = useState(null)
+    const [breathingActive, setBreathingActive] = useState(false)
+    const [breathingPhase, setBreathingPhase] = useState('inhale')
+    const [selectedMealPlan, setSelectedMealPlan] = useState('balanced')
+    const [selectedCountry, setSelectedCountry] = useState('london')
+
+    const weatherData = {
+        london: {
+            name: 'London, UK',
+            temp: 15,
+            condition: 'Partly Cloudy',
+            airQuality: 'Good',
+            uvIndex: 'Low',
+            humidity: 72,
+            windSpeed: 18,
+            icon: '⛅',
+            image: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=800',
+            description: 'Mild and pleasant weather'
+        },
+        paris: {
+            name: 'Paris, France',
+            temp: 18,
+            condition: 'Sunny',
+            airQuality: 'Good',
+            uvIndex: 'Moderate',
+            humidity: 65,
+            windSpeed: 12,
+            icon: '☀️',
+            image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800',
+            description: 'Perfect day for sightseeing'
+        },
+        tokyo: {
+            name: 'Tokyo, Japan',
+            temp: 24,
+            condition: 'Clear',
+            airQuality: 'Excellent',
+            uvIndex: 'High',
+            humidity: 58,
+            windSpeed: 15,
+            icon: '🌤️',
+            image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800',
+            description: 'Warm and clear skies'
+        },
+        dubai: {
+            name: 'Dubai, UAE',
+            temp: 35,
+            condition: 'Hot & Sunny',
+            airQuality: 'Moderate',
+            uvIndex: 'Very High',
+            humidity: 45,
+            windSpeed: 20,
+            icon: '🌞',
+            image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800',
+            description: 'Very hot, stay hydrated'
+        },
+        newYork: {
+            name: 'New York, USA',
+            temp: 12,
+            condition: 'Rainy',
+            airQuality: 'Good',
+            uvIndex: 'Low',
+            humidity: 85,
+            windSpeed: 25,
+            icon: '🌧️',
+            image: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=800',
+            description: 'Bring an umbrella'
+        },
+        sydney: {
+            name: 'Sydney, Australia',
+            temp: 22,
+            condition: 'Sunny',
+            airQuality: 'Excellent',
+            uvIndex: 'High',
+            humidity: 60,
+            windSpeed: 16,
+            icon: '☀️',
+            image: 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=800',
+            description: 'Beautiful beach weather'
+        },
+        singapore: {
+            name: 'Singapore',
+            temp: 30,
+            condition: 'Humid',
+            airQuality: 'Good',
+            uvIndex: 'Very High',
+            humidity: 80,
+            windSpeed: 10,
+            icon: '🌤️',
+            image: 'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=800',
+            description: 'Hot and humid conditions'
+        },
+        barcelona: {
+            name: 'Barcelona, Spain',
+            temp: 26,
+            condition: 'Sunny',
+            airQuality: 'Good',
+            uvIndex: 'High',
+            humidity: 55,
+            windSpeed: 14,
+            icon: '☀️',
+            image: 'https://images.unsplash.com/photo-1583422409516-2895a77efded?w=800',
+            description: 'Perfect Mediterranean weather'
+        }
+    }
 
     const sectionRefs = useRef({})
     const chatMessagesRef = useRef(null)
 
-    // Slideshow Logic - cycles through background images every 6 seconds
+    // Slideshow Logic
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentSlide((prev) => (prev + 1) % backgroundImages.length)
-        }, 6000) // Change image every 6 seconds
+        }, 6000)
         return () => clearInterval(interval)
     }, [])
 
@@ -84,8 +190,33 @@ export default function Wellbeingpage() {
         }
     }, [messages, showTyping])
 
+    // Breathing exercise timer
+    useEffect(() => {
+        if (breathingActive && selectedBreathingExercise) {
+            const exercise = breathingExercises.find(e => e.id === selectedBreathingExercise)
+            let phase = 0
+            const phases = ['inhale', 'hold', 'exhale', 'rest']
+            const durations = [exercise.inhale, exercise.hold, exercise.exhale, exercise.rest || 0]
+
+            const interval = setInterval(() => {
+                phase = (phase + 1) % phases.length
+                if (durations[phase] === 0) phase = (phase + 1) % phases.length
+                setBreathingPhase(phases[phase])
+            }, durations[phase] * 1000)
+
+            return () => clearInterval(interval)
+        }
+    }, [breathingActive, selectedBreathingExercise, breathingPhase])
+
     const animateStatCounters = () => {
-        const targets = { steps: 8547, heartRate: 72, sleep: 7.5, hydration: 65 }
+        const targets = {
+            steps: 8547,
+            heartRate: 72,
+            sleep: 7.5,
+            hydration: 65,
+            calories: 1850,
+            activeMinutes: 45
+        }
         const duration = 2000
         const steps = 60
 
@@ -98,11 +229,149 @@ export default function Wellbeingpage() {
                 steps: Math.floor(targets.steps * progress),
                 heartRate: Math.floor(targets.heartRate * progress),
                 sleep: (targets.sleep * progress).toFixed(1),
-                hydration: Math.floor(targets.hydration * progress)
+                hydration: Math.floor(targets.hydration * progress),
+                calories: Math.floor(targets.calories * progress),
+                activeMinutes: Math.floor(targets.activeMinutes * progress)
             })
 
             if (currentStep >= steps) clearInterval(interval)
         }, duration / steps)
+    }
+
+    // Breathing exercises data
+    const breathingExercises = [
+        {
+            id: 'box',
+            name: 'Box Breathing',
+            description: 'Equal breathing technique for stress relief',
+            inhale: 4,
+            hold: 4,
+            exhale: 4,
+            rest: 4,
+            icon: '📦'
+        },
+        {
+            id: '478',
+            name: '4-7-8 Breathing',
+            description: 'Relaxation technique for better sleep',
+            inhale: 4,
+            hold: 7,
+            exhale: 8,
+            rest: 0,
+            icon: '😴'
+        },
+        {
+            id: 'calm',
+            name: 'Calming Breath',
+            description: 'Quick anxiety reducer',
+            inhale: 4,
+            hold: 2,
+            exhale: 6,
+            rest: 0,
+            icon: '🧘'
+        }
+    ]
+
+    // Meal plan data
+    const mealPlans = {
+        balanced: {
+            name: 'Balanced Diet',
+            breakfast: 'Greek yogurt with berries and granola',
+            lunch: 'Grilled chicken salad with quinoa',
+            dinner: 'Baked salmon with roasted vegetables',
+            snacks: 'Mixed nuts, fresh fruit',
+            calories: 2000
+        },
+        vegetarian: {
+            name: 'Vegetarian',
+            breakfast: 'Avocado toast with poached eggs',
+            lunch: 'Chickpea curry with brown rice',
+            dinner: 'Vegetable stir-fry with tofu',
+            snacks: 'Hummus with veggies, trail mix',
+            calories: 1900
+        },
+        highProtein: {
+            name: 'High Protein',
+            breakfast: 'Protein smoothie bowl',
+            lunch: 'Turkey wrap with vegetables',
+            dinner: 'Lean beef with sweet potato',
+            snacks: 'Protein bars, Greek yogurt',
+            calories: 2200
+        }
+    }
+
+    // Wellness activities data
+    const wellnessActivities = [
+        {
+            title: 'Morning Yoga',
+            duration: '20 min',
+            difficulty: 'Beginner',
+            benefits: 'Flexibility, Balance',
+            image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400',
+            icon: '🧘‍♀️'
+        },
+        {
+            title: 'Guided Meditation',
+            duration: '15 min',
+            difficulty: 'All Levels',
+            benefits: 'Stress Relief, Focus',
+            image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400',
+            icon: '🧠'
+        },
+        {
+            title: 'HIIT Workout',
+            duration: '30 min',
+            difficulty: 'Advanced',
+            benefits: 'Cardio, Strength',
+            image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=400',
+            icon: '💪'
+        },
+        {
+            title: 'Walking Tour',
+            duration: '45 min',
+            difficulty: 'Easy',
+            benefits: 'Exploration, Light Cardio',
+            image: 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=400',
+            icon: '🚶'
+        },
+        {
+            title: 'Swimming',
+            duration: '40 min',
+            difficulty: 'Intermediate',
+            benefits: 'Full Body, Low Impact',
+            image: 'https://images.unsplash.com/photo-1519315901367-f34ff9154487?w=400',
+            icon: '🏊'
+        },
+        {
+            title: 'Stretching Session',
+            duration: '25 min',
+            difficulty: 'All Levels',
+            benefits: 'Recovery, Flexibility',
+            image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400',
+            icon: '🤸'
+        }
+    ]
+
+    // Health checklist items
+    const healthChecklist = [
+        { item: 'Water bottle', checked: true, icon: '💧' },
+        { item: 'First-aid kit', checked: true, icon: '🏥' },
+        { item: 'Sunscreen', checked: false, icon: '☀️' },
+        { item: 'Hand sanitizer', checked: true, icon: '🧴' },
+        { item: 'Daily medications', checked: true, icon: '💊' },
+        { item: 'Healthy snacks', checked: false, icon: '🍎' },
+        { item: 'Power bank', checked: true, icon: '🔋' },
+        { item: 'Emergency contacts', checked: true, icon: '📞' },
+        { item: 'Travel insurance', checked: true, icon: '🛡️' },
+        { item: 'Reusable mask', checked: false, icon: '😷' }
+    ]
+
+    const [checklistState, setChecklistState] = useState(healthChecklist)
+
+    const toggleChecklistItem = (index) => {
+        setChecklistState(prev => prev.map((item, i) =>
+            i === index ? { ...item, checked: !item.checked } : item
+        ))
     }
 
     // Enhanced Features Data
@@ -240,7 +509,6 @@ export default function Wellbeingpage() {
             <nav>
                 <div className="logo" onClick={() => navigate('/')}>Travelinn</div>
 
-                {/* Hamburger Menu Button */}
                 <button
                     className={`hamburger ${mobileMenuOpen ? 'active' : ''}`}
                     onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -350,7 +618,339 @@ export default function Wellbeingpage() {
                                 <span className="stat-target">Goal: 100%</span>
                             </div>
                         </div>
+
+                        <div className="stat-card">
+                            <div className="stat-icon calories-icon">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                </svg>
+                            </div>
+                            <div className="stat-content">
+                                <h3 className="stat-value">{healthStats.calories}</h3>
+                                <p className="stat-label">Calories Burned</p>
+                                <div className="stat-progress">
+                                    <div className="progress-bar calories-bar" style={{ width: `${(healthStats.calories / 2500) * 100}%` }}></div>
+                                </div>
+                                <span className="stat-target">Goal: 2,500</span>
+                            </div>
+                        </div>
+
+                        <div className="stat-card">
+                            <div className="stat-icon active-icon">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                            </div>
+                            <div className="stat-content">
+                                <h3 className="stat-value">{healthStats.activeMinutes}</h3>
+                                <p className="stat-label">Active Minutes</p>
+                                <div className="stat-progress">
+                                    <div className="progress-bar active-bar" style={{ width: `${(healthStats.activeMinutes / 60) * 100}%` }}></div>
+                                </div>
+                                <span className="stat-target">Goal: 60 min</span>
+                            </div>
+                        </div>
                     </div>
+                </section>
+
+                {/* Weather & Environment Section */}
+                <section
+                    className={`weather-section ${visibleSections.has('weather') ? 'visible' : ''}`}
+                    ref={el => sectionRefs.current['weather'] = el}
+                    data-section="weather"
+                >
+                    <h2>Environmental Health</h2>
+                    <p className="section-subtitle">Check weather conditions for your destination</p>
+
+                    {/* Country Selector */}
+                    <div className="country-selector">
+                        {Object.keys(weatherData).map((key) => (
+                            <button
+                                key={key}
+                                className={`country-btn ${selectedCountry === key ? 'active' : ''}`}
+                                onClick={() => setSelectedCountry(key)}
+                            >
+                                <span className="country-flag">{weatherData[key].icon}</span>
+                                <span className="country-name">{weatherData[key].name.split(',')[0]}</span>
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Main Weather Display */}
+                    <div className="weather-app-container">
+                        <div className="weather-main-card">
+                            <div
+                                className="weather-hero-image"
+                                style={{ backgroundImage: `url(${weatherData[selectedCountry].image})` }}
+                            >
+                                <div className="weather-overlay">
+                                    <div className="weather-main-info">
+                                        <h3 className="location-name">{weatherData[selectedCountry].name}</h3>
+                                        <div className="main-temp">
+                                            <span className="temp-icon">{weatherData[selectedCountry].icon}</span>
+                                            <span className="temp-value">{weatherData[selectedCountry].temp}°C</span>
+                                        </div>
+                                        <p className="condition-text">{weatherData[selectedCountry].condition}</p>
+                                        <p className="weather-description">{weatherData[selectedCountry].description}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Weather Details Grid */}
+                            <div className="weather-details-grid">
+                                <div className="weather-detail-item">
+                                    <div className="detail-icon">💧</div>
+                                    <div className="detail-info">
+                                        <span className="detail-label">Humidity</span>
+                                        <span className="detail-value">{weatherData[selectedCountry].humidity}%</span>
+                                    </div>
+                                </div>
+
+                                <div className="weather-detail-item">
+                                    <div className="detail-icon">💨</div>
+                                    <div className="detail-info">
+                                        <span className="detail-label">Wind Speed</span>
+                                        <span className="detail-value">{weatherData[selectedCountry].windSpeed} km/h</span>
+                                    </div>
+                                </div>
+
+                                <div className="weather-detail-item">
+                                    <div className="detail-icon">🌬️</div>
+                                    <div className="detail-info">
+                                        <span className="detail-label">Air Quality</span>
+                                        <span className={`detail-value aqi-${weatherData[selectedCountry].airQuality.toLowerCase()}`}>
+                                            {weatherData[selectedCountry].airQuality}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="weather-detail-item">
+                                    <div className="detail-icon">☀️</div>
+                                    <div className="detail-info">
+                                        <span className="detail-label">UV Index</span>
+                                        <span className={`detail-value uv-${weatherData[selectedCountry].uvIndex.toLowerCase().replace(' ', '-')}`}>
+                                            {weatherData[selectedCountry].uvIndex}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Health Recommendations */}
+                        <div className="weather-recommendations">
+                            <h4>Health Recommendations</h4>
+                            <div className="recommendation-list">
+                                {weatherData[selectedCountry].temp > 30 && (
+                                    <div className="recommendation-item hot">
+                                        <span className="rec-icon">🌡️</span>
+                                        <p>Very hot! Drink plenty of water and avoid peak sun hours (11am-3pm)</p>
+                                    </div>
+                                )}
+                                {weatherData[selectedCountry].temp < 15 && (
+                                    <div className="recommendation-item cold">
+                                        <span className="rec-icon">❄️</span>
+                                        <p>Cool weather. Layer your clothing and keep warm</p>
+                                    </div>
+                                )}
+                                {weatherData[selectedCountry].uvIndex === 'High' || weatherData[selectedCountry].uvIndex === 'Very High' && (
+                                    <div className="recommendation-item uv">
+                                        <span className="rec-icon">🧴</span>
+                                        <p>High UV! Wear sunscreen SPF 30+ and protective clothing</p>
+                                    </div>
+                                )}
+                                {weatherData[selectedCountry].humidity > 75 && (
+                                    <div className="recommendation-item humidity">
+                                        <span className="rec-icon">💦</span>
+                                        <p>High humidity. Stay hydrated and take breaks in air-conditioned spaces</p>
+                                    </div>
+                                )}
+                                {weatherData[selectedCountry].condition.includes('Rain') && (
+                                    <div className="recommendation-item rain">
+                                        <span className="rec-icon">☔</span>
+                                        <p>Rainy conditions. Carry an umbrella and waterproof gear</p>
+                                    </div>
+                                )}
+                                {weatherData[selectedCountry].airQuality === 'Excellent' || weatherData[selectedCountry].airQuality === 'Good' ? (
+                                    <div className="recommendation-item air-good">
+                                        <span className="rec-icon">✅</span>
+                                        <p>Great air quality! Perfect for outdoor activities and exercise</p>
+                                    </div>
+                                ) : null}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Breathing Exercises Section */}
+                <section
+                    className={`breathing-section ${visibleSections.has('breathing') ? 'visible' : ''}`}
+                    ref={el => sectionRefs.current['breathing'] = el}
+                    data-section="breathing"
+                >
+                    <h2>Breathing & Relaxation</h2>
+                    <p className="section-subtitle">Reduce stress and improve focus with guided breathing exercises</p>
+
+                    <div className="breathing-exercises-grid">
+                        {breathingExercises.map((exercise) => (
+                            <div
+                                key={exercise.id}
+                                className={`breathing-card ${selectedBreathingExercise === exercise.id ? 'active' : ''}`}
+                                onClick={() => {
+                                    setSelectedBreathingExercise(exercise.id)
+                                    setBreathingActive(false)
+                                }}
+                            >
+                                <div className="breathing-icon">{exercise.icon}</div>
+                                <h3>{exercise.name}</h3>
+                                <p>{exercise.description}</p>
+                                <div className="breathing-pattern">
+                                    <span>Inhale: {exercise.inhale}s</span>
+                                    <span>Hold: {exercise.hold}s</span>
+                                    <span>Exhale: {exercise.exhale}s</span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {selectedBreathingExercise && (
+                        <div className="breathing-visualizer">
+                            <div className={`breathing-circle ${breathingActive ? breathingPhase : ''}`}>
+                                <span className="breathing-instruction">
+                                    {breathingActive ? breathingPhase.toUpperCase() : 'Ready'}
+                                </span>
+                            </div>
+                            <button
+                                className="breathing-control-btn"
+                                onClick={() => setBreathingActive(!breathingActive)}
+                            >
+                                {breathingActive ? 'Stop' : 'Start'} Exercise
+                            </button>
+                        </div>
+                    )}
+                </section>
+
+                {/* Wellness Activities Section */}
+                <section
+                    className={`activities-section ${visibleSections.has('activities') ? 'visible' : ''}`}
+                    ref={el => sectionRefs.current['activities'] = el}
+                    data-section="activities"
+                >
+                    <h2>Recommended Wellness Activities</h2>
+                    <p className="section-subtitle">Stay active and healthy during your travels</p>
+
+                    <div className="activities-grid">
+                        {wellnessActivities.map((activity, idx) => (
+                            <div key={idx} className="activity-card">
+                                <div className="activity-image" style={{ backgroundImage: `url(${activity.image})` }}>
+                                    <div className="activity-overlay">
+                                        <span className="activity-icon">{activity.icon}</span>
+                                    </div>
+                                </div>
+                                <div className="activity-content">
+                                    <h3>{activity.title}</h3>
+                                    <div className="activity-meta">
+                                        <span className="activity-duration">⏱ {activity.duration}</span>
+                                        <span className={`activity-difficulty difficulty-${activity.difficulty.toLowerCase()}`}>
+                                            {activity.difficulty}
+                                        </span>
+                                    </div>
+                                    <p className="activity-benefits">✨ {activity.benefits}</p>
+                                    <button className="activity-btn">Start Activity</button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+                {/* Meal Planning Section */}
+                <section
+                    className={`nutrition-section ${visibleSections.has('nutrition') ? 'visible' : ''}`}
+                    ref={el => sectionRefs.current['nutrition'] = el}
+                    data-section="nutrition"
+                >
+                    <h2>Daily Meal Planning</h2>
+                    <p className="section-subtitle">Maintain a balanced diet while traveling</p>
+
+                    <div className="meal-plan-selector">
+                        {Object.keys(mealPlans).map((key) => (
+                            <button
+                                key={key}
+                                className={`meal-plan-btn ${selectedMealPlan === key ? 'active' : ''}`}
+                                onClick={() => setSelectedMealPlan(key)}
+                            >
+                                {mealPlans[key].name}
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="meal-plan-display">
+                        <div className="meal-plan-header">
+                            <h3>{mealPlans[selectedMealPlan].name}</h3>
+                            <span className="meal-calories">{mealPlans[selectedMealPlan].calories} cal/day</span>
+                        </div>
+                        <div className="meals-grid">
+                            <div className="meal-item">
+                                <div className="meal-icon">🌅</div>
+                                <h4>Breakfast</h4>
+                                <p>{mealPlans[selectedMealPlan].breakfast}</p>
+                            </div>
+                            <div className="meal-item">
+                                <div className="meal-icon">☀️</div>
+                                <h4>Lunch</h4>
+                                <p>{mealPlans[selectedMealPlan].lunch}</p>
+                            </div>
+                            <div className="meal-item">
+                                <div className="meal-icon">🌙</div>
+                                <h4>Dinner</h4>
+                                <p>{mealPlans[selectedMealPlan].dinner}</p>
+                            </div>
+                            <div className="meal-item">
+                                <div className="meal-icon">🍪</div>
+                                <h4>Snacks</h4>
+                                <p>{mealPlans[selectedMealPlan].snacks}</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Health Checklist Section */}
+                <section
+                    className={`checklist-section ${visibleSections.has('checklist') ? 'visible' : ''}`}
+                    ref={el => sectionRefs.current['checklist'] = el}
+                    data-section="checklist"
+                >
+                    <h2>Travel Health Checklist</h2>
+                    <p className="section-subtitle">Make sure you have everything for a healthy trip</p>
+
+                    <div className="checklist-grid">
+                        {checklistState.map((item, idx) => (
+                            <div
+                                key={idx}
+                                className={`checklist-item ${item.checked ? 'checked' : ''}`}
+                                onClick={() => toggleChecklistItem(idx)}
+                            >
+                                <div className="checklist-checkbox">
+                                    {item.checked && (
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                    )}
+                                </div>
+                                <span className="checklist-icon">{item.icon}</span>
+                                <span className="checklist-text">{item.item}</span>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="checklist-progress-bar">
+                        <div className="checklist-progress-fill" style={{
+                            width: `${(checklistState.filter(i => i.checked).length / checklistState.length) * 100}%`
+                        }}></div>
+                    </div>
+                    <p className="checklist-status">
+                        {checklistState.filter(i => i.checked).length} of {checklistState.length} items packed
+                    </p>
                 </section>
 
                 {/* Solo Traveler Section */}
