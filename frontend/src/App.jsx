@@ -4,7 +4,7 @@ import { ProtectedRoute } from './components/ProtectedRoute'
 import HomePage from './Pages/HomePage'
 import HotelsPage from './Pages/HotelsPage'
 import WellbeingPage from './Pages/Wellbeingpage'
-import GroupsPage from './Pages/Groupspage'
+import GroupsPage from './Pages/GroupsPage.jsx'
 import GroupChatRoom from './Pages/Groupchatroom'
 import AboutPage from './Pages/AboutPage'
 import ProfilePage from './Pages/Profilepage'  // ← ADD THIS IMPORT
