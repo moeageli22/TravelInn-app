@@ -17,6 +17,7 @@ export default function HomePage() {
     const [currentSlide, setCurrentSlide] = useState(0)
     const [chatOpen, setChatOpen] = useState(false)
     const [settingsOpen, setSettingsOpen] = useState(false)
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
     const [messages, setMessages] = useState([
         {
             text: "Hello! 👋 I'm your AI travel assistant. I can help you find perfect hotels, plan trips, and answer any travel questions. How can I assist you today?",
@@ -65,6 +66,18 @@ export default function HomePage() {
         }, 3000)
         return () => clearInterval(interval)
     }, [])
+
+    // Close mobile menu when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (mobileMenuOpen && !e.target.closest('.mobile-menu') && !e.target.closest('.hamburger-menu')) {
+                setMobileMenuOpen(false)
+            }
+        }
+
+        document.addEventListener('click', handleClickOutside)
+        return () => document.removeEventListener('click', handleClickOutside)
+    }, [mobileMenuOpen])
 
     const getAIResponse = (message) => {
         const lower = message.toLowerCase()
@@ -148,10 +161,17 @@ export default function HomePage() {
         }, 1500)
     }
 
+    const handleNavClick = (path) => {
+        setMobileMenuOpen(false)
+        navigate(path)
+    }
+
     return (
         <div className="home-page">
             <nav>
                 <div className="logo">Travelinn</div>
+
+                {/* Desktop Navigation Links */}
                 <ul className="nav-links">
                     <li><a href="#home">Home</a></li>
                     <li><a href="#hotels" onClick={(e) => { e.preventDefault(); navigate('/hotels') }}>Hotels</a></li>
@@ -159,6 +179,7 @@ export default function HomePage() {
                     <li><a href="#groups" onClick={(e) => { e.preventDefault(); navigate('/groups') }}>Groups</a></li>
                     <li><a href="#about" onClick={(e) => { e.preventDefault(); navigate('/about') }}>About</a></li>
                 </ul>
+
                 <div className="nav-right">
                     <button className="settings-icon-btn" onClick={() => setSettingsOpen(true)}>
                         <svg className="settings-icon" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
@@ -171,8 +192,45 @@ export default function HomePage() {
                     ) : (
                         <button className="sign-in-btn" onClick={() => navigate('/signin')}>Sign In</button>
                     )}
+
+                    {/* Hamburger Menu Button - Mobile Only */}
+                    <button
+                        className="hamburger-menu"
+                        onClick={(e) => {
+                            e.stopPropagation()
+                            setMobileMenuOpen(!mobileMenuOpen)
+                        }}
+                        aria-label="Menu"
+                    >
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
                 </div>
             </nav>
+
+            {/* Mobile Menu Overlay */}
+            {mobileMenuOpen && <div className="mobile-menu-overlay" onClick={() => setMobileMenuOpen(false)}></div>}
+
+            {/* Mobile Menu */}
+            <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
+                <div className="mobile-menu-header">
+                    <div className="mobile-menu-logo">Travelinn</div>
+                    <button className="close-mobile-menu" onClick={() => setMobileMenuOpen(false)}>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+                <ul className="mobile-menu-links">
+                    <li><a href="#home" onClick={() => handleNavClick('/')}>Home</a></li>
+                    <li><a href="#hotels" onClick={() => handleNavClick('/hotels')}>Hotels</a></li>
+                    <li><a href="#wellbeing" onClick={() => handleNavClick('/wellbeing')}>Wellbeing</a></li>
+                    <li><a href="#groups" onClick={() => handleNavClick('/groups')}>Groups</a></li>
+                    <li><a href="#about" onClick={() => handleNavClick('/about')}>About</a></li>
+                </ul>
+            </div>
 
             <section className="hero-section">
                 <div className="background-slideshow">
