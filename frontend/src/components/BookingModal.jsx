@@ -571,7 +571,13 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                                     className={`payment-method ${paymentMethod === 'card' ? 'selected' : ''}`}
                                     onClick={() => setPaymentMethod('card')}
                                 >
-                                    <div className="method-icon">💳</div>
+                                    <div className="method-icon card-brands-icon">
+                                        <img
+                                            src="https://help.zazzle.com/hc/article_attachments/360010513393"
+                                            alt="Card Payments"
+                                            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                                        />
+                                    </div>
                                     <div>
                                         <h4>Credit / Debit Card</h4>
                                         <p>Pay with Visa, MasterCard, or AmEx</p>
@@ -581,10 +587,32 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                                     className={`payment-method ${paymentMethod === 'applepay' ? 'selected' : ''}`}
                                     onClick={() => setPaymentMethod('applepay')}
                                 >
-                                    <div className="method-icon">🍎</div>
+                                    <div className="method-icon apple-pay-icon">
+                                        <img
+                                            src="https://developer.apple.com/news/images/og/apple-pay-og.jpg"
+                                            alt="Apple Pay"
+                                            style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }}
+                                        />
+                                    </div>
                                     <div>
                                         <h4>Apple Pay</h4>
                                         <p>Pay securely with Apple Pay</p>
+                                    </div>
+                                </div>
+                                <div
+                                    className={`payment-method ${paymentMethod === 'googlepay' ? 'selected' : ''}`}
+                                    onClick={() => setPaymentMethod('googlepay')}
+                                >
+                                    <div className="method-icon google-pay-icon">
+                                        <img
+                                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_Logo.svg/2560px-Google_Pay_Logo.svg.png"
+                                            alt="Google Pay"
+                                            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                                        />
+                                    </div>
+                                    <div>
+                                        <h4>Google Pay</h4>
+                                        <p>Pay securely with Google Pay</p>
                                     </div>
                                 </div>
                             </div>
