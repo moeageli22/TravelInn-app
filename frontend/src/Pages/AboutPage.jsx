@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import UserMenu from '../components/UserMenu.jsx'
-import logo from '../assets/IMG_3327.png'
+import logo from '../assets/IMG_3327.png' // Ensure the image is in src/assets
 import './AboutPage.css'
 
 const backgroundImages = [
@@ -16,8 +16,8 @@ export default function AboutPage() {
     const { user } = useAuth()
     const [currentSlide, setCurrentSlide] = useState(0)
     const [chatOpen, setChatOpen] = useState(false)
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
+    // Slideshow Logic
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentSlide((prev) => (prev + 1) % backgroundImages.length)
@@ -25,18 +25,7 @@ export default function AboutPage() {
         return () => clearInterval(interval)
     }, [])
 
-    // Close mobile menu when clicking outside
-    useEffect(() => {
-        const handleClickOutside = (e) => {
-            if (mobileMenuOpen && !e.target.closest('.mobile-menu') && !e.target.closest('.hamburger-menu')) {
-                setMobileMenuOpen(false)
-            }
-        }
-
-        document.addEventListener('click', handleClickOutside)
-        return () => document.removeEventListener('click', handleClickOutside)
-    }, [mobileMenuOpen])
-
+    // Chatbot State
     const [messages, setMessages] = useState([
         {
             text: "Hi there! I can tell you more about Travelinn's mission or help you navigate the site. What would you like to know?",
@@ -67,11 +56,6 @@ export default function AboutPage() {
         }, 1000)
     }
 
-    const handleNavClick = (path) => {
-        setMobileMenuOpen(false)
-        navigate(path)
-    }
-
     return (
         <div className="about-page">
             <nav>
@@ -83,51 +67,12 @@ export default function AboutPage() {
                     <li><a href="/groups" onClick={(e) => { e.preventDefault(); navigate('/groups') }}>Groups</a></li>
                     <li><a href="/about" className="active">About</a></li>
                 </ul>
-                <div className="nav-right">
-                    {user ? (
-                        <UserMenu />
-                    ) : (
-                        <button className="sign-in-btn" onClick={() => navigate('/signin')}>Sign In</button>
-                    )}
-
-                    {/* Hamburger Menu Button - Mobile Only */}
-                    <button
-                        className="hamburger-menu"
-                        onClick={(e) => {
-                            e.stopPropagation()
-                            setMobileMenuOpen(!mobileMenuOpen)
-                        }}
-                        aria-label="Menu"
-                    >
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </button>
-                </div>
+                {user ? (
+                    <UserMenu />
+                ) : (
+                    <button className="sign-in-btn" onClick={() => navigate('/signin')}>Sign In</button>
+                )}
             </nav>
-
-            {/* Mobile Menu Overlay */}
-            {mobileMenuOpen && <div className="mobile-menu-overlay" onClick={() => setMobileMenuOpen(false)}></div>}
-
-            {/* Mobile Menu */}
-            <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
-                <div className="mobile-menu-header">
-                    <div className="mobile-menu-logo">Travelinn</div>
-                    <button className="close-mobile-menu" onClick={() => setMobileMenuOpen(false)}>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                    </button>
-                </div>
-                <ul className="mobile-menu-links">
-                    <li><a href="#home" onClick={() => handleNavClick('/')}>Home</a></li>
-                    <li><a href="#hotels" onClick={() => handleNavClick('/hotels')}>Hotels</a></li>
-                    <li><a href="#wellbeing" onClick={() => handleNavClick('/wellbeing')}>Wellbeing</a></li>
-                    <li><a href="#groups" onClick={() => handleNavClick('/groups')}>Groups</a></li>
-                    <li><a href="#about" onClick={() => handleNavClick('/about')}>About</a></li>
-                </ul>
-            </div>
 
             {/* Hero Section */}
             <div className="about-hero">
@@ -162,13 +107,14 @@ export default function AboutPage() {
                     </p>
                 </section>
 
-                {/* What We Provide */}
+                {/* What We Provide (Features Grid) */}
                 <section className="values-section">
                     <h2 style={{ marginBottom: '3rem', textAlign: 'center', color: 'white' }}>What We Provide</h2>
                     <div className="features-grid">
+                        {/* Hotel Discovery Card */}
                         <div className="feature-card">
                             <div className="feature-icon" style={{ background: 'rgba(139, 92, 246, 0.1)', color: '#8b5cf6' }}>
-                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M3 21h18"/>
                                     <path d="M5 21V7l8-4 8 4v14"/>
                                     <path d="M9 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/>
@@ -178,9 +124,10 @@ export default function AboutPage() {
                             <p>A curated selection of hotels with detailed descriptions, room options, prices, amenities, and a secure booking process.</p>
                         </div>
 
+                        {/* AI Travel Assistant Card */}
                         <div className="feature-card">
                             <div className="feature-icon" style={{ background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6' }}>
-                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M12 2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2 2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/>
                                     <path d="M12 8v6"/>
                                     <path d="M12 14a4 4 0 0 1-4 4H6"/>
@@ -193,9 +140,10 @@ export default function AboutPage() {
                             <p>A built-in assistant that answers travel questions, suggests options, and guides users through the planning process.</p>
                         </div>
 
+                        {/* Traveler Communities Card */}
                         <div className="feature-card">
                             <div className="feature-icon" style={{ background: 'rgba(16, 185, 129, 0.1)', color: '#10b981' }}>
-                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
                                     <circle cx="9" cy="7" r="4"/>
                                     <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
@@ -206,9 +154,10 @@ export default function AboutPage() {
                             <p>Groups based on shared interests where users can join discussions, ask questions, and meet others exploring similar destinations or activities.</p>
                         </div>
 
+                        {/* User-Focused Experience Card */}
                         <div className="feature-card">
                             <div className="feature-icon" style={{ background: 'rgba(236, 72, 153, 0.1)', color: '#ec4899' }}>
-                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M12 2L2 7l10 5 10-5-10-5z"/>
                                     <path d="M2 17l10 5 10-5"/>
                                     <path d="M2 12l10 5 10-5"/>
@@ -232,7 +181,7 @@ export default function AboutPage() {
                 </section>
             </div>
 
-            {/* Chatbot */}
+            {/* Chatbot Component */}
             <div className="chat-bot" onClick={() => setChatOpen(!chatOpen)}>
                 <dotlottie-wc
                     src="https://lottie.host/b3e4cac4-349a-4761-b167-2bf30a257e55/Xas0LWY1sY.lottie"
