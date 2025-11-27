@@ -233,7 +233,7 @@ export default function BookingModal({ isOpen, onClose, hotel }) {
                 )
             }
 
-            // Close modal and resett
+            // Close modal and reset
             onClose()
             resetForm()
 
