@@ -12,6 +12,7 @@ export default function ProfilePage() {
     const [uploading, setUploading] = useState(false)
     const [saving, setSaving] = useState(false)
     const [successMessage, setSuccessMessage] = useState('')
+    const [errorMessage, setErrorMessage] = useState('')
 
     // Profile data
     const [profile, setProfile] = useState({
@@ -31,7 +32,7 @@ export default function ProfilePage() {
     const [editedProfile, setEditedProfile] = useState({...profile})
 
     // Tab state
-    const [activeTab, setActiveTab] = useState('profile') // profile, security, preferences
+    const [activeTab, setActiveTab] = useState('profile')
 
     // Password change
     const [passwordData, setPasswordData] = useState({
@@ -55,21 +56,26 @@ export default function ProfilePage() {
         }
     }, [user, navigate])
 
-    // Auto-hide success message after 5 seconds
+    // Auto-hide messages after 5 seconds
     useEffect(() => {
         if (successMessage) {
-            const timer = setTimeout(() => {
-                setSuccessMessage('')
-            }, 5000)
+            const timer = setTimeout(() => setSuccessMessage(''), 5000)
             return () => clearTimeout(timer)
         }
     }, [successMessage])
 
+    useEffect(() => {
+        if (errorMessage) {
+            const timer = setTimeout(() => setErrorMessage(''), 7000)
+            return () => clearTimeout(timer)
+        }
+    }, [errorMessage])
+
     const loadProfile = async () => {
         try {
             setLoading(true)
+            console.log('Loading profile for user:', user.id)
 
-            // Get profile from Supabase
             const { data, error } = await supabase
                 .from('profiles')
                 .select('*')
@@ -77,33 +83,42 @@ export default function ProfilePage() {
                 .single()
 
             if (error && error.code !== 'PGRST116') {
+                console.error('Error loading profile:', error)
                 throw error
             }
 
             if (data) {
+                console.log('Profile loaded:', data)
                 setProfile(data)
                 setEditedProfile(data)
             } else {
-                // Create profile if it doesn't exist
+                console.log('No profile found, creating new one')
                 const newProfile = {
                     id: user.id,
                     email: user.email,
                     full_name: user.user_metadata?.full_name || '',
                     avatar_url: '',
-                    updated_at: new Date().toISOString()
+                    cover_photo_url: ''
                 }
 
-                const { error: insertError } = await supabase
+                const { data: insertedData, error: insertError } = await supabase
                     .from('profiles')
                     .insert([newProfile])
+                    .select()
+                    .single()
 
-                if (!insertError) {
-                    setProfile(newProfile)
-                    setEditedProfile(newProfile)
+                if (insertError) {
+                    console.error('Error creating profile:', insertError)
+                    setErrorMessage('Failed to create profile. Please refresh the page.')
+                } else {
+                    console.log('Profile created:', insertedData)
+                    setProfile(insertedData)
+                    setEditedProfile(insertedData)
                 }
             }
         } catch (error) {
-            console.error('Error loading profile:', error)
+            console.error('Error in loadProfile:', error)
+            setErrorMessage('Failed to load profile: ' + error.message)
         } finally {
             setLoading(false)
         }
@@ -112,61 +127,78 @@ export default function ProfilePage() {
     const handleAvatarUpload = async (event) => {
         try {
             setUploading(true)
+            setErrorMessage('')
 
             if (!event.target.files || event.target.files.length === 0) {
                 return
             }
 
             const file = event.target.files[0]
+            console.log('Uploading avatar:', file.name, file.size, 'bytes')
 
-            // Check file size (max 5MB)
+            // Validation
             if (file.size > 5 * 1024 * 1024) {
-                alert('File size must be less than 5MB')
+                setErrorMessage('File size must be less than 5MB')
                 return
             }
 
-            // Check file type
             if (!file.type.startsWith('image/')) {
-                alert('Please upload an image file')
+                setErrorMessage('Please upload an image file (JPG, PNG, GIF, etc.)')
                 return
             }
 
             const fileExt = file.name.split('.').pop()
-            const fileName = `${user.id}-${Math.random()}.${fileExt}`
+            const fileName = `avatar-${user.id}-${Date.now()}.${fileExt}`
             const filePath = `avatars/${fileName}`
 
+            console.log('Uploading to storage:', filePath)
+
             // Upload to Supabase Storage
-            const { error: uploadError } = await supabase.storage
+            const { data: uploadData, error: uploadError } = await supabase.storage
                 .from('profiles')
-                .upload(filePath, file)
+                .upload(filePath, file, {
+                    cacheControl: '3600',
+                    upsert: false
+                })
 
             if (uploadError) {
-                throw uploadError
+                console.error('Upload error:', uploadError)
+                setErrorMessage(`Upload failed: ${uploadError.message}. Make sure the 'profiles' storage bucket exists in Supabase.`)
+                return
             }
 
+            console.log('Upload successful:', uploadData)
+
             // Get public URL
-            const { data } = supabase.storage
+            const { data: urlData } = supabase.storage
                 .from('profiles')
                 .getPublicUrl(filePath)
 
-            const avatarUrl = data.publicUrl
+            const avatarUrl = urlData.publicUrl
+            console.log('Avatar URL:', avatarUrl)
 
-            // Update profile with new avatar URL
-            const { error: updateError } = await supabase
+            // Update profile
+            const { data: updateData, error: updateError } = await supabase
                 .from('profiles')
-                .update({ avatar_url: avatarUrl })
+                .update({ avatar_url: avatarUrl, updated_at: new Date().toISOString() })
                 .eq('id', user.id)
+                .select()
+                .single()
 
             if (updateError) {
-                throw updateError
+                console.error('Profile update error:', updateError)
+                setErrorMessage('Failed to update profile: ' + updateError.message)
+                return
             }
 
+            console.log('Profile updated:', updateData)
             setProfile({ ...profile, avatar_url: avatarUrl })
             setEditedProfile({ ...editedProfile, avatar_url: avatarUrl })
-            setSuccessMessage('Profile picture updated successfully!')
+            setSuccessMessage('✅ Profile picture updated successfully!')
+
         } catch (error) {
-            console.error('Error uploading avatar:', error)
-            alert('Error uploading image. Please try again.')
+            console.error('Error in handleAvatarUpload:', error)
+            setErrorMessage('Error uploading image: ' + error.message)
         } finally {
             setUploading(false)
         }
@@ -175,58 +207,75 @@ export default function ProfilePage() {
     const handleCoverPhotoUpload = async (event) => {
         try {
             setUploading(true)
+            setErrorMessage('')
 
             if (!event.target.files || event.target.files.length === 0) {
                 return
             }
 
             const file = event.target.files[0]
+            console.log('Uploading cover:', file.name, file.size, 'bytes')
 
-            // Check file size (max 10MB)
+            // Validation
             if (file.size > 10 * 1024 * 1024) {
-                alert('File size must be less than 10MB')
+                setErrorMessage('File size must be less than 10MB')
                 return
             }
 
-            // Check file type
             if (!file.type.startsWith('image/')) {
-                alert('Please upload an image file')
+                setErrorMessage('Please upload an image file (JPG, PNG, GIF, etc.)')
                 return
             }
 
             const fileExt = file.name.split('.').pop()
-            const fileName = `${user.id}-cover-${Math.random()}.${fileExt}`
+            const fileName = `cover-${user.id}-${Date.now()}.${fileExt}`
             const filePath = `covers/${fileName}`
 
-            const { error: uploadError } = await supabase.storage
+            console.log('Uploading to storage:', filePath)
+
+            const { data: uploadData, error: uploadError } = await supabase.storage
                 .from('profiles')
-                .upload(filePath, file)
+                .upload(filePath, file, {
+                    cacheControl: '3600',
+                    upsert: false
+                })
 
             if (uploadError) {
-                throw uploadError
+                console.error('Upload error:', uploadError)
+                setErrorMessage(`Upload failed: ${uploadError.message}. Make sure the 'profiles' storage bucket exists in Supabase.`)
+                return
             }
 
-            const { data } = supabase.storage
+            console.log('Upload successful:', uploadData)
+
+            const { data: urlData } = supabase.storage
                 .from('profiles')
                 .getPublicUrl(filePath)
 
-            const coverUrl = data.publicUrl
+            const coverUrl = urlData.publicUrl
+            console.log('Cover URL:', coverUrl)
 
-            const { error: updateError } = await supabase
+            const { data: updateData, error: updateError } = await supabase
                 .from('profiles')
-                .update({ cover_photo_url: coverUrl })
+                .update({ cover_photo_url: coverUrl, updated_at: new Date().toISOString() })
                 .eq('id', user.id)
+                .select()
+                .single()
 
             if (updateError) {
-                throw updateError
+                console.error('Profile update error:', updateError)
+                setErrorMessage('Failed to update profile: ' + updateError.message)
+                return
             }
 
+            console.log('Profile updated:', updateData)
             setProfile({ ...profile, cover_photo_url: coverUrl })
             setEditedProfile({ ...editedProfile, cover_photo_url: coverUrl })
-            setSuccessMessage('Cover photo updated successfully!')
+            setSuccessMessage('✅ Cover photo updated successfully!')
+
         } catch (error) {
-            console.error('Error uploading cover photo:', error)
-            alert('Error uploading image. Please try again.')
+            console.error('Error in handleCoverPhotoUpload:', error)
+            setErrorMessage('Error uploading image: ' + error.message)
         } finally {
             setUploading(false)
         }
@@ -235,59 +284,77 @@ export default function ProfilePage() {
     const handleSaveProfile = async () => {
         try {
             setSaving(true)
+            setErrorMessage('')
+            console.log('Saving profile:', editedProfile)
 
-            const { error } = await supabase
+            const { data, error } = await supabase
                 .from('profiles')
                 .update({
-                    full_name: editedProfile.full_name,
-                    username: editedProfile.username,
-                    bio: editedProfile.bio,
-                    phone: editedProfile.phone,
-                    country: editedProfile.country,
-                    city: editedProfile.city,
-                    date_of_birth: editedProfile.date_of_birth,
+                    full_name: editedProfile.full_name || null,
+                    username: editedProfile.username || null,
+                    bio: editedProfile.bio || null,
+                    phone: editedProfile.phone || null,
+                    country: editedProfile.country || null,
+                    city: editedProfile.city || null,
+                    date_of_birth: editedProfile.date_of_birth || null,
                     updated_at: new Date().toISOString()
                 })
                 .eq('id', user.id)
+                .select()
+                .single()
 
-            if (error) throw error
+            if (error) {
+                console.error('Save error:', error)
+                setErrorMessage('Failed to save profile: ' + error.message + '. Check console for details.')
+                throw error
+            }
 
-            setProfile(editedProfile)
+            console.log('Profile saved successfully:', data)
+            setProfile(data)
+            setEditedProfile(data)
             setIsEditing(false)
-            setSuccessMessage('Profile updated successfully!')
+            setSuccessMessage('✅ Profile updated successfully!')
+
         } catch (error) {
-            console.error('Error updating profile:', error)
-            alert('Error updating profile. Please try again.')
+            console.error('Error in handleSaveProfile:', error)
         } finally {
             setSaving(false)
         }
     }
 
     const handlePasswordChange = async () => {
-        if (passwordData.newPassword !== passwordData.confirmPassword) {
-            alert('Passwords do not match!')
-            return
-        }
-
-        if (passwordData.newPassword.length < 6) {
-            alert('Password must be at least 6 characters!')
-            return
-        }
-
         try {
-            setSaving(true)
+            setErrorMessage('')
 
-            const { error } = await supabase.auth.updateUser({
+            if (passwordData.newPassword !== passwordData.confirmPassword) {
+                setErrorMessage('❌ Passwords do not match!')
+                return
+            }
+
+            if (passwordData.newPassword.length < 6) {
+                setErrorMessage('❌ Password must be at least 6 characters!')
+                return
+            }
+
+            setSaving(true)
+            console.log('Updating password...')
+
+            const { data, error } = await supabase.auth.updateUser({
                 password: passwordData.newPassword
             })
 
-            if (error) throw error
+            if (error) {
+                console.error('Password update error:', error)
+                setErrorMessage('Failed to update password: ' + error.message)
+                throw error
+            }
 
-            setSuccessMessage('Password updated successfully!')
+            console.log('Password updated successfully')
+            setSuccessMessage('✅ Password updated successfully!')
             setPasswordData({ newPassword: '', confirmPassword: '' })
+
         } catch (error) {
-            console.error('Error updating password:', error)
-            alert('Error updating password. Please try again.')
+            console.error('Error in handlePasswordChange:', error)
         } finally {
             setSaving(false)
         }
@@ -469,6 +536,28 @@ export default function ProfilePage() {
                         </div>
                     )}
 
+                    {/* Error Message */}
+                    {errorMessage && (
+                        <div className="error-message" style={{
+                            background: 'rgba(239, 68, 68, 0.15)',
+                            border: '2px solid #ef4444',
+                            color: '#ef4444',
+                            padding: '1.125rem 1.5rem',
+                            borderRadius: '12px',
+                            marginBottom: '2rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.875rem',
+                            animation: 'slideDown 0.3s ease',
+                            fontWeight: '600'
+                        }}>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                            </svg>
+                            {errorMessage}
+                        </div>
+                    )}
+
                     {activeTab === 'profile' && (
                         <div className="profile-details">
                             {isEditing ? (
@@ -592,6 +681,7 @@ export default function ProfilePage() {
                                         <button className="cancel-btn" onClick={() => {
                                             setEditedProfile(profile)
                                             setIsEditing(false)
+                                            setErrorMessage('')
                                         }}>
                                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                                 <line x1="18" y1="6" x2="6" y2="18"></line>
