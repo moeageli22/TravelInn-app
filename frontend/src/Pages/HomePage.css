@@ -435,30 +435,283 @@ nav {
     box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
 }
 
-/* Responsive Design  */
+/* Responsive Design for Mobile/iPhone */
 @media (max-width: 768px) {
     nav {
-        padding: 1rem 2rem;
+        padding: 1rem 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .logo {
+        font-size: 1.3rem;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    .nav-right {
+        gap: 1rem;
+    }
+
+    .settings-icon-btn {
+        padding: 0.5rem;
+    }
+
+    .settings-icon {
+        width: 18px;
+        height: 18px;
+    }
+
+    .sign-in-btn {
+        padding: 0.6rem 1.5rem;
+        font-size: 0.85rem;
+    }
+
+    .hero-section {
+        height: 100svh; /* Use svh for mobile Safari */
+    }
+
+    .hero-content {
+        padding: 0 1.5rem;
+        margin-top: 2rem;
     }
 
     .hero-title {
-        font-size: 3rem;
+        font-size: 2.5rem;
+        line-height: 1.2;
+        margin-bottom: 1rem;
     }
 
     .hero-subtitle {
         font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 2rem;
+    }
+
+    .explore-btn {
+        padding: 1rem 2.5rem;
+        font-size: 0.9rem;
+        width: 100%;
+        max-width: 300px;
     }
 
     .chat-window {
-        width: 90%;
-        right: 5%;
-        left: 5%;
+        width: 100%;
+        height: 80vh;
+        max-height: 600px;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        border-radius: 20px 20px 0 0;
+    }
+
+    .chat-header {
+        padding: 1.25rem;
+    }
+
+    .chat-header h3 {
+        font-size: 1rem;
+    }
+
+    .chat-header p {
+        font-size: 0.8rem;
+    }
+
+    .chat-messages {
+        padding: 1rem;
+    }
+
+    .message-content {
+        font-size: 0.9rem;
+        padding: 0.65rem 0.9rem;
+    }
+
+    .quick-actions {
+        padding: 0.75rem;
+        gap: 0.4rem;
+    }
+
+    .quick-action-btn {
+        padding: 0.5rem 0.4rem;
+        font-size: 0.75rem;
+    }
+
+    .chat-input-container {
+        padding: 1rem;
+    }
+
+    .chat-input {
+        padding: 0.7rem 0.9rem;
+        font-size: 0.85rem;
+    }
+
+    .send-btn {
+        width: 40px;
+        height: 40px;
     }
 
     .chat-bot {
-        width: 80px;
-        height: 80px;
-        bottom: 2rem;
-        right: 2rem;
+        width: 70px;
+        height: 70px;
+        bottom: 1.5rem;
+        right: 1.5rem;
+    }
+}
+
+/* iPhone specific optimizations (smaller screens) */
+@media (max-width: 430px) {
+    nav {
+        padding: 0.875rem 1rem;
+    }
+
+    .logo {
+        font-size: 1.2rem;
+    }
+
+    .sign-in-btn {
+        padding: 0.5rem 1.2rem;
+        font-size: 0.8rem;
+    }
+
+    .hero-content {
+        padding: 0 1rem;
+    }
+
+    .hero-title {
+        font-size: 2rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .hero-subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .explore-btn {
+        padding: 0.9rem 2rem;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+    }
+
+    .chat-bot {
+        width: 65px;
+        height: 65px;
+        bottom: 1.25rem;
+        right: 1.25rem;
+        border-width: 2px;
+    }
+
+    .chat-window {
+        height: 85vh;
+    }
+
+    .chat-header {
+        padding: 1rem;
+    }
+
+    .chat-messages {
+        padding: 0.875rem;
+        gap: 0.75rem;
+    }
+
+    .message-avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 0.7rem;
+    }
+
+    .message-content {
+        font-size: 0.85rem;
+        padding: 0.6rem 0.8rem;
+    }
+
+    .message-time {
+        font-size: 0.65rem;
+    }
+
+    .quick-actions {
+        padding: 0.625rem;
+        flex-wrap: wrap;
+    }
+
+    .quick-action-btn {
+        flex: 1 1 calc(50% - 0.2rem);
+        padding: 0.5rem 0.3rem;
+        font-size: 0.7rem;
+    }
+
+    .chat-input-container {
+        padding: 0.875rem;
+    }
+
+    .chat-input {
+        padding: 0.65rem 0.8rem;
+        font-size: 0.8rem;
+        border-radius: 10px;
+    }
+
+    .send-btn {
+        width: 38px;
+        height: 38px;
+    }
+
+    .send-btn svg {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+/* Safe area handling for notch devices (iPhone X and later) */
+@supports (padding: max(0px)) {
+    @media (max-width: 768px) {
+        nav {
+            padding-top: max(1rem, env(safe-area-inset-top));
+            padding-left: max(1.5rem, env(safe-area-inset-left));
+            padding-right: max(1.5rem, env(safe-area-inset-right));
+        }
+
+        .chat-window {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .chat-input-container {
+            padding-bottom: max(1rem, env(safe-area-inset-bottom));
+        }
+
+        .chat-bot {
+            bottom: max(1.5rem, calc(env(safe-area-inset-bottom) + 1rem));
+            right: max(1.5rem, calc(env(safe-area-inset-right) + 0.5rem));
+        }
+    }
+
+    @media (max-width: 430px) {
+        nav {
+            padding-top: max(0.875rem, env(safe-area-inset-top));
+            padding-left: max(1rem, env(safe-area-inset-left));
+            padding-right: max(1rem, env(safe-area-inset-right));
+        }
+
+        .chat-bot {
+            bottom: max(1.25rem, calc(env(safe-area-inset-bottom) + 0.75rem));
+            right: max(1.25rem, calc(env(safe-area-inset-right) + 0.5rem));
+        }
+    }
+}
+
+/* Prevent zoom on input focus (iOS Safari fix) */
+@media (max-width: 768px) {
+    input,
+    textarea,
+    select {
+        font-size: 16px !important;
+    }
+}
+
+/* Smooth scrolling for mobile */
+@media (max-width: 768px) {
+    .chat-messages {
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
     }
 }
