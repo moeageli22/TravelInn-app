@@ -5,7 +5,7 @@ import HomePage from './Pages/HomePage'
 import HotelsPage from './Pages/HotelsPage'
 import WellbeingPage from './Pages/Wellbeingpage'
 import GroupsPage from './Pages/GroupsPage.jsx'
-import GroupChatRoom from './Pages/Groupchatroom'
+import GroupchatRoom from './Pages/GroupchatRoom.jsx'
 import AboutPage from './Pages/AboutPage'
 import ProfilePage from './Pages/Profilepage'  // ← ADD THIS IMPORT
 import SignInPage from './Pages/SignInPage'
@@ -48,7 +48,7 @@ function App() {
                         path="/groups/:groupId"
                         element={
                             <ProtectedRoute>
-                                <GroupChatRoom />
+                                <GroupchatRoom />
                             </ProtectedRoute>
                         }
                     />

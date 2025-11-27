@@ -93,7 +93,7 @@ const AI_MESSAGES = {
     ]
 }
 
-export default function GroupChatRoom() {
+export default function GroupchatRoom() {
     const { groupId } = useParams()
     const navigate = useNavigate()
     const messagesEndRef = useRef(null)
