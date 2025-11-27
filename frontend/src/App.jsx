@@ -7,7 +7,7 @@ import WellbeingPage from './Pages/Wellbeingpage'
 import GroupsPage from './Pages/GroupsPage.jsx'
 import GroupchatRoom from './Pages/GroupchatRoom.jsx'
 import AboutPage from './Pages/AboutPage'
-import ProfilePage from './Pages/Profilepage'  // ← ADD THIS IMPORT
+import ProfilePage from './Pages/ProfilePage.jsx'  // ← ADD THIS IMPORT
 import SignInPage from './Pages/SignInPage'
 import SignUpPage from './Pages/SignUpPage'
 import ForgotPasswordPage from './Pages/Forgotpasswordpage'
