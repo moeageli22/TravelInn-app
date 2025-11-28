@@ -8,7 +8,8 @@ import GroupsPage from './Pages/GroupsPage.jsx'
 import GroupchatRoom from './Pages/GroupchatRoom.jsx'
 import AboutPage from './Pages/AboutPage'
 import ProfilePage from './Pages/ProfilePage.jsx'
-import MyBookingsPage from './Pages/MyBookingsPage.jsx'  // ← NEW: Import My Bookings Page
+import MyBookingsPage from './Pages/MyBookingsPage.jsx'
+import SettingsPage from './Pages/SettingsPage.jsx'  // ← NEW: Import Settings Page
 import SignInPage from './Pages/SignInPage'
 import SignUpPage from './Pages/SignUpPage'
 import ForgotPasswordPage from './Pages/Forgotpasswordpage'
@@ -61,12 +62,20 @@ function App() {
                             </ProtectedRoute>
                         }
                     />
-                    {/* ← NEW: My Bookings Route */}
                     <Route
                         path="/bookings"
                         element={
                             <ProtectedRoute>
                                 <MyBookingsPage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    {/* ← NEW: Settings Route */}
+                    <Route
+                        path="/settings"
+                        element={
+                            <ProtectedRoute>
+                                <SettingsPage />
                             </ProtectedRoute>
                         }
                     />
