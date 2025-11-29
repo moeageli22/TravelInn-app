@@ -524,7 +524,7 @@ export default function ProfilePage() {
                     </button>
                 </div>
 
-                {/* Tab Content */}
+                {/* Tab Content ..  */}
                 <div className="tab-content">
                     {/* Success Message */}
                     {successMessage && (
@@ -536,7 +536,7 @@ export default function ProfilePage() {
                         </div>
                     )}
 
-                    {/* Error Message */}
+                    {/* Error Message section  */}
                     {errorMessage && (
                         <div className="error-message" style={{
                             background: 'rgba(239, 68, 68, 0.15)',
