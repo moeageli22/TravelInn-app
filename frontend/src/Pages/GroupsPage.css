@@ -5,6 +5,7 @@
     animation: gradientShift 15s ease infinite;
     color: white;
     position: relative;
+    overflow-x: hidden;
 }
 
 @keyframes gradientShift {
@@ -27,6 +28,9 @@
     z-index: 0;
 }
 
+/* ============================================
+   NAVIGATION
+   ============================================ */
 .groups-page nav {
     position: fixed;
     top: 0;
@@ -92,6 +96,9 @@
     box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6);
 }
 
+/* ============================================
+   CONTAINER & HEADER
+   ============================================ */
 .container {
     max-width: 1400px;
     margin: 0 auto;
@@ -102,7 +109,20 @@
 
 .page-header {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 3.5rem;
+}
+
+.header-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    color: #c084fc;
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(10px);
 }
 
 .page-header h1 {
@@ -112,6 +132,7 @@
     background: linear-gradient(135deg, #60a5fa 0%, #a855f7 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    line-height: 1.2;
 }
 
 .page-header p {
@@ -121,9 +142,12 @@
     margin: 0 auto;
 }
 
+/* ============================================
+   SEARCH
+   ============================================ */
 .search-section {
     max-width: 600px;
-    margin: 0 auto 3rem;
+    margin: 0 auto 3.5rem;
 }
 
 .search-bar {
@@ -134,21 +158,22 @@
 
 .search-icon {
     position: absolute;
-    left: 1.25rem;
+    left: 1.5rem;
     color: rgba(255, 255, 255, 0.5);
     pointer-events: none;
 }
 
 .search-bar input {
     width: 100%;
-    padding: 1rem 1rem 1rem 3.5rem;
+    padding: 1.2rem 1.5rem 1.2rem 4rem;
     background: rgba(255, 255, 255, 0.05);
-    border: 2px solid rgba(255, 255, 255, 0.15);
-    border-radius: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
     color: white;
     font-size: 1rem;
     outline: none;
     transition: all 0.3s;
+    backdrop-filter: blur(10px);
 }
 
 .search-bar input::placeholder {
@@ -161,61 +186,95 @@
     box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
 }
 
+/* ============================================
+   GROUPS GRID
+   ============================================ */
 .groups-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 2.5rem;
 }
 
 .group-card {
     background: rgba(30, 41, 59, 0.6);
-    backdrop-filter: blur(10px);
-    border-radius: 24px;
-    padding: 2rem;
-    border: 2px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-radius: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
-    overflow: hidden;
-}
-
-.group-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, var(--group-color, #8b5cf6) 0%, transparent 100%);
-    opacity: 0;
-    transition: opacity 0.4s;
-    pointer-events: none;
-}
-
-.group-card:hover::before {
-    opacity: 0.1;
 }
 
 .group-card:hover {
-    transform: translateY(-10px);
-    border-color: var(--group-color, #8b5cf6);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    transform: translateY(-12px);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.card-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: var(--group-gradient);
+    opacity: 0;
+    filter: blur(40px);
+    transition: opacity 0.4s;
+    z-index: 0;
+}
+
+.group-card:hover .card-glow {
+    opacity: 0.15;
+}
+
+.group-image-container {
+    position: relative;
+    height: 240px;
+    overflow: hidden;
+}
+
+.group-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s;
+}
+
+.group-card:hover .group-image {
+    transform: scale(1.1);
+}
+
+.image-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    background: linear-gradient(to top, rgba(30, 41, 59, 1) 0%, transparent 100%);
+}
+
+.group-content {
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
 }
 
 .group-header {
     display: flex;
     align-items: flex-start;
     gap: 1.25rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
 }
 
 .group-icon {
-    width: 72px;
-    height: 72px;
+    width: 64px;
+    height: 64px;
     border-radius: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2.5rem;
+    font-size: 2rem;
     flex-shrink: 0;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
@@ -241,7 +300,7 @@
 }
 
 .traveler-count svg {
-    color: var(--group-color, #8b5cf6);
+    color: #8b5cf6;
 }
 
 .group-description {
@@ -251,21 +310,56 @@
     font-size: 0.95rem;
 }
 
+.group-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.feature-tag {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.4rem 0.9rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+    backdrop-filter: blur(10px);
+}
+
 .join-btn {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.75rem;
-    padding: 1rem 2rem;
+    padding: 1.1rem 2rem;
     border: none;
-    border-radius: 14px;
+    border-radius: 16px;
     color: white;
     font-weight: 700;
     font-size: 1rem;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.join-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.join-btn:hover::before {
+    left: 100%;
 }
 
 .join-btn:hover {
@@ -273,7 +367,168 @@
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
 }
 
-/* Responsive Design */
+/* ============================================
+   WELCOME MODAL
+   ============================================ */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.welcome-modal {
+    background: rgba(30, 41, 59, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    max-width: 500px;
+    width: 90%;
+    overflow: hidden;
+    position: relative;
+    animation: slideUp 0.4s ease;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+    opacity: 0.1;
+    filter: blur(60px);
+    animation: rotate 10s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.modal-image-container {
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+}
+
+.modal-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.modal-content {
+    padding: 2.5rem;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.modal-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    margin: -60px auto 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border: 4px solid rgba(30, 41, 59, 1);
+}
+
+.modal-content h2 {
+    color: white;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.modal-content > p {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.modal-features {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.modal-feature {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
+}
+
+.modal-feature svg {
+    color: #8b5cf6;
+    flex-shrink: 0;
+}
+
+.loading-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.loading-progress {
+    height: 100%;
+    background: linear-gradient(90deg, #8b5cf6 0%, #a855f7 100%);
+    border-radius: 10px;
+    animation: loading 3s ease-in-out;
+}
+
+@keyframes loading {
+    from { width: 0%; }
+    to { width: 100%; }
+}
+
+.redirecting-text {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
 @media (max-width: 768px) {
     .groups-page nav {
         padding: 1rem 2rem;
@@ -293,5 +548,17 @@
 
     .groups-grid {
         grid-template-columns: 1fr;
+    }
+
+    .welcome-modal {
+        width: 95%;
+    }
+
+    .modal-content {
+        padding: 2rem;
+    }
+
+    .modal-content h2 {
+        font-size: 1.5rem;
     }
 }
